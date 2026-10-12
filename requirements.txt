@@ -1,0 +1,7 @@
+torch==2.10.0
+numpy==2.2.6
+pytest==9.1.1
+huggingface_hub==2.1.1
+tokenizers==0.23.3
+psutil==7.2.2
+ipykernel==7.4.0

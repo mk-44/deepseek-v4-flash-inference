@@ -1,0 +1,15 @@
+# Python environment and caches: rebuilt from requirements.txt
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+
+# not pushed (your choice): Markdown files, the paper, personal notes
+*.md
+v4_paper.pdf
+doubts.txt
+
+# model weights never go into git
+*.safetensors
+*.bin
