@@ -788,4 +788,5 @@ if __name__ == '__main__':
     parser.add_argument('--real-size', action='store_true', help='also run the real-size gates (minutes, ~10 GiB)')
     parser.add_argument('--only', help='comma-separated gate names, e.g. G5,RB')
     a = parser.parse_args()
-    run_gates(load_notebook_defs(), real_size=a.real_size, only=a.only.split(',') if a.only else None)
+    results = run_gates(load_notebook_defs(), real_size=a.real_size, only=a.only.split(',') if a.only else None)
+    sys.exit(0 if results and all(results.values()) else 1)

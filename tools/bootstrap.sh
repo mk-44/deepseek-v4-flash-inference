@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 # Box setup for one Paperspace session. Run it at the start of every session; re-running is safe:
 #     cd /notebooks/v4 && bash tools/bootstrap.sh
-# /notebooks and /storage are network disks (Ceph) and persist. The local disk / probably doesn't (the markers
-# below tell), so the Python environment lives there for fast imports and is rebuilt here when missing.
-# uv, the Hugging Face cache and the logs live on /storage. The output is also saved to $V4_DATA/logs/.
+# /notebooks and /storage are network disks (Ceph) that persist; /storage is billed, so it holds only small files.
+# The local disk / is wiped at every stop (measured), so the Python environment and any model files live there and are
+# rebuilt or fetched again each session (D6). The output is also saved to $V4_DATA/logs/.
 set -euo pipefail
 source "$(dirname "$0")/env.sh"
-mkdir -p "$V4_DATA/bin" "$V4_DATA/logs" "$HF_HOME"
+mkdir -p "$V4_DATA/bin" "$V4_DATA/logs" "$V4_DATA/state" "$V4_LOCAL"
 LOG="$V4_DATA/logs/bootstrap-$(date -u +%Y%m%dT%H%M%SZ).log"
 exec > >(tee -a "$LOG") 2>&1
 export PYTHONUNBUFFERED=1
+COMMIT=$(git -C "$V4_ROOT" rev-parse --short HEAD)
 step() { printf '\n== %s  [%d s]\n' "$1" "$SECONDS"; }
 
 step "host"
-echo "$(hostname)  $(date -u +%FT%TZ)  repo commit $(git -C "$V4_ROOT" rev-parse --short HEAD)"
+echo "$(hostname)  $(date -u +%FT%TZ)  repo commit $COMMIT"
 nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader
 echo "cpu  $(nproc) cores, $(lscpu | sed -n 's/^Model name: *//p')"
 free -h | awk '/^Mem:/ {print "ram  " $2 " total, " $7 " available"}'
@@ -55,8 +56,16 @@ grep -qF "$V4_ROOT/tools/env.sh" ~/.bashrc 2>/dev/null || echo "source $V4_ROOT/
 step "GPU toolchain check (DP3)"
 python "$V4_ROOT/tools/gpu_env_check.py" || true
 
-step "tiny gates on the CPU (expect 14/14 PASS, as on the Mac)"
-python "$V4_ROOT/checks/gates.py" || true
+step "speed probe: Hugging Face, local disk, RAM -> GPU"
+python "$V4_ROOT/tools/probe.py" || true
+
+PASSED="$V4_DATA/state/gates-passed-$COMMIT"
+if [ -f "$PASSED" ] && [ -z "$(git -C "$V4_ROOT" status --porcelain --untracked-files=no)" ]; then
+  step "tiny gates: skipped, commit $COMMIT already passed on this box ($(cat "$PASSED"))"
+else
+  step "tiny gates on the CPU (expect 14/14 PASS, as on the Mac)"
+  if python "$V4_ROOT/checks/gates.py"; then date -u +%FT%TZ > "$PASSED"; fi
+fi
 
 step "done"
 echo "log: $LOG"
