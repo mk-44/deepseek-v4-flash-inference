@@ -1,0 +1,12 @@
+bench_h2d  host nu62wzaz31  2026-10-14T08:21:39Z  commit 091ec5a  full run
+pinned RAM       30 GiB in 1 GiB blocks (0.37 s each), 8.3 GiB of RAM left -> 2409 expert slots
+copies GB/s      size          RAM->GPU pinned   pageable   GPU->RAM pinned   pageable
+                    1.00 MiB            21.3       12.4              22.2        8.9
+                   12.75 MiB            24.9       22.4              26.0       10.4
+                   64.00 MiB            25.2       23.7              26.3        9.8
+                  256.00 MiB            25.3       23.9              26.3        9.8
+during matmuls   RAM->GPU 25.2 GB/s (alone 25.2); one 4096^3 BF16 matmul 1.11 ms (alone 1.23)
+after idle       one expert RAM->GPU, median (max): warm 0.55 ms (0.62), after 0.1 s idle 0.73 ms (1.09), after 1.0 s idle 0.63 ms (0.64)
+disk -> GPU      experts: p50 / p99 ms (reading alone, p50): 1: 13.0 / 15.9 (12.2), 3: 38.3 / 47.7 (36.6), 6: 76.9 / 92.1 (73.5)
+CPU RAM GB/s     1 thread 10.9, 2 threads 22.7, 4 threads 39.3, 8 threads 41.8; 8 threads during RAM->GPU copies 34.5 (copies meanwhile 18.7)
+VRAM             680 GB/s (the A6000 spec is 768)

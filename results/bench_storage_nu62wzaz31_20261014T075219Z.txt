@@ -1,0 +1,21 @@
+bench_storage  host nu62wzaz31  2026-10-14T07:52:19Z  commit 091ec5a  full run
+free on /        127 GB before the fetch (the experts outside VRAM + pinned RAM need 76.3 GB)
+fetch from HF    69.1 GB in 195 s = 0.35 GB/s (20 files)
+O_DIRECT         yes
+write            16 GiB at 0.75 GB/s (O_DIRECT yes)
+sweep GB/s       size \ in flight        1      2      4      8     16     32     64
+                           128 KiB    0.07   0.16   0.37   0.70   1.05   1.06   1.07
+                           256 KiB    0.17   0.30   0.70   1.05   1.08   1.05   1.08
+                           512 KiB    0.35   0.66   1.05   1.05   0.99   1.11   1.09
+                          1.00 MiB    0.53   0.86   1.08   1.10   1.08   1.09   1.03
+                          2.00 MiB    0.69   1.02   1.06   1.10   1.06   1.08   1.11
+                          4.00 MiB    0.93   1.01   1.08   1.09   1.11   1.08   1.11
+                          8.00 MiB    1.02   1.05   1.10   1.09   1.10   1.09   1.10
+                         12.75 MiB    0.94   0.95   0.99   0.95   0.93   0.66   0.95
+sweep best       0.50 MiB x 32 in flight: 1.11 GB/s, p50 13.1 ms, p99 45.1 ms
+expert groups    experts: p50 / p99 ms at the best chunk count (chunks)
+                 1: 12.8 / 17.3 (32)   2: 24.7 / 31.4 (8)   3: 49.2 / 85.5 (1)   4: 51.1 / 66.7 (16)   6: 73.5 / 96.3 (4)   12: 146.8 / 183.3 (4)
+t(6)/t(3)        1.49  (about 1: limited by response time, extra parallel reads are nearly free; about 2: limited by bandwidth)
+sustained        15 min at 32 in flight: 0.94 GB/s average, first 1.08, last 0.89 -> steady
+fit              1 in flight: 0.81 ms + bytes / 1.06 GB/s   2 in flight: 0.43 ms + bytes / 0.53 GB/s   4 in flight: -0.46 ms + bytes / 0.26 GB/s   8 in flight: -1.52 ms + bytes / 0.13 GB/s   16 in flight: -2.93 ms + bytes / 0.06 GB/s   32 in flight: -22.38 ms + bytes / 0.02 GB/s   64 in flight: -16.54 ms + bytes / 0.02 GB/s
+DP1 first row    sustained >= 1.5 GB/s: NO, 3 experts p99 <= 20 ms: NO, free >= 76 GB: yes, O_DIRECT: yes

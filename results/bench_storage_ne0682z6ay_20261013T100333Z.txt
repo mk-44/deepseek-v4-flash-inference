@@ -1,0 +1,16 @@
+bench_storage  host ne0682z6ay  2026-10-13T10:03:33Z  commit 091ec5a  quick run
+free on /        114 GB before the fetch (the experts outside VRAM + pinned RAM need 76.3 GB)
+fetch from HF    4.6 GB in 13 s = 0.34 GB/s (2 files)
+O_DIRECT         yes
+write            2 GiB at 0.72 GB/s (O_DIRECT yes)
+sweep GB/s       size \ in flight        1      8     32
+                           128 KiB    0.38   1.17   1.19
+                          1.00 MiB    0.85   1.21   1.22
+                         12.75 MiB    1.17   1.17   1.17
+sweep best       1.00 MiB x 32 in flight: 1.22 GB/s, p50 22.6 ms, p99 92.9 ms
+expert groups    experts: p50 / p99 ms at the best chunk count (chunks)
+                 1: 11.4 / 12.8 (1)   3: 33.4 / 36.7 (1)   6: 65.9 / 67.4 (1)
+t(6)/t(3)        1.97  (about 1: limited by response time, extra parallel reads are nearly free; about 2: limited by bandwidth)
+sustained        30 s at 32 in flight: 1.20 GB/s average, first 1.16, last 1.21 -> steady
+fit              1 in flight: 0.29 ms + bytes / 1.21 GB/s   8 in flight: -0.35 ms + bytes / 0.15 GB/s   32 in flight: -0.86 ms + bytes / 0.04 GB/s
+DP1 first row    sustained >= 1.5 GB/s: NO, 3 experts p99 <= 20 ms: NO, free >= 76 GB: yes, O_DIRECT: yes
