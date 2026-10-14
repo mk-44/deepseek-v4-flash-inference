@@ -14,7 +14,7 @@ import sys, time
 from _paths import ROOT, load_notebook_defs
 import torch
 
-sys.path.insert(0, str(ROOT / 'reference'))
+sys.path.insert(0, str(ROOT / 'checks'))
 from load_official import load_official, official_args
 
 

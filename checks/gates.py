@@ -9,7 +9,7 @@ From a terminal (reads the saved arch.ipynb, or the copy named by V4_NOTEBOOK):
     venv/bin/python checks/gates.py [--real-size] [--only G5,RB]
 
 Each gate builds its own models from the notebook's definitions (U), and, where it compares, from the official 0731
-code on the CPU (reference/load_official.py). It seeds its own random numbers and prints one line. If a gate raises,
+code on the CPU (checks/load_official.py). It seeds its own random numbers and prints one line. If a gate raises,
 it FAILs with the error and the other gates still run. The per-step scripts in checks/ stay as they are; most gates
 here re-run their properties on the final code, several with bigger sweeps.
 
@@ -55,7 +55,7 @@ from _paths import ROOT, load_notebook_defs, set_quant_simulation
 import torch
 import torch.nn.functional as F
 
-sys.path.insert(0, str(ROOT / 'reference'))
+sys.path.insert(0, str(ROOT / 'checks'))
 from load_official import load_official, official_args, official_generate
 import notebook_regression          # importing it switches the official rounding off; run_gates switches it back
 from chat_check import EXPECTED_IDS
@@ -65,7 +65,7 @@ from sync_check import counted
 
 LENGTHS = (1, 2, 3, 4, 5, 7, 8, 9, 12, 15, 16, 17, 20, 21, 32, 33, 64, 100)   # both sides of window 8, blocks 4 and 16
 TOL = 1e-12                                                                   # float64 checks: rounding is 1e-16 to 1e-14
-CHECKPOINT = ROOT / 'reference' / 'official' / '0731'
+CHECKPOINT = ROOT / 'deepseek_official' / '0731'
 
 
 # ---------------------------------------------------------------- helpers

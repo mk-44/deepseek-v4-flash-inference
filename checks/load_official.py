@@ -1,17 +1,17 @@
 """Load an official DeepSeek-V4 model.py so it runs on a CPU, for checks.
 
-    import sys; sys.path.insert(0, "reference")
+    import sys; sys.path.insert(0, "checks")
     from load_official import load_official, official_args
     off = load_official("april")                     # or "0731"
     theirs = off.Block(layer_id, official_args(off, args)).float()
 
 How:
-- reference/shim/ goes first on sys.path, so model.py's `from kernel import ...` gets the
+- checks/shim/ goes first on sys.path, so model.py's `from kernel import ...` gets the
   pure-PyTorch stand-ins (shim/kernel.py), and rotate_activation's
   `import fast_hadamard_transform` gets shim/fast_hadamard_transform.py.
 - One patch: the official rotate_activation asserts that x is bf16. The patched copy is the same
   function without that assert, so float32 and float64 checks work.
-- The official code is otherwise unchanged. It reads its files from reference/official/<rev>/.
+- The official code is otherwise unchanged. It reads its files from deepseek_official/<rev>/.
 
 official_args(off, args) maps our ModelArgs to the official ModelArgs: the same field values,
 with float weights (dtype "bf16", no FP8/FP4 formats). The official Linear then creates bf16
@@ -30,11 +30,11 @@ from dataclasses import fields
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SHIM = ROOT / "reference" / "shim"
+SHIM = ROOT / "checks" / "shim"
 
 
 def load_official(rev: str = "april"):
-    path = ROOT / "reference" / "official" / rev / "inference" / "model.py"
+    path = ROOT / "deepseek_official" / rev / "inference" / "model.py"
     if str(SHIM) not in sys.path:
         sys.path.insert(0, str(SHIM))
     spec = importlib.util.spec_from_file_location(f"official_{rev}", path)
@@ -65,7 +65,7 @@ def official_generate(off, rev: str = "0731"):
     from its source. With 0731, sampling happens inside Transformer.forward at model.temperature
     (set it to 0 for greedy)."""
     import torch
-    path = ROOT / "reference" / "official" / rev / "inference" / "generate.py"
+    path = ROOT / "deepseek_official" / rev / "inference" / "generate.py"
     node = next(n for n in ast.parse(path.read_text()).body if isinstance(n, ast.FunctionDef) and n.name == "generate")
     ns = {"torch": torch, "List": List, "Transformer": off.Transformer}
     exec(compile(ast.Module([node], []), str(path), "exec"), ns)

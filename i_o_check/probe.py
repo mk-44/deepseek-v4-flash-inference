@@ -4,7 +4,7 @@ another machine. It prints one line and appends it to $V4_DATA/logs/probe.csv:
 - local disk: that file read back with O_DIRECT, whole experts (12.75 MiB) with 16 reads in flight, for 3 s;
 - RAM -> GPU: one expert copied from pinned memory, the median of 20 copies.
 The file is deleted afterwards.
-    python tools/probe.py                 # --file PATH reads an existing file instead of fetching one
+    python i_o_check/probe.py                 # --file PATH reads an existing file instead of fetching one
 """
 import argparse
 import csv

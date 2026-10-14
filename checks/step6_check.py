@@ -1,6 +1,6 @@
 from _paths import ROOT, OFFICIAL, NOTEBOOK, load_notebook_defs
 import math, ast, io, contextlib, sys, torch
-sys.path.insert(0, str(ROOT / 'reference' / 'shim'))
+sys.path.insert(0, str(ROOT / 'checks' / 'shim'))
 import kernel as shim_kernel   # the official FP8 / FP4 rounding
 shim_kernel.SIMULATE_QUANT = False   # the per-step reference checks in these files predate it; load_notebook_defs turns it on when the notebook has it
 from torch import nn
@@ -89,7 +89,7 @@ def naive_compress(comp: Compressor, x: torch.Tensor, freqs_cis: torch.Tensor) -
     return rotate_activation(kv) if comp.rotate else kv
 
 
-# ---------------- official Compressor prefill, extracted verbatim (kernels: reference/shim/kernel.py rounding, our hadamard) ----------------
+# ---------------- official Compressor prefill, extracted verbatim (kernels: checks/shim/kernel.py rounding, our hadamard) ----------------
 src = open(OFFICIAL / 'model.py').read(); tree = ast.parse(src)
 from dataclasses import dataclass
 from typing import Optional, Tuple, Literal

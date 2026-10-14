@@ -20,7 +20,7 @@ from _paths import ROOT, load_notebook_defs
 import torch
 from torch.utils._python_dispatch import TorchDispatchMode
 
-sys.path.insert(0, str(ROOT / 'reference'))
+sys.path.insert(0, str(ROOT / 'checks'))
 from load_official import load_official, official_args
 
 READS = {'_local_scalar_dense', 'nonzero', 'bincount', 'masked_select', 'unique', '_unique', '_unique2', 'unique_consecutive'}

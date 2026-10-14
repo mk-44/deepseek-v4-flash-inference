@@ -24,7 +24,7 @@ import sys
 from _paths import ROOT, load_notebook_defs
 import torch
 
-sys.path.insert(0, str(ROOT / 'reference'))
+sys.path.insert(0, str(ROOT / 'checks'))
 from load_official import load_official, official_args
 
 ALIASES = [f'mtp.{i}.{m}.weight' for i in range(3) for m in ('embed', 'head')]
@@ -131,14 +131,14 @@ def run(U, real_size=True):
             print(f'  P = {P:2d}  {k} wrong tokens: identical to the direct run {same}')
 
     print('D. real config: ModelArgs() defaults vs the 0731 config.json, and weight names (meta device) vs the 0731 checkpoint index')
-    cfg = json.load(open(ROOT / 'reference' / 'official' / '0731' / 'inference' / 'config.json'))
+    cfg = json.load(open(ROOT / 'deepseek_official' / '0731' / 'inference' / 'config.json'))
     default, loaded = U['ModelArgs'](), U['ModelArgs'](**cfg)
     diff = {k: (getattr(default, k), getattr(loaded, k)) for k in cfg if getattr(default, k) != getattr(loaded, k)}
     print(f'  ModelArgs() equals config.json in all {len(cfg)} fields: {not diff}  {diff if diff else ""}')
     with torch.device('meta'):
         real = Transformer(U['ModelArgs']())
     ours = set(real.state_dict())
-    index = json.load(open(ROOT / 'reference' / 'official' / '0731' / 'model.safetensors.index.json'))['weight_map']
+    index = json.load(open(ROOT / 'deepseek_official' / '0731' / 'model.safetensors.index.json'))['weight_map']
     ckpt = {k for k in index if not k.endswith('.scale')}
     print(f'  ours {len(ours):,}  checkpoint {len(ckpt):,}  only ours {sorted(ours - ckpt)[:3]}  '
           f'only checkpoint {sorted(ckpt - ours)[:3]}  identical {ours == ckpt}')

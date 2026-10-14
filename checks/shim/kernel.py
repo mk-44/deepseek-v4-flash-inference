@@ -1,9 +1,9 @@
-"""Pure-PyTorch stand-ins for the official GPU kernels (reference/official/*/inference/kernel.py).
+"""Pure-PyTorch stand-ins for the official GPU kernels (deepseek_official/*/inference/kernel.py).
 
 The official model.py does
     from kernel import act_quant, fp4_act_quant, fp8_gemm, fp4_gemm, sparse_attn, hc_split_sinkhorn
 and those are TileLang GPU kernels. This file has the same names and signatures in plain PyTorch,
-so the official model can run on a CPU for checks (see reference/load_official.py).
+so the official model can run on a CPU for checks (see checks/load_official.py).
 
 - sparse_attn, hc_split_sinkhorn: the kernels' math, computed in float32 (float64 stays float64),
   output cast back to the input dtype like the kernels do.

@@ -1,6 +1,6 @@
 """Phase 3: memory and PCIe. How much pinned RAM can we get, and how fast does data move between disk, RAM and the GPU?
-    python tools/bench_h2d.py           # about 2 minutes
-    python tools/bench_h2d.py --quick   # about 1 minute
+    python i_o_check/bench_h2d.py           # about 2 minutes
+    python i_o_check/bench_h2d.py --quick   # about 1 minute
 Results go to results/bench_h2d_<host>_<time>.json/.txt, plus a printed summary:
 1. pinned RAM: pinned memory (RAM locked in place, so the GPU can copy from it directly) taken 1 GiB at a time until
    8 GiB of RAM is left: how many experts the RAM tier can hold. It runs in a child process, which frees it all on exit;

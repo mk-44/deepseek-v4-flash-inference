@@ -1,6 +1,6 @@
 """Phase 2, Step 23: tokenizer, official chat encoding, and generate for prompts of different lengths (plan item 8).
 
-A. tokenizer + chat encoding: the 4 official example conversations (reference/official/0731/encoding/tests) come back
+A. tokenizer + chat encoding: the 4 official example conversations (deepseek_official/0731/encoding/tests) come back
    unchanged after encode -> decode; 'What is 2+2?' gives the expected 11 ids; chat mode ends with </think>, thinking
    mode with <think>; decode_completion cuts at end-of-text, drops the -1 fillers, ends with exactly one end-of-text
    (the official convention, which parse_message_from_completion_text requires); the official encoding's own tests pass.
@@ -13,14 +13,14 @@ import sys
 from _paths import ROOT, ENCODING, load_notebook_defs
 import torch
 
-sys.path.insert(0, str(ROOT / 'reference'))
+sys.path.insert(0, str(ROOT / 'checks'))
 from load_official import load_official, official_args, official_generate
 
 EXPECTED_IDS = [0, 128803, 3085, 344, 223, 20, 13, 20, 33, 128804, 128822]
 
 
 def run(U):
-    chat = U['ChatTokenizer'](str(ROOT / 'reference' / 'official' / '0731' / 'tokenizer.json'))
+    chat = U['ChatTokenizer'](str(ROOT / 'deepseek_official' / '0731' / 'tokenizer.json'))
     parse = U['parse_message_from_completion_text']
 
     print('A. tokenizer + official chat encoding')

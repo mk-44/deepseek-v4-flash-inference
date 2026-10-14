@@ -1,6 +1,6 @@
 """Phase 3, DP1: how fast does the local disk read model data? Results go to results/bench_storage_<host>_<time>.json/.txt.
-    python tools/bench_storage.py            # full run, about 30-40 minutes: start it inside tmux
-    python tools/bench_storage.py --quick    # about 2 minutes: run this first to check that everything works
+    python i_o_check/bench_storage.py            # full run, about 30-40 minutes: start it inside tmux
+    python i_o_check/bench_storage.py --quick    # about 2 minutes: run this first to check that everything works
 The model's master copy is Hugging Face (D6): every session fetches the files onto the local disk /, which is wiped at
 every stop. So only / is measured, on real model files:
 1. fetch: model files from Hugging Face onto / (the per-session fill speed);

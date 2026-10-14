@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OFFICIAL = ROOT / 'reference' / 'official' / 'april' / 'inference'   # the official code the notebook is verified against
+OFFICIAL = ROOT / 'deepseek_official' / 'april' / 'inference'   # the official code the notebook is verified against
 NOTEBOOK = Path(os.environ.get('V4_NOTEBOOK', ROOT / 'arch.ipynb'))   # V4_NOTEBOOK: check a copy instead
-ENCODING = ROOT / 'reference' / 'official' / '0731' / 'encoding'   # official chat encoding (Step 23's tokenizer cell imports it)
+ENCODING = ROOT / 'deepseek_official' / '0731' / 'encoding'   # official chat encoding (Step 23's tokenizer cell imports it)
 if str(ENCODING) not in sys.path:
     sys.path.insert(0, str(ENCODING))
 
@@ -62,10 +62,10 @@ def load_notebook_defs(path=NOTEBOOK):
 
 
 def set_quant_simulation(on):
-    """The official model rounds its stored keys to FP8 / FP4 (reference/shim/kernel.py). The notebook does the
+    """The official model rounds its stored keys to FP8 / FP4 (checks/shim/kernel.py). The notebook does the
     same from Phase 2 step 6 on, so the rounding is switched on exactly when the notebook defines fp8_simulate:
     the checks then compare like with like, before and after that step."""
-    shim = str(ROOT / 'reference' / 'shim')
+    shim = str(ROOT / 'checks' / 'shim')
     if shim not in sys.path:
         sys.path.insert(0, shim)
     import kernel

@@ -57,7 +57,7 @@ step "GPU toolchain check (DP3)"
 python "$V4_ROOT/tools/gpu_env_check.py" || true
 
 step "speed probe: Hugging Face, local disk, RAM -> GPU"
-python "$V4_ROOT/tools/probe.py" || true
+python "$V4_ROOT/i_o_check/probe.py" || true
 
 PASSED="$V4_DATA/state/gates-passed-$COMMIT"
 if [ -f "$PASSED" ] && [ -z "$(git -C "$V4_ROOT" status --porcelain --untracked-files=no)" ]; then
