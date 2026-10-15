@@ -1,0 +1,20 @@
+bench_gpu  host nhykwtlj9n  2026-10-14T19:35:09Z  commit 3bb01e2  torch 2.10.0+cu126  NVIDIA RTX A6000
+expand FP4->BF16  one expert (3 matrices, 25.2M values, 13.4 MB in, 50.3 MB out): plain 0.759 ms (84 GB/s), compiled 0.164 ms (389 GB/s; first calls incl. compiling 4 s); bit-exact vs float64: plain True, compiled True
+matmul BF16       x [rows, 4096] @ w1 [2048, 4096]: rows ms TFLOPS (weight read GB/s)
+                       1     0.030     0.6  (558 GB/s)
+                       2     0.033     1.0  (511 GB/s)
+                       4     0.033     2.0  (510 GB/s)
+                       8     0.033     4.1  (508 GB/s)
+                      16     0.029     9.2  (577 GB/s)
+                      32     0.033    16.4  (512 GB/s)
+                      64     0.034    31.4  (491 GB/s)
+                     128     0.037    58.3  (455 GB/s)
+                     256     0.053    80.8  (316 GB/s)
+                     512     0.116    74.3  (145 GB/s)
+                   1,024     0.175    98.0  (96 GB/s)
+                   2,048     0.327   105.1  (51 GB/s)
+                   4,096     0.651   105.5  (26 GB/s)
+                   8,192     1.215   113.1  (14 GB/s)
+                  16,384     2.299   119.6  (7 GB/s)
+expert BF16       w1, w3, SiLU, w2: 1 row 0.094 ms, 512 rows 0.327 ms; 1 row starting from its FP4 bytes 0.855 ms
+launch            one small GPU op 6.0 us, one host read 13.9 us -> 22,400 ops = 134 ms/token, 387 reads = 3 ms/token more (eager decode, plan section 3.1)

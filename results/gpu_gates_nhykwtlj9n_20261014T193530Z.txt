@@ -1,0 +1,16 @@
+gpu_gates  nhykwtlj9n  2026-10-14T19:35:30Z  torch 2.10.0+cu126  CUDA 12.6  NVIDIA RTX A6000  TF32 matmul False, cuDNN True; BF16 reduced-precision sums False
+G6   PASS     9 s  tiny model, BF16 vs float64 | ours vs float64: rel L2 3.3e-02 (plan bound 2e-2: False), cos 0.999450, top-1 96.9%; official BF16: rel L2 3.3e-02, cos 0.999450, top-1 96.9% -> ours within 2x: True; ours vs official: rel L2 2.0e-04; router picks 18 of 2,352 differ, indexer picks 68 of 784 differ
+G7   PASS    49 s  real-size layers 0 / 2 / 3, BF16 | all 3 layers ran, outputs finite: True
+      tokens 4,096 + 64; prefill in tokens/s and us/token; decode ms/token; peak GPU MiB; errors vs float32 on the CPU
+      | layer | type | prefill tok/s | prefill us/tok | decode ms | peak MiB | prefill rel L2 | decode rel L2 | picks |
+      |---|---|---|---|---|---|---|---|---|
+      | 0 | window only, hash | 50.3K | 20 | 5.9 | 2,224 | 4.3e-03 | 4.3e-03 | router picks 0 of 4,160 differ |
+      | 2 | CSA, hash | 28.2K | 36 | 10.2 | 2,364 | 6.7e-03 | 1.1e-02 | router picks 0 of 4,160 differ, indexer picks 2,075 of 4,160 differ |
+      | 3 | HCA, learned | 48.4K | 21 | 8.4 | 2,238 | 5.5e-03 | 8.0e-03 | router picks 23 of 4,160 differ |
+PROF PASS     0 s  decode step, profiled | eager decode with every expert on the GPU: 394 ms/token (43 layers: 2 x layer 0 + 21 x layer 2 + 20 x layer 3), GPU busy 92 ms, 26,943 GPU kernels
+      | layer | decode ms | GPU busy ms | GPU kernels | CPU-GPU waits | ATen ops | routing copies | other host reads |
+      |---|---|---|---|---|---|---|---|
+      | 0 | 5.9 | 1.91 | 546 | 1.2 | 629 | 1 | none |
+      | 2 | 10.2 | 2.29 | 679 | 1.2 | 750 | 1 | none |
+      | 3 | 8.4 | 2.01 | 580 | 1.2 | 668 | 1 | none |
+3/3 PASS

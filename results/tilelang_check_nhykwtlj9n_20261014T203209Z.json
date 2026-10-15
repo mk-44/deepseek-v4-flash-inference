@@ -1,0 +1,37 @@
+{
+ "meta": {
+  "host": "nhykwtlj9n",
+  "time": "2026-10-14T20:32:09Z",
+  "torch": "2.10.0+cu126",
+  "tilelang": "0.1.8",
+  "gpu": "NVIDIA RTX A6000",
+  "kernels": "deepseek_official/0731/inference/kernel.py"
+ },
+ "import_s": 1.1977104665711522,
+ "FP8 act_quant, fp32 scales": {
+  "values": 237888,
+  "differ": 0,
+  "zero_sign_only": 0
+ },
+ "FP8 act_quant, E8M0 scales": {
+  "values": 237888,
+  "differ": 0,
+  "zero_sign_only": 0
+ },
+ "FP4 fp4_act_quant, 448 per row": {
+  "values": 235648,
+  "differ": 0,
+  "zero_sign_only": 0
+ },
+ "FP4 fp4_act_quant, 128 per row": {
+  "values": 83456,
+  "differ": 0,
+  "zero_sign_only": 0
+ },
+ "passed": {
+  "FP8 act_quant, fp32 scales": true,
+  "FP8 act_quant, E8M0 scales": true,
+  "FP4 fp4_act_quant, 448 per row": true,
+  "FP4 fp4_act_quant, 128 per row": true
+ }
+}

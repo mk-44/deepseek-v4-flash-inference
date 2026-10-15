@@ -1,0 +1,6 @@
+tilelang_check  nhykwtlj9n  2026-10-14T20:32:09Z  torch 2.10.0+cu126  TileLang 0.1.8  NVIDIA RTX A6000  kernels: deepseek_official/0731/inference/kernel.py
+PASS  FP8 act_quant, fp32 scales         5.6 s  237,888 values: bit-identical
+PASS  FP8 act_quant, E8M0 scales         4.2 s  237,888 values: bit-identical
+PASS  FP4 fp4_act_quant, 448 per row     4.1 s  235,648 values: bit-identical
+PASS  FP4 fp4_act_quant, 128 per row     4.1 s  83,456 values: bit-identical
+4/4 PASS

@@ -1,0 +1,126 @@
+{
+ "meta": {
+  "host": "nhykwtlj9n",
+  "time": "2026-10-14T19:35:30Z",
+  "torch": "2.10.0+cu126",
+  "cuda": "12.6",
+  "device": "cuda",
+  "gpu": "NVIDIA RTX A6000",
+  "tf32_matmul": false,
+  "tf32_cudnn": true,
+  "bf16_reduced_precision_reduction": false,
+  "float32_matmul_precision": "highest"
+ },
+ "quick": false,
+ "G6": {
+  "ours": {
+   "rel_l2": 0.033153757012628356,
+   "cos": 0.999450427081107,
+   "top1": 0.9693877551020408
+  },
+  "flips": {
+   "router differ": 18,
+   "router all": 2352,
+   "indexer differ": 68,
+   "indexer all": 784
+  },
+  "official": {
+   "rel_l2": 0.03315451107694182,
+   "cos": 0.9994504013036001,
+   "top1": 0.9693877551020408
+  }
+ },
+ "G7": {
+  "0": {
+   "type": "window only, hash",
+   "prefill_s": 0.08146297000348568,
+   "decode_ms": 5.8952387335011736,
+   "peak_mib": 2223.7861328125,
+   "prefill": {
+    "rel_l2": 0.004317331020925534,
+    "cos": 0.9999906803160743
+   },
+   "decode": {
+    "rel_l2": 0.004299236407215545,
+    "cos": 0.9999907584750077
+   },
+   "flips": {
+    "router differ": 0,
+    "router all": 4160
+   },
+   "finite": true,
+   "profile": {
+    "gpu_ops": 546.0,
+    "gpu_busy_ms": 1.9055736249999706,
+    "waits": 1.25,
+    "aten_ops": 629,
+    "host_reads": {},
+    "routing_copies": 1
+   }
+  },
+  "2": {
+   "type": "CSA, hash",
+   "prefill_s": 0.14547797292470932,
+   "decode_ms": 10.188509346335195,
+   "peak_mib": 2364.04248046875,
+   "prefill": {
+    "rel_l2": 0.006724374751344231,
+    "cos": 0.9999773913562581
+   },
+   "decode": {
+    "rel_l2": 0.01120920948506893,
+    "cos": 0.9999371772316685
+   },
+   "flips": {
+    "indexer differ": 2075,
+    "indexer all": 4160,
+    "router differ": 0,
+    "router all": 4160
+   },
+   "finite": true,
+   "profile": {
+    "gpu_ops": 678.875,
+    "gpu_busy_ms": 2.2906537499999735,
+    "waits": 1.25,
+    "aten_ops": 750,
+    "host_reads": {},
+    "routing_copies": 1
+   }
+  },
+  "3": {
+   "type": "HCA, learned",
+   "prefill_s": 0.08456175960600376,
+   "decode_ms": 8.420201571425423,
+   "peak_mib": 2237.640625,
+   "prefill": {
+    "rel_l2": 0.005472082541316701,
+    "cos": 0.9999850280447706
+   },
+   "decode": {
+    "rel_l2": 0.00802924216567787,
+    "cos": 0.9999677661943038
+   },
+   "flips": {
+    "router differ": 23,
+    "router all": 4160
+   },
+   "finite": true,
+   "profile": {
+    "gpu_ops": 579.75,
+    "gpu_busy_ms": 2.0108513750000014,
+    "waits": 1.25,
+    "aten_ops": 668,
+    "host_reads": {},
+    "routing_copies": 1
+   }
+  },
+  "eager_ms_per_token": 394.1532051685499,
+  "gpu_busy_ms_per_token": 92.13190349999941,
+  "gpu_kernels_per_token": 26943.375
+ },
+ "passed": {
+  "G6": true,
+  "G7": true,
+  "PROF": true
+ }
+}
