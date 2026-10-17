@@ -7,9 +7,9 @@ so the official model can run on a CPU for checks (see checks/load_official.py).
 
 - sparse_attn, hc_split_sinkhorn: the kernels' math, computed in float32 (float64 stays float64),
   output cast back to the input dtype like the kernels do.
-- act_quant, fp4_act_quant: the official model calls them only with inplace=True, as a
-  "round to FP8 / FP4 and back" simulation. Here they are a literal copy of the TileLang kernels
-  act_quant_kernel / fp4_quant_kernel with inplace=True (Phase 2 step 6):
+- act_quant, fp4_act_quant with inplace=True: the official model's "round to FP8 / FP4 and back" simulations.
+  Here they are a literal copy of the TileLang kernels act_quant_kernel / fp4_quant_kernel with inplace=True
+  (Phase 2 step 6):
   - per block of block_size values along the last dim, amax in float32, floored at 1e-4 (FP8) or 6 * 2**-126 (FP4);
   - scale = amax * float32(1/448) (FP8) or amax * float32(1/6) (FP4), rounded up to a power of two through the
     float32 bit pattern (fast_log2_ceil + fast_pow2) when scale_fmt is set (FP8) and always for FP4;
@@ -18,11 +18,18 @@ so the official model can run on a CPU for checks (see checks/load_official.py).
   The kernels are compiled for bf16 inputs; float32 inputs use the same float32 math, and float64 inputs (never used
   by the official model) the same rules in float64. With SIMULATE_QUANT = False both leave x unchanged.
   checks/_paths.load_notebook_defs sets SIMULATE_QUANT from the notebook: on once it defines fp8_simulate.
-- fp8_gemm, fp4_gemm: only used with FP8 / FP4 weights. The checks use float weights, so they raise.
+- act_quant with inplace=False, fp8_gemm, fp4_gemm: the official matmuls with FP8 / FP4 weights (the checkpoint's
+  own, see load_official.official_module). act_quant rounds the matmul's input to FP8 with one scale per 128 values,
+  as act_quant_kernel with inplace=False does; the GEMMs dequantize both sides (PyTorch's own FP8 and E8M0
+  conversions; FP4 with convert.py's table, the low 4 bits first) and multiply in float32, which is what the kernels
+  compute up to the order of the float32 sums. The output has the default dtype, like the kernels.
+  FP8_ACTIVATIONS = False skips the input rounding: the plan's XD mode (exactly decoded weights, exact activations);
+  True (the default) is the official behaviour, the plan's OE mode.
 """
 import torch
 
 SIMULATE_QUANT = True
+FP8_ACTIVATIONS = True
 
 
 def _upcast(x: torch.Tensor) -> torch.Tensor:
@@ -56,7 +63,7 @@ def _fp4_round(v: torch.Tensor) -> torch.Tensor:
 def act_quant(x: torch.Tensor, block_size: int = 128, scale_fmt=None,
               scale_dtype: torch.dtype = torch.float32, inplace: bool = False):
     if not inplace:
-        raise NotImplementedError("act_quant(inplace=False) is only used with FP8/FP4 weights")
+        return _fp8_matmul_input(x, block_size, scale_fmt, scale_dtype)
     if not SIMULATE_QUANT:
         return x
     assert x.size(-1) % block_size == 0
@@ -84,12 +91,42 @@ def fp4_act_quant(x: torch.Tensor, block_size: int = 32, inplace: bool = False):
     return x
 
 
-def fp8_gemm(*args, **kwargs):
-    raise NotImplementedError("fp8_gemm: the CPU checks use float weights")
+def _fp8_matmul_input(x: torch.Tensor, block_size: int, scale_fmt, scale_dtype: torch.dtype):
+    """act_quant(inplace=False): x as FP8 values [..., K] and one scale per block [..., K / block_size]."""
+    if not FP8_ACTIVATIONS:
+        return x.float(), torch.ones(*x.shape[:-1], x.size(-1) // block_size, device=x.device)
+    z = _upcast(x.contiguous()).unflatten(-1, (-1, block_size))
+    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(1e-4, dtype=z.dtype))
+    s = amax * torch.tensor(1 / 448.0, dtype=z.dtype)
+    if scale_fmt is not None:
+        s = _pow2_ceil(s)
+    y = (z / s).clamp(-448.0, 448.0).to(torch.float8_e4m3fn)
+    return y.flatten(-2), s.squeeze(-1).to(scale_dtype)
 
 
-def fp4_gemm(*args, **kwargs):
-    raise NotImplementedError("fp4_gemm: the CPU checks use float weights")
+def fp8_gemm(a: torch.Tensor, a_s: torch.Tensor, b: torch.Tensor, b_s: torch.Tensor,
+             scale_dtype: torch.dtype = torch.float32) -> torch.Tensor:
+    """C [..., N] = A [..., K] @ B [N, K]^T. A has a scale per 128 values along K, B one per 128 x 128 tile."""
+    n, k = b.shape
+    A = a.float() * a_s.float().repeat_interleave(128, dim=-1)[..., :k]
+    B = b.float() * b_s.float().repeat_interleave(128, dim=0)[:n].repeat_interleave(128, dim=1)[:, :k]
+    return (A @ B.T).to(torch.get_default_dtype())
+
+
+_FP4_TABLE = torch.tensor([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0,
+                           0.0, -0.5, -1.0, -1.5, -2.0, -3.0, -4.0, -6.0])   # convert.py's FP4_TABLE
+
+
+def fp4_gemm(a: torch.Tensor, a_s: torch.Tensor, b: torch.Tensor, b_s: torch.Tensor,
+             scale_dtype: torch.dtype = torch.float32) -> torch.Tensor:
+    """C [..., N] = A [..., K] @ B [N, K]^T. A has a scale per 128 values along K. B is [N, K / 2] float4_e2m1fn_x2:
+    two FP4 values per byte along K, the low 4 bits first (as convert.py unpacks them), and a scale per 32 values."""
+    u = b.view(torch.uint8)
+    table = _FP4_TABLE.to(u.device)
+    w = torch.stack([table[(u & 0x0F).long()], table[(u >> 4).long()]], dim=-1).flatten(-2)   # [N, K]
+    A = a.float() * a_s.float().repeat_interleave(128, dim=-1)
+    B = w * b_s.float().repeat_interleave(32, dim=-1)
+    return (A @ B.T).to(torch.get_default_dtype())
 
 
 def sparse_attn(q: torch.Tensor, kv: torch.Tensor, attn_sink: torch.Tensor,
