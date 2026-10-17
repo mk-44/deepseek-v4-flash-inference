@@ -1,0 +1,6 @@
+prompt 0 ours    : ' Paris' -0.21 | ' **' -3.36 | ' ________' -4.00 | ' PAR' -4.72 | ' __________' -4.75
+prompt 0 DeepSeek: ' Paris' -0.19 | ' **' -3.36 | ' ________' -4.24 | ' PAR' -4.57 | ' a' -4.82
+prompt 1 ours    : '4' -0.01 | '2' -5.45 | 'The' -5.67 | 'It' -6.29 | 'That' -6.74
+prompt 1 DeepSeek: '4' -0.01 | '2' -6.02 | 'The' -6.58 | 'It' -6.88 | 'That' -7.67
+worst layer vs DeepSeek (exact): L03 prompt 1, rel err 4.6e-02; experts identical in 81 of 86 layer-prompt pairs
+ours: load 217 s, forward 2.3 s, waited for downloads 152 s
