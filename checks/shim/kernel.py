@@ -3,7 +3,8 @@
 The official model.py does
     from kernel import act_quant, fp4_act_quant, fp8_gemm, fp4_gemm, sparse_attn, hc_split_sinkhorn
 and those are TileLang GPU kernels. This file has the same names and signatures in plain PyTorch,
-so the official model can run on a CPU for checks (see checks/load_official.py).
+so the official model can run without TileLang for checks, on the CPU or the GPU: every tensor it makes is put
+on its input's device (see checks/load_official.py).
 
 - sparse_attn, hc_split_sinkhorn: the kernels' math, computed in float32 (float64 stays float64),
   output cast back to the input dtype like the kernels do.
@@ -68,8 +69,8 @@ def act_quant(x: torch.Tensor, block_size: int = 128, scale_fmt=None,
         return x
     assert x.size(-1) % block_size == 0
     z = _upcast(x.contiguous()).unflatten(-1, (-1, block_size))
-    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(1e-4, dtype=z.dtype))
-    s = amax * torch.tensor(1 / 448.0, dtype=z.dtype)
+    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(1e-4, dtype=z.dtype, device=z.device))
+    s = amax * torch.tensor(1 / 448.0, dtype=z.dtype, device=z.device)
     if scale_fmt is not None:
         s = _pow2_ceil(s)
     y = (z / s).clamp(-448.0, 448.0).to(torch.float8_e4m3fn).to(z.dtype) * s
@@ -84,8 +85,8 @@ def fp4_act_quant(x: torch.Tensor, block_size: int = 32, inplace: bool = False):
         return x
     assert x.size(-1) % block_size == 0
     z = _upcast(x.contiguous()).unflatten(-1, (-1, block_size))
-    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(6 * 2.0 ** -126, dtype=z.dtype))
-    s = _pow2_ceil(amax * torch.tensor(1 / 6.0, dtype=z.dtype))
+    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(6 * 2.0 ** -126, dtype=z.dtype, device=z.device))
+    s = _pow2_ceil(amax * torch.tensor(1 / 6.0, dtype=z.dtype, device=z.device))
     y = _fp4_round((z / s).clamp(-6.0, 6.0)) * s
     x.copy_(y.flatten(-2).to(x.dtype))
     return x
@@ -96,8 +97,8 @@ def _fp8_matmul_input(x: torch.Tensor, block_size: int, scale_fmt, scale_dtype: 
     if not FP8_ACTIVATIONS:
         return x.float(), torch.ones(*x.shape[:-1], x.size(-1) // block_size, device=x.device)
     z = _upcast(x.contiguous()).unflatten(-1, (-1, block_size))
-    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(1e-4, dtype=z.dtype))
-    s = amax * torch.tensor(1 / 448.0, dtype=z.dtype)
+    amax = z.abs().amax(-1, keepdim=True).clamp(min=torch.tensor(1e-4, dtype=z.dtype, device=z.device))
+    s = amax * torch.tensor(1 / 448.0, dtype=z.dtype, device=z.device)
     if scale_fmt is not None:
         s = _pow2_ceil(s)
     y = (z / s).clamp(-448.0, 448.0).to(torch.float8_e4m3fn)

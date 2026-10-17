@@ -122,20 +122,22 @@ def official_module(off, build, folder, prefix: str, skip=(), device="cpu"):
     return m
 
 
-def _run(off, fn, fp8):
+def _run(off, fn, fp8, device="cpu"):
     import kernel
     kernel.FP8_ACTIVATIONS = fp8
     try:
-        with torch.inference_mode(), off.set_dtype(torch.bfloat16):
+        with torch.inference_mode(), off.set_dtype(torch.bfloat16), torch.device(device):
             return fn()
     finally:
         kernel.FP8_ACTIVATIONS = True
 
 
-def official_run(off, fn):
-    """fn() run as generate.py runs the model (BF16 default dtype, no gradients), twice: with exact matmul inputs
-    (the plan's XD mode) and with the official FP8 rounding of them (OE). Returns (exact, fp8)."""
-    return [_run(off, fn, fp8) for fp8 in (False, True)]
+def official_run(off, fn, device="cpu"):
+    """fn() run as generate.py runs the model (BF16 default dtype, the model's device as the default device, no
+    gradients), twice: with exact matmul inputs (the plan's XD mode) and with the official FP8 rounding of them (OE).
+    Returns (exact, fp8). The default device matters on a GPU: model.py makes its attention index tensors with
+    torch.arange(...) and no device, because generate.py calls torch.set_default_device("cuda")."""
+    return [_run(off, fn, fp8, device) for fp8 in (False, True)]
 
 
 def _compare(a, b):
@@ -170,7 +172,7 @@ class Reference:
         self.oargs = a = off.ModelArgs(**json.load(open(ROOT / "deepseek_official" / rev / "inference" / "config.json")))
         self.folder, self.device, self.rows = folder, device, []
         emb = official_module(off, lambda: off.ParallelEmbedding(a.vocab_size, a.dim), folder, "embed.", device=device)
-        self.r = [_run(off, lambda: emb(ids).unsqueeze(2).repeat(1, 1, a.hc_mult, 1), False) for ids in prompts]
+        self.r = [_run(off, lambda: emb(ids).unsqueeze(2).repeat(1, 1, a.hc_mult, 1), False, device) for ids in prompts]
         self.norm = official_module(off, lambda: off.RMSNorm(a.dim, a.norm_eps), folder, "norm.", device=device)
         self.head = official_module(off, lambda: off.ParallelHead(a.vocab_size, a.dim, a.norm_eps, a.hc_eps), folder,
                                     "head.", device=device)
@@ -186,10 +188,10 @@ class Reference:
         for k, ids in enumerate(prompts):
             got = []
             hook = theirs.ffn.gate.register_forward_hook(lambda module, inputs, out: got.append(out[1].long().sort(-1).values))
-            exact, fp8 = official_run(off, lambda: theirs(hs[k], 0, ids))
+            exact, fp8 = official_run(off, lambda: theirs(hs[k], 0, ids), self.device)
             hook.remove()
             ours = _picks(layer.ffn.gate, lambda: layer(hs[k], ids))
-            self.r[k] = _run(off, lambda: theirs(self.r[k], 0, ids), False)
+            self.r[k] = _run(off, lambda: theirs(self.r[k], 0, ids), False, self.device)
             row = dict(layer=i, prompt=k, xd=_compare(outs[k] - hs[k], exact - hs[k]),
                        oe=_compare(outs[k] - hs[k], fp8 - hs[k]),
                        same_experts=(ours == got[0]).all(-1).float().mean().item(), tokens=ours.shape[0],
@@ -205,7 +207,7 @@ class Reference:
         """DeepSeek's top-n next tokens for prompt k, from its own chain: [(text, log-probability)]."""
         off, a = self.off, self.oargs
         eps = type("Eps", (), dict(norm_eps=a.norm_eps, hc_eps=a.hc_eps))()     # all that Block.hc_head reads from self
-        logits = _run(off, lambda: self.head(self.norm(off.Block.hc_head(eps, self.r[k], *self.hc))), False)
+        logits = _run(off, lambda: self.head(self.norm(off.Block.hc_head(eps, self.r[k], *self.hc))), False, self.device)
         lp = logits.float().log_softmax(-1)[0].topk(n)
         return [(chat.tokenizer.decode([t]), v) for t, v in zip(lp.indices.tolist(), lp.values.tolist())]
 
