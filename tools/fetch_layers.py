@@ -7,7 +7,12 @@ head (with the final norm and hc_head), then layers 0-42. The DSpark files are n
 - the download runs at most `ahead` files past the last file asked for;
 - a file is deleted once `keep` newer files have been asked for: by then the pass, and DeepSeek's reference reading
   the same file, are done with it.
-A file already in the folder (from an earlier run in this session) is used as it is."""
+A file already in the folder (from an earlier run in this session) is used as it is.
+
+Iteration B's checks use the first layers only, kept on disk for the whole session (no rolling window):
+    python tools/fetch_layers.py --layers 4     # the embedding, the head and layers 0-3: 6 files, 16.4 GB
+Delete them when done: rm -rf /v4local/ckpt"""
+import argparse
 import json
 import os
 import shutil
@@ -103,3 +108,22 @@ def hf_download(name, folder):
     os.environ.setdefault('HF_XET_CHUNK_CACHE_SIZE_BYTES', '0')
     from huggingface_hub import hf_hub_download
     hf_hub_download(REPO, name, revision=REVISION, local_dir=folder, token=False)
+
+
+def main():
+    p = argparse.ArgumentParser(description = 'Download the embedding, the head and the first layers, and keep them.')
+    p.add_argument('--layers', type = int, default = 4, help = 'layers 0 .. N-1 (default 4)')
+    p.add_argument('--folder', default = '/v4local/ckpt')
+    a = p.parse_args()
+    prefixes = pass_prefixes(a.layers)
+    t = time.perf_counter()
+    files = LayerFiles(a.folder, prefixes, ahead = len(prefixes), keep = len(prefixes)) # keep = all: nothing is deleted
+    for prefix in prefixes:
+        files.wait(prefix)
+    total = sum(nbytes for nbytes, _ in files.ready.values())
+    print(f'{len(prefixes)} files, {total / 1e9:.2f} GB in {time.perf_counter() - t:.0f} s, kept in {files.folder} '
+          f'({shutil.disk_usage(files.folder).free / 1e9:.0f} GB free there). When done: rm -rf {files.folder}')
+
+
+if __name__ == '__main__':
+    main()
