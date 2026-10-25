@@ -19,7 +19,7 @@ class RouteTrace:
             self.calls.append({"layer" : layer, "experts" : indices.tolist(), "weights" : weights.tolist()})
         return record
 
-def generate_greedy(model : Transformer, args : ModelArgs, ids : torch.Tensor, n_new : int, after_step = None):
+def generate_greedy(model : Transformer, args : ModelArgs, ids : torch.Tensor, n_new : int, after_step = None, stop : int | None = None):
     state = SequenceState(args, 1, model.embed.weight.dtype, device = ids.device)
     tokens, scores, seconds, x = [], [], [], ids
     for step in range(n_new):
@@ -32,6 +32,9 @@ def generate_greedy(model : Transformer, args : ModelArgs, ids : torch.Tensor, n
         
         if after_step:
             after_step(step, seconds[-1], x)
+        
+        if stop is not None and x.item() == stop:
+            break
         
     return torch.cat(tokens, dim = -1), torch.cat(scores), seconds # [1, n_new], [n_new, vocab], n_new
 
