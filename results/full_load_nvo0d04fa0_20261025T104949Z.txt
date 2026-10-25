@@ -1,0 +1,100 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+plan, by expert id: 56 GPU + 57 RAM + 143 disk experts per layer, 43 layers
+  GPU 50.75 GB free: static weights 16.36 + tier 32.19 GB
+  RAM 39.4 GiB available: tier 30.5 GiB,   pinned in 31 pieces of 1 GiB
+  disk 138 GB free: repacked file 82.2 GB + up to 4 checkpoint files 14.8 GB
+45 files to /v4local/ckpt, 138 GB free there
+store ready in 13.2 s | GPU allocated 32.21 GB
+  file model-00001-of-00048.safetensors (embed.*): 1.06 GB downloaded in 34.3 s (0.03 GB/s), waited 21.1 s
+  file model-00045-of-00048.safetensors (head.*): 1.06 GB downloaded in 14.8 s (0.07 GB/s), waited 14.8 s
+  file model-00002-of-00048.safetensors (layers.0.*): 3.57 GB downloaded in 35.1 s (0.10 GB/s), waited 19.4 s
+  L0: static 2.2 s | experts: read 4.5 s, to GPU 0.09 s, to RAM 0.12 s, to the repacked file 2.4 s | GPU 35.7 GB | RAM available 4.6 GiB | disk free 131 GB
+  file model-00003-of-00048.safetensors (layers.1.*): 3.57 GB downloaded in 36.5 s (0.10 GB/s), waited 27.0 s
+  L1: static 0.7 s | experts: read 5.9 s, to GPU 0.07 s, to RAM 0.11 s, to the repacked file 2.5 s | check L0 6/6 | GPU 35.9 GB | RAM available 4.1 GiB | disk free 127 GB
+  file model-00004-of-00048.safetensors (layers.2.*): 3.60 GB downloaded in 23.2 s (0.16 GB/s), waited 13.4 s
+  L2: static 0.6 s | experts: read 5.7 s, to GPU 0.07 s, to RAM 0.12 s, to the repacked file 2.6 s | check L1 6/6 | GPU 36.3 GB | RAM available 4.6 GiB | disk free 124 GB
+  file model-00005-of-00048.safetensors (layers.3.*): 3.57 GB downloaded in 34.6 s (0.10 GB/s), waited 24.9 s
+  L3: static 0.6 s | experts: read 6.1 s, to GPU 0.05 s, to RAM 0.14 s, to the repacked file 2.5 s | check L2 6/6 | GPU 36.6 GB | RAM available 4.1 GiB | disk free 122 GB
+  file model-00006-of-00048.safetensors (layers.4.*): 3.59 GB downloaded in 28.7 s (0.13 GB/s), waited 18.6 s
+  L4: static 0.4 s | experts: read 6.7 s, to GPU 0.06 s, to RAM 0.08 s, to the repacked file 2.4 s | check L3 6/6 | GPU 36.9 GB | RAM available 4.9 GiB | disk free 119 GB
+  file model-00007-of-00048.safetensors (layers.5.*): 3.57 GB downloaded in 16.9 s (0.21 GB/s), waited 6.8 s
+  L5: static 2.2 s | experts: read 5.2 s, to GPU 0.06 s, to RAM 0.09 s, to the repacked file 2.8 s | check L4 6/6 | GPU 37.2 GB | RAM available 4.4 GiB | disk free 117 GB
+  file model-00008-of-00048.safetensors (layers.6.*): 3.59 GB downloaded in 17.2 s (0.21 GB/s), waited 6.2 s
+  L6: static 0.6 s | experts: read 6.3 s, to GPU 0.07 s, to RAM 0.11 s, to the repacked file 2.8 s | check L5 6/6 | GPU 37.5 GB | RAM available 4.7 GiB | disk free 115 GB
+  file model-00009-of-00048.safetensors (layers.7.*): 3.57 GB downloaded in 17.1 s (0.21 GB/s), waited 6.5 s
+  L7: static 0.6 s | experts: read 6.6 s, to GPU 0.07 s, to RAM 0.12 s, to the repacked file 2.8 s | check L6 6/6 | GPU 37.8 GB | RAM available 5.1 GiB | disk free 113 GB
+  file model-00010-of-00048.safetensors (layers.8.*): 3.59 GB downloaded in 17.8 s (0.20 GB/s), waited 6.7 s
+  L8: static 0.6 s | experts: read 6.7 s, to GPU 0.07 s, to RAM 0.12 s, to the repacked file 2.7 s | check L7 6/6 | GPU 38.1 GB | RAM available 4.7 GiB | disk free 112 GB
+  file model-00011-of-00048.safetensors (layers.9.*): 3.57 GB downloaded in 17.5 s (0.20 GB/s), waited 6.4 s
+  L9: static 0.9 s | experts: read 6.3 s, to GPU 0.08 s, to RAM 0.12 s, to the repacked file 2.6 s | check L8 6/6 | GPU 38.4 GB | RAM available 4.2 GiB | disk free 110 GB
+  file model-00012-of-00048.safetensors (layers.10.*): 3.59 GB downloaded in 17.4 s (0.21 GB/s), waited 6.8 s
+  L10: static 0.4 s | experts: read 7.2 s, to GPU 0.07 s, to RAM 0.11 s, to the repacked file 2.7 s | check L9 6/6 | GPU 38.7 GB | RAM available 4.0 GiB | disk free 108 GB
+  file model-00013-of-00048.safetensors (layers.11.*): 3.57 GB downloaded in 17.3 s (0.21 GB/s), waited 6.3 s
+  L11: static 0.9 s | experts: read 6.6 s, to GPU 0.07 s, to RAM 0.15 s, to the repacked file 2.7 s | check L10 6/6 | GPU 39.0 GB | RAM available 4.7 GiB | disk free 106 GB
+  file model-00014-of-00048.safetensors (layers.12.*): 3.59 GB downloaded in 17.2 s (0.21 GB/s), waited 6.2 s
+  L12: static 0.5 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L11 6/6 | GPU 39.4 GB | RAM available 4.7 GiB | disk free 104 GB
+  file model-00015-of-00048.safetensors (layers.13.*): 3.57 GB downloaded in 18.5 s (0.19 GB/s), waited 8.3 s
+  L13: static 0.8 s | experts: read 6.5 s, to GPU 0.06 s, to RAM 0.10 s, to the repacked file 2.7 s | check L12 6/6 | GPU 39.7 GB | RAM available 4.6 GiB | disk free 102 GB
+  file model-00016-of-00048.safetensors (layers.14.*): 3.59 GB downloaded in 17.4 s (0.21 GB/s), waited 6.5 s
+  L14: static 0.2 s | experts: read 7.3 s, to GPU 0.07 s, to RAM 0.14 s, to the repacked file 2.6 s | check L13 6/6 | GPU 40.0 GB | RAM available 4.9 GiB | disk free 100 GB
+  file model-00017-of-00048.safetensors (layers.15.*): 3.57 GB downloaded in 18.4 s (0.19 GB/s), waited 7.4 s
+  L15: static 1.0 s | experts: read 6.0 s, to GPU 0.06 s, to RAM 0.09 s, to the repacked file 2.6 s | check L14 6/6 | GPU 40.3 GB | RAM available 4.5 GiB | disk free 98 GB
+  file model-00018-of-00048.safetensors (layers.16.*): 3.59 GB downloaded in 16.8 s (0.21 GB/s), waited 6.3 s
+  L16: static 0.6 s | experts: read 6.4 s, to GPU 0.06 s, to RAM 0.10 s, to the repacked file 3.1 s | check L15 6/6 | GPU 40.6 GB | RAM available 4.5 GiB | disk free 96 GB
+  file model-00019-of-00048.safetensors (layers.17.*): 3.57 GB downloaded in 17.5 s (0.20 GB/s), waited 6.5 s
+  L17: static 0.6 s | experts: read 6.6 s, to GPU 0.10 s, to RAM 0.12 s, to the repacked file 2.5 s | check L16 6/6 | GPU 40.9 GB | RAM available 4.6 GiB | disk free 95 GB
+  file model-00020-of-00048.safetensors (layers.18.*): 3.59 GB downloaded in 17.5 s (0.20 GB/s), waited 6.9 s
+  L18: static 0.2 s | experts: read 6.9 s, to GPU 0.07 s, to RAM 0.16 s, to the repacked file 2.8 s | check L17 6/6 | GPU 41.2 GB | RAM available 4.8 GiB | disk free 92 GB
+  file model-00021-of-00048.safetensors (layers.19.*): 3.57 GB downloaded in 17.3 s (0.21 GB/s), waited 6.4 s
+  L19: static 0.8 s | experts: read 6.3 s, to GPU 0.07 s, to RAM 0.13 s, to the repacked file 2.6 s | check L18 6/6 | GPU 41.5 GB | RAM available 4.5 GiB | disk free 91 GB
+  file model-00022-of-00048.safetensors (layers.20.*): 3.59 GB downloaded in 17.0 s (0.21 GB/s), waited 6.2 s
+  L20: static 0.7 s | experts: read 6.7 s, to GPU 0.07 s, to RAM 0.14 s, to the repacked file 2.6 s | check L19 6/6 | GPU 41.8 GB | RAM available 5.0 GiB | disk free 89 GB
+  file model-00023-of-00048.safetensors (layers.21.*): 3.57 GB downloaded in 17.2 s (0.21 GB/s), waited 6.2 s
+  L21: static 0.6 s | experts: read 6.7 s, to GPU 0.07 s, to RAM 0.11 s, to the repacked file 2.6 s | check L20 6/6 | GPU 42.1 GB | RAM available 4.6 GiB | disk free 87 GB
+  file model-00024-of-00048.safetensors (layers.22.*): 3.59 GB downloaded in 17.2 s (0.21 GB/s), waited 6.4 s
+  L22: static 1.4 s | experts: read 5.6 s, to GPU 0.08 s, to RAM 0.10 s, to the repacked file 3.1 s | check L21 6/6 | GPU 42.5 GB | RAM available 4.9 GiB | disk free 85 GB
+  file model-00025-of-00048.safetensors (layers.23.*): 3.57 GB downloaded in 17.8 s (0.20 GB/s), waited 6.6 s
+  L23: static 0.4 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L22 6/6 | GPU 42.7 GB | RAM available 4.0 GiB | disk free 83 GB
+  file model-00026-of-00048.safetensors (layers.24.*): 3.59 GB downloaded in 16.6 s (0.22 GB/s), waited 6.5 s
+  L24: static 0.2 s | experts: read 6.6 s, to GPU 0.06 s, to RAM 0.08 s, to the repacked file 2.5 s | check L23 6/6 | GPU 43.1 GB | RAM available 4.7 GiB | disk free 81 GB
+  file model-00027-of-00048.safetensors (layers.25.*): 3.57 GB downloaded in 16.4 s (0.22 GB/s), waited 6.5 s
+  L25: static 0.5 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.5 s | check L24 6/6 | GPU 43.4 GB | RAM available 4.9 GiB | disk free 79 GB
+  file model-00028-of-00048.safetensors (layers.26.*): 3.59 GB downloaded in 16.5 s (0.22 GB/s), waited 6.1 s
+  L26: static 0.4 s | experts: read 6.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L25 6/6 | GPU 43.7 GB | RAM available 5.0 GiB | disk free 77 GB
+  file model-00029-of-00048.safetensors (layers.27.*): 3.57 GB downloaded in 16.7 s (0.21 GB/s), waited 6.5 s
+  L27: static 0.7 s | experts: read 6.8 s, to GPU 0.06 s, to RAM 0.11 s, to the repacked file 2.6 s | check L26 6/6 | GPU 44.0 GB | RAM available 4.5 GiB | disk free 76 GB
+  file model-00030-of-00048.safetensors (layers.28.*): 3.59 GB downloaded in 17.1 s (0.21 GB/s), waited 6.2 s
+  L28: static 0.2 s | experts: read 6.9 s, to GPU 0.05 s, to RAM 0.12 s, to the repacked file 2.4 s | check L27 6/6 | GPU 44.3 GB | RAM available 4.7 GiB | disk free 74 GB
+  file model-00031-of-00048.safetensors (layers.29.*): 3.57 GB downloaded in 16.9 s (0.21 GB/s), waited 6.7 s
+  L29: static 0.2 s | experts: read 7.0 s, to GPU 0.07 s, to RAM 0.09 s, to the repacked file 2.5 s | check L28 6/6 | GPU 44.6 GB | RAM available 5.0 GiB | disk free 72 GB
+  file model-00032-of-00048.safetensors (layers.30.*): 3.59 GB downloaded in 16.8 s (0.21 GB/s), waited 6.6 s
+  L30: static 0.2 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.4 s | check L29 6/6 | GPU 44.9 GB | RAM available 4.3 GiB | disk free 70 GB
+  file model-00033-of-00048.safetensors (layers.31.*): 3.57 GB downloaded in 16.4 s (0.22 GB/s), waited 6.6 s
+  L31: static 0.6 s | experts: read 7.1 s, to GPU 0.07 s, to RAM 0.10 s, to the repacked file 2.6 s | check L30 6/6 | GPU 45.2 GB | RAM available 4.3 GiB | disk free 68 GB
+  file model-00034-of-00048.safetensors (layers.32.*): 3.59 GB downloaded in 17.3 s (0.21 GB/s), waited 6.0 s
+  L32: static 1.2 s | experts: read 5.5 s, to GPU 0.08 s, to RAM 0.13 s, to the repacked file 2.5 s | check L31 6/6 | GPU 45.6 GB | RAM available 3.9 GiB | disk free 67 GB
+  file model-00035-of-00048.safetensors (layers.33.*): 3.57 GB downloaded in 18.1 s (0.20 GB/s), waited 7.8 s
+  L33: static 0.6 s | experts: read 6.8 s, to GPU 0.07 s, to RAM 0.21 s, to the repacked file 2.7 s | check L32 6/6 | GPU 45.8 GB | RAM available 4.1 GiB | disk free 64 GB
+  file model-00036-of-00048.safetensors (layers.34.*): 3.59 GB downloaded in 17.2 s (0.21 GB/s), waited 6.1 s
+  L34: static 1.0 s | experts: read 5.8 s, to GPU 0.06 s, to RAM 0.11 s, to the repacked file 2.6 s | check L33 6/6 | GPU 46.2 GB | RAM available 5.0 GiB | disk free 62 GB
+  file model-00037-of-00048.safetensors (layers.35.*): 3.57 GB downloaded in 16.4 s (0.22 GB/s), waited 6.2 s
+  L35: static 1.1 s | experts: read 5.8 s, to GPU 0.08 s, to RAM 0.14 s, to the repacked file 2.6 s | check L34 6/6 | GPU 46.5 GB | RAM available 4.5 GiB | disk free 60 GB
+  file model-00038-of-00048.safetensors (layers.36.*): 3.59 GB downloaded in 16.7 s (0.22 GB/s), waited 6.2 s
+  L36: static 0.3 s | experts: read 6.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.5 s | check L35 6/6 | GPU 46.8 GB | RAM available 4.4 GiB | disk free 58 GB
+  file model-00039-of-00048.safetensors (layers.37.*): 3.57 GB downloaded in 16.4 s (0.22 GB/s), waited 6.3 s
+  L37: static 0.2 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L36 6/6 | GPU 47.1 GB | RAM available 4.4 GiB | disk free 56 GB
+  file model-00040-of-00048.safetensors (layers.38.*): 3.59 GB downloaded in 16.8 s (0.21 GB/s), waited 6.7 s
+  L38: static 0.8 s | experts: read 6.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L37 6/6 | GPU 47.4 GB | RAM available 3.9 GiB | disk free 54 GB
+  file model-00041-of-00048.safetensors (layers.39.*): 3.57 GB downloaded in 17.2 s (0.21 GB/s), waited 6.7 s
+  L39: static 0.4 s | experts: read 6.5 s, to GPU 0.06 s, to RAM 0.08 s, to the repacked file 2.6 s | check L38 6/6 | GPU 47.7 GB | RAM available 4.4 GiB | disk free 52 GB
+  file model-00042-of-00048.safetensors (layers.40.*): 3.59 GB downloaded in 16.9 s (0.21 GB/s), waited 6.6 s
+  L40: static 0.5 s | experts: read 6.7 s, to GPU 0.05 s, to RAM 0.12 s, to the repacked file 2.8 s | check L39 6/6 | GPU 48.0 GB | RAM available 4.5 GiB | disk free 50 GB
+  file model-00043-of-00048.safetensors (layers.41.*): 3.57 GB downloaded in 17.1 s (0.21 GB/s), waited 6.2 s
+  L41: static 0.5 s | experts: read 7.0 s, to GPU 0.05 s, to RAM 0.19 s, to the repacked file 2.6 s | check L40 6/6 | GPU 48.3 GB | RAM available 4.7 GiB | disk free 49 GB
+  file model-00044-of-00048.safetensors (layers.42.*): 3.59 GB downloaded in 17.3 s (0.21 GB/s), waited 6.5 s
+  L42: static 2.7 s | experts: read 3.3 s, to GPU 0.06 s, to RAM 0.11 s, to the repacked file 2.5 s | check L41 6/6 | GPU 48.7 GB | RAM available 6.8 GiB | disk free 48 GB
+checks: 258/258 experts reach the GPU with exactly their file's bytes
+model ready in 14.5 min | GPU allocated 48.65 GB, reserved 49.13, free 1.52 GB | RAM available 6.8 GiB | repacked file 82.2 GB, disk free 56 GB
+  gpu : 0.04 ms per expert to the GPU
+  ram : 0.56 ms per expert to the GPU
+  disk: 15.02 ms per expert to the GPU (read 14.3 + copy 0.71)
