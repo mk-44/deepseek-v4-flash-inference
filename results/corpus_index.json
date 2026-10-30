@@ -1,0 +1,4157 @@
+{
+ "max_tokens": 3000,
+ "texts": [
+  {
+   "id": "chat-wildchat-00",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     318
+    ],
+    [
+     "assistant",
+     318,
+     965
+    ]
+   ],
+   "tokens": 965
+  },
+  {
+   "id": "chat-wildchat-01",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 2,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     40
+    ],
+    [
+     "assistant",
+     40,
+     105
+    ]
+   ],
+   "tokens": 105
+  },
+  {
+   "id": "chat-wildchat-02",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 50000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     26
+    ],
+    [
+     "assistant",
+     26,
+     102
+    ],
+    [
+     "user",
+     102,
+     108
+    ],
+    [
+     "assistant",
+     108,
+     194
+    ],
+    [
+     "user",
+     194,
+     207
+    ],
+    [
+     "assistant",
+     207,
+     330
+    ],
+    [
+     "user",
+     330,
+     343
+    ],
+    [
+     "assistant",
+     343,
+     486
+    ],
+    [
+     "user",
+     486,
+     505
+    ],
+    [
+     "assistant",
+     505,
+     777
+    ],
+    [
+     "user",
+     777,
+     789
+    ],
+    [
+     "assistant",
+     789,
+     1048
+    ],
+    [
+     "user",
+     1048,
+     1063
+    ],
+    [
+     "assistant",
+     1063,
+     1306
+    ],
+    [
+     "user",
+     1306,
+     1317
+    ],
+    [
+     "assistant",
+     1317,
+     1515
+    ],
+    [
+     "user",
+     1515,
+     1532
+    ],
+    [
+     "assistant",
+     1532,
+     1776
+    ]
+   ],
+   "tokens": 1776
+  },
+  {
+   "id": "chat-wildchat-03",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 100002,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     27
+    ],
+    [
+     "assistant",
+     27,
+     30
+    ]
+   ],
+   "tokens": 30
+  },
+  {
+   "id": "chat-wildchat-04",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 100004,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     25
+    ],
+    [
+     "assistant",
+     25,
+     242
+    ],
+    [
+     "user",
+     242,
+     260
+    ],
+    [
+     "assistant",
+     260,
+     433
+    ]
+   ],
+   "tokens": 433
+  },
+  {
+   "id": "chat-wildchat-05",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 150000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     912
+    ],
+    [
+     "assistant",
+     912,
+     1389
+    ]
+   ],
+   "tokens": 1389
+  },
+  {
+   "id": "chat-wildchat-06",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 150002,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     205
+    ],
+    [
+     "assistant",
+     205,
+     245
+    ],
+    [
+     "user",
+     245,
+     390
+    ],
+    [
+     "assistant",
+     390,
+     470
+    ]
+   ],
+   "tokens": 470
+  },
+  {
+   "id": "chat-wildchat-07",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 200007,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     131
+    ],
+    [
+     "assistant",
+     131,
+     248
+    ]
+   ],
+   "tokens": 248
+  },
+  {
+   "id": "chat-wildchat-08",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 250000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     193
+    ],
+    [
+     "assistant",
+     193,
+     763
+    ]
+   ],
+   "tokens": 763
+  },
+  {
+   "id": "chat-wildchat-09",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 250001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     207
+    ],
+    [
+     "assistant",
+     207,
+     363
+    ]
+   ],
+   "tokens": 363
+  },
+  {
+   "id": "chat-wildchat-10",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 300000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     1855
+    ],
+    [
+     "assistant",
+     1855,
+     1915
+    ]
+   ],
+   "tokens": 1915
+  },
+  {
+   "id": "chat-wildchat-11",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 300002,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     741
+    ],
+    [
+     "assistant",
+     741,
+     2235
+    ]
+   ],
+   "tokens": 2235
+  },
+  {
+   "id": "chat-wildchat-12",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 350000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     88
+    ],
+    [
+     "assistant",
+     88,
+     713
+    ],
+    [
+     "user",
+     713,
+     911
+    ],
+    [
+     "assistant",
+     911,
+     1195
+    ]
+   ],
+   "tokens": 1195
+  },
+  {
+   "id": "chat-wildchat-13",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 350001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     11
+    ],
+    [
+     "assistant",
+     11,
+     451
+    ]
+   ],
+   "tokens": 451
+  },
+  {
+   "id": "chat-wildchat-14",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 400001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     72
+    ],
+    [
+     "assistant",
+     72,
+     80
+    ],
+    [
+     "user",
+     80,
+     127
+    ],
+    [
+     "assistant",
+     127,
+     131
+    ],
+    [
+     "user",
+     131,
+     182
+    ],
+    [
+     "assistant",
+     182,
+     186
+    ],
+    [
+     "user",
+     186,
+     209
+    ],
+    [
+     "assistant",
+     209,
+     222
+    ],
+    [
+     "user",
+     222,
+     275
+    ],
+    [
+     "assistant",
+     275,
+     294
+    ],
+    [
+     "user",
+     294,
+     332
+    ],
+    [
+     "assistant",
+     332,
+     343
+    ],
+    [
+     "user",
+     343,
+     376
+    ],
+    [
+     "assistant",
+     376,
+     389
+    ],
+    [
+     "user",
+     389,
+     464
+    ],
+    [
+     "assistant",
+     464,
+     489
+    ],
+    [
+     "user",
+     489,
+     541
+    ],
+    [
+     "assistant",
+     541,
+     587
+    ],
+    [
+     "user",
+     587,
+     623
+    ],
+    [
+     "assistant",
+     623,
+     993
+    ]
+   ],
+   "tokens": 993
+  },
+  {
+   "id": "chat-wildchat-15",
+   "kind": "chat",
+   "shape": "qa",
+   "source": "allenai/WildChat-1M",
+   "row": 400003,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     23
+    ],
+    [
+     "assistant",
+     23,
+     34
+    ]
+   ],
+   "tokens": 34
+  },
+  {
+   "id": "code-codefeedback-00",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     58
+    ],
+    [
+     "assistant",
+     58,
+     212
+    ]
+   ],
+   "tokens": 212
+  },
+  {
+   "id": "code-codefeedback-01",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     254
+    ],
+    [
+     "assistant",
+     254,
+     533
+    ]
+   ],
+   "tokens": 533
+  },
+  {
+   "id": "code-codefeedback-02",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 9000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     371
+    ],
+    [
+     "assistant",
+     371,
+     889
+    ]
+   ],
+   "tokens": 889
+  },
+  {
+   "id": "code-codefeedback-03",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 9001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     147
+    ],
+    [
+     "assistant",
+     147,
+     694
+    ]
+   ],
+   "tokens": 694
+  },
+  {
+   "id": "code-codefeedback-04",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 18000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     48
+    ],
+    [
+     "assistant",
+     48,
+     267
+    ]
+   ],
+   "tokens": 267
+  },
+  {
+   "id": "code-codefeedback-05",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 18001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     28
+    ],
+    [
+     "assistant",
+     28,
+     244
+    ]
+   ],
+   "tokens": 244
+  },
+  {
+   "id": "code-codefeedback-06",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 27000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     88
+    ],
+    [
+     "assistant",
+     88,
+     648
+    ]
+   ],
+   "tokens": 648
+  },
+  {
+   "id": "code-codefeedback-07",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 27001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     239
+    ],
+    [
+     "assistant",
+     239,
+     778
+    ]
+   ],
+   "tokens": 778
+  },
+  {
+   "id": "code-codefeedback-08",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 36000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     51
+    ],
+    [
+     "assistant",
+     51,
+     342
+    ]
+   ],
+   "tokens": 342
+  },
+  {
+   "id": "code-codefeedback-09",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 36001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     44
+    ],
+    [
+     "assistant",
+     44,
+     631
+    ]
+   ],
+   "tokens": 631
+  },
+  {
+   "id": "code-codefeedback-10",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 45000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     177
+    ],
+    [
+     "assistant",
+     177,
+     503
+    ]
+   ],
+   "tokens": 503
+  },
+  {
+   "id": "code-codefeedback-11",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 45001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     433
+    ],
+    [
+     "assistant",
+     433,
+     742
+    ]
+   ],
+   "tokens": 742
+  },
+  {
+   "id": "code-codefeedback-12",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 54000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     700
+    ],
+    [
+     "assistant",
+     700,
+     923
+    ]
+   ],
+   "tokens": 923
+  },
+  {
+   "id": "code-codefeedback-13",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 54001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     241
+    ],
+    [
+     "assistant",
+     241,
+     420
+    ]
+   ],
+   "tokens": 420
+  },
+  {
+   "id": "code-codefeedback-14",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 63000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     234
+    ],
+    [
+     "assistant",
+     234,
+     468
+    ]
+   ],
+   "tokens": 468
+  },
+  {
+   "id": "code-codefeedback-15",
+   "kind": "code",
+   "shape": "qa",
+   "source": "m-a-p/CodeFeedback-Filtered-Instruction",
+   "row": 63001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     219
+    ],
+    [
+     "assistant",
+     219,
+     739
+    ]
+   ],
+   "tokens": 739
+  },
+  {
+   "id": "math-gsm8k-00",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     42
+    ],
+    [
+     "assistant",
+     42,
+     80
+    ]
+   ],
+   "tokens": 80
+  },
+  {
+   "id": "math-gsm8k-01",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     33
+    ],
+    [
+     "assistant",
+     33,
+     71
+    ]
+   ],
+   "tokens": 71
+  },
+  {
+   "id": "math-gsm8k-02",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 700,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     38
+    ],
+    [
+     "assistant",
+     38,
+     96
+    ]
+   ],
+   "tokens": 96
+  },
+  {
+   "id": "math-gsm8k-03",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 701,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     35
+    ],
+    [
+     "assistant",
+     35,
+     74
+    ]
+   ],
+   "tokens": 74
+  },
+  {
+   "id": "math-gsm8k-04",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 1400,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     34
+    ],
+    [
+     "assistant",
+     34,
+     74
+    ]
+   ],
+   "tokens": 74
+  },
+  {
+   "id": "math-gsm8k-05",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 1401,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     81
+    ],
+    [
+     "assistant",
+     81,
+     134
+    ]
+   ],
+   "tokens": 134
+  },
+  {
+   "id": "math-gsm8k-06",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 2100,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     59
+    ],
+    [
+     "assistant",
+     59,
+     126
+    ]
+   ],
+   "tokens": 126
+  },
+  {
+   "id": "math-gsm8k-07",
+   "kind": "math",
+   "shape": "qa",
+   "source": "openai/gsm8k",
+   "row": 2101,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     45
+    ],
+    [
+     "assistant",
+     45,
+     118
+    ]
+   ],
+   "tokens": 118
+  },
+  {
+   "id": "math-openr1-00",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     122
+    ],
+    [
+     "assistant",
+     122,
+     882
+    ]
+   ],
+   "tokens": 882
+  },
+  {
+   "id": "math-openr1-01",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     111
+    ],
+    [
+     "assistant",
+     111,
+     520
+    ]
+   ],
+   "tokens": 520
+  },
+  {
+   "id": "math-openr1-02",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 9000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     65
+    ],
+    [
+     "assistant",
+     65,
+     489
+    ]
+   ],
+   "tokens": 489
+  },
+  {
+   "id": "math-openr1-03",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 18001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     75
+    ],
+    [
+     "assistant",
+     75,
+     672
+    ]
+   ],
+   "tokens": 672
+  },
+  {
+   "id": "math-openr1-04",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 36000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     59
+    ],
+    [
+     "assistant",
+     59,
+     680
+    ]
+   ],
+   "tokens": 680
+  },
+  {
+   "id": "math-openr1-05",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 36001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     80
+    ],
+    [
+     "assistant",
+     80,
+     581
+    ]
+   ],
+   "tokens": 581
+  },
+  {
+   "id": "math-openr1-06",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 45001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     113
+    ],
+    [
+     "assistant",
+     113,
+     648
+    ]
+   ],
+   "tokens": 648
+  },
+  {
+   "id": "math-openr1-07",
+   "kind": "math",
+   "shape": "qa",
+   "source": "open-r1/OpenR1-Math-220k",
+   "row": 54000,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     42
+    ],
+    [
+     "assistant",
+     42,
+     467
+    ]
+   ],
+   "tokens": 467
+  },
+  {
+   "id": "science-wiki_article-00",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     13
+    ],
+    [
+     "assistant",
+     13,
+     313
+    ]
+   ],
+   "tokens": 313
+  },
+  {
+   "id": "science-wiki_article-01",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     13
+    ],
+    [
+     "assistant",
+     13,
+     605
+    ]
+   ],
+   "tokens": 605
+  },
+  {
+   "id": "science-wiki_article-02",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 300000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     14
+    ],
+    [
+     "assistant",
+     14,
+     309
+    ]
+   ],
+   "tokens": 309
+  },
+  {
+   "id": "science-wiki_article-03",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 300001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     13
+    ],
+    [
+     "assistant",
+     13,
+     561
+    ]
+   ],
+   "tokens": 561
+  },
+  {
+   "id": "science-wiki_article-04",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 600003,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     21
+    ],
+    [
+     "assistant",
+     21,
+     2387
+    ]
+   ],
+   "tokens": 2387
+  },
+  {
+   "id": "science-wiki_article-05",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 600004,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     15
+    ],
+    [
+     "assistant",
+     15,
+     169
+    ]
+   ],
+   "tokens": 169
+  },
+  {
+   "id": "science-wiki_article-06",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 900010,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     15
+    ],
+    [
+     "assistant",
+     15,
+     870
+    ]
+   ],
+   "tokens": 870
+  },
+  {
+   "id": "science-wiki_article-07",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 900014,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     13
+    ],
+    [
+     "assistant",
+     13,
+     1184
+    ]
+   ],
+   "tokens": 1184
+  },
+  {
+   "id": "science-wiki_article-08",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 1200011,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     14
+    ],
+    [
+     "assistant",
+     14,
+     1751
+    ]
+   ],
+   "tokens": 1751
+  },
+  {
+   "id": "science-wiki_article-09",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 1500002,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     14
+    ],
+    [
+     "assistant",
+     14,
+     902
+    ]
+   ],
+   "tokens": 902
+  },
+  {
+   "id": "science-wiki_article-10",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 1800000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     14
+    ],
+    [
+     "assistant",
+     14,
+     262
+    ]
+   ],
+   "tokens": 262
+  },
+  {
+   "id": "science-wiki_article-11",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 1800001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     16
+    ],
+    [
+     "assistant",
+     16,
+     531
+    ]
+   ],
+   "tokens": 531
+  },
+  {
+   "id": "science-wiki_article-12",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 2100007,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     16
+    ],
+    [
+     "assistant",
+     16,
+     1567
+    ]
+   ],
+   "tokens": 1567
+  },
+  {
+   "id": "science-wiki_article-13",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 2100009,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     17
+    ],
+    [
+     "assistant",
+     17,
+     601
+    ]
+   ],
+   "tokens": 601
+  },
+  {
+   "id": "science-wiki_article-14",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 2400004,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     14
+    ],
+    [
+     "assistant",
+     14,
+     296
+    ]
+   ],
+   "tokens": 296
+  },
+  {
+   "id": "science-wiki_article-15",
+   "kind": "science",
+   "shape": "qa",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 2400009,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     20
+    ],
+    [
+     "assistant",
+     20,
+     612
+    ]
+   ],
+   "tokens": 612
+  },
+  {
+   "id": "legal-ledgar-00",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     15
+    ],
+    [
+     "assistant",
+     15,
+     82
+    ]
+   ],
+   "tokens": 82
+  },
+  {
+   "id": "legal-ledgar-01",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     16
+    ],
+    [
+     "assistant",
+     16,
+     104
+    ]
+   ],
+   "tokens": 104
+  },
+  {
+   "id": "legal-ledgar-02",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 7000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     16
+    ],
+    [
+     "assistant",
+     16,
+     219
+    ]
+   ],
+   "tokens": 219
+  },
+  {
+   "id": "legal-ledgar-03",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 7001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     17
+    ],
+    [
+     "assistant",
+     17,
+     57
+    ]
+   ],
+   "tokens": 57
+  },
+  {
+   "id": "legal-ledgar-04",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 14000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     16
+    ],
+    [
+     "assistant",
+     16,
+     123
+    ]
+   ],
+   "tokens": 123
+  },
+  {
+   "id": "legal-ledgar-05",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 14001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     15
+    ],
+    [
+     "assistant",
+     15,
+     84
+    ]
+   ],
+   "tokens": 84
+  },
+  {
+   "id": "legal-ledgar-06",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 21000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     15
+    ],
+    [
+     "assistant",
+     15,
+     109
+    ]
+   ],
+   "tokens": 109
+  },
+  {
+   "id": "legal-ledgar-07",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue ledgar",
+   "row": 21001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     15
+    ],
+    [
+     "assistant",
+     15,
+     450
+    ]
+   ],
+   "tokens": 450
+  },
+  {
+   "id": "legal-scotus-00",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     153
+    ],
+    [
+     "assistant",
+     153,
+     424
+    ]
+   ],
+   "tokens": 424
+  },
+  {
+   "id": "legal-scotus-01",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     144
+    ],
+    [
+     "assistant",
+     144,
+     515
+    ]
+   ],
+   "tokens": 515
+  },
+  {
+   "id": "legal-scotus-02",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 600,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     142
+    ],
+    [
+     "assistant",
+     142,
+     336
+    ]
+   ],
+   "tokens": 336
+  },
+  {
+   "id": "legal-scotus-03",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 601,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     142
+    ],
+    [
+     "assistant",
+     142,
+     454
+    ]
+   ],
+   "tokens": 454
+  },
+  {
+   "id": "legal-scotus-04",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 1200,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     158
+    ],
+    [
+     "assistant",
+     158,
+     425
+    ]
+   ],
+   "tokens": 425
+  },
+  {
+   "id": "legal-scotus-05",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 1201,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     108
+    ],
+    [
+     "assistant",
+     108,
+     356
+    ]
+   ],
+   "tokens": 356
+  },
+  {
+   "id": "legal-scotus-06",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 1800,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     117
+    ],
+    [
+     "assistant",
+     117,
+     319
+    ]
+   ],
+   "tokens": 319
+  },
+  {
+   "id": "legal-scotus-07",
+   "kind": "legal",
+   "shape": "qa",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 1801,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     157
+    ],
+    [
+     "assistant",
+     157,
+     250
+    ]
+   ],
+   "tokens": 250
+  },
+  {
+   "id": "stories-writingprompts-00",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     52
+    ],
+    [
+     "assistant",
+     52,
+     719
+    ]
+   ],
+   "tokens": 719
+  },
+  {
+   "id": "stories-writingprompts-01",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     20
+    ],
+    [
+     "assistant",
+     20,
+     690
+    ]
+   ],
+   "tokens": 690
+  },
+  {
+   "id": "stories-writingprompts-02",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 15000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     21
+    ],
+    [
+     "assistant",
+     21,
+     722
+    ]
+   ],
+   "tokens": 722
+  },
+  {
+   "id": "stories-writingprompts-03",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 15001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     29
+    ],
+    [
+     "assistant",
+     29,
+     616
+    ]
+   ],
+   "tokens": 616
+  },
+  {
+   "id": "stories-writingprompts-04",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 30000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     45
+    ],
+    [
+     "assistant",
+     45,
+     986
+    ]
+   ],
+   "tokens": 986
+  },
+  {
+   "id": "stories-writingprompts-05",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 30001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     50
+    ],
+    [
+     "assistant",
+     50,
+     436
+    ]
+   ],
+   "tokens": 436
+  },
+  {
+   "id": "stories-writingprompts-06",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 45000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     23
+    ],
+    [
+     "assistant",
+     23,
+     1085
+    ]
+   ],
+   "tokens": 1085
+  },
+  {
+   "id": "stories-writingprompts-07",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 45001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     35
+    ],
+    [
+     "assistant",
+     35,
+     426
+    ]
+   ],
+   "tokens": 426
+  },
+  {
+   "id": "stories-writingprompts-08",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 60000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     49
+    ],
+    [
+     "assistant",
+     49,
+     426
+    ]
+   ],
+   "tokens": 426
+  },
+  {
+   "id": "stories-writingprompts-09",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 60001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     21
+    ],
+    [
+     "assistant",
+     21,
+     689
+    ]
+   ],
+   "tokens": 689
+  },
+  {
+   "id": "stories-writingprompts-10",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 75000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     31
+    ],
+    [
+     "assistant",
+     31,
+     603
+    ]
+   ],
+   "tokens": 603
+  },
+  {
+   "id": "stories-writingprompts-11",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 75001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     36
+    ],
+    [
+     "assistant",
+     36,
+     489
+    ]
+   ],
+   "tokens": 489
+  },
+  {
+   "id": "stories-writingprompts-12",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 90000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     29
+    ],
+    [
+     "assistant",
+     29,
+     1192
+    ]
+   ],
+   "tokens": 1192
+  },
+  {
+   "id": "stories-writingprompts-13",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 90001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     25
+    ],
+    [
+     "assistant",
+     25,
+     312
+    ]
+   ],
+   "tokens": 312
+  },
+  {
+   "id": "stories-writingprompts-14",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 105000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     17
+    ],
+    [
+     "assistant",
+     17,
+     530
+    ]
+   ],
+   "tokens": 530
+  },
+  {
+   "id": "stories-writingprompts-15",
+   "kind": "stories",
+   "shape": "qa",
+   "source": "euclaise/writingprompts",
+   "row": 105001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     42
+    ],
+    [
+     "assistant",
+     42,
+     1191
+    ]
+   ],
+   "tokens": 1191
+  },
+  {
+   "id": "news-news-00",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 3,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     145
+    ],
+    [
+     "assistant",
+     145,
+     862
+    ]
+   ],
+   "tokens": 862
+  },
+  {
+   "id": "news-news-01",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 10,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     116
+    ],
+    [
+     "assistant",
+     116,
+     1291
+    ]
+   ],
+   "tokens": 1291
+  },
+  {
+   "id": "news-news-02",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 100001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     143
+    ],
+    [
+     "assistant",
+     143,
+     696
+    ]
+   ],
+   "tokens": 696
+  },
+  {
+   "id": "news-news-03",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 100004,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     109
+    ],
+    [
+     "assistant",
+     109,
+     387
+    ]
+   ],
+   "tokens": 387
+  },
+  {
+   "id": "news-news-04",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 200001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     152
+    ],
+    [
+     "assistant",
+     152,
+     571
+    ]
+   ],
+   "tokens": 571
+  },
+  {
+   "id": "news-news-05",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 200005,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     88
+    ],
+    [
+     "assistant",
+     88,
+     638
+    ]
+   ],
+   "tokens": 638
+  },
+  {
+   "id": "news-news-06",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 300000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     149
+    ],
+    [
+     "assistant",
+     149,
+     429
+    ]
+   ],
+   "tokens": 429
+  },
+  {
+   "id": "news-news-07",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 300001,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     88
+    ],
+    [
+     "assistant",
+     88,
+     680
+    ]
+   ],
+   "tokens": 680
+  },
+  {
+   "id": "news-news-08",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 400003,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     131
+    ],
+    [
+     "assistant",
+     131,
+     559
+    ]
+   ],
+   "tokens": 559
+  },
+  {
+   "id": "news-news-09",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 400005,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     142
+    ],
+    [
+     "assistant",
+     142,
+     549
+    ]
+   ],
+   "tokens": 549
+  },
+  {
+   "id": "news-news-10",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 500001,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     137
+    ],
+    [
+     "assistant",
+     137,
+     646
+    ]
+   ],
+   "tokens": 646
+  },
+  {
+   "id": "news-news-11",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 500002,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     150
+    ],
+    [
+     "assistant",
+     150,
+     677
+    ]
+   ],
+   "tokens": 677
+  },
+  {
+   "id": "news-news-12",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 600002,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     151
+    ],
+    [
+     "assistant",
+     151,
+     761
+    ]
+   ],
+   "tokens": 761
+  },
+  {
+   "id": "news-news-13",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 600003,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     156
+    ],
+    [
+     "assistant",
+     156,
+     717
+    ]
+   ],
+   "tokens": 717
+  },
+  {
+   "id": "news-news-14",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 700000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     95
+    ],
+    [
+     "assistant",
+     95,
+     395
+    ]
+   ],
+   "tokens": 395
+  },
+  {
+   "id": "news-news-15",
+   "kind": "news",
+   "shape": "qa",
+   "source": "allenai/c4 realnewslike",
+   "row": 700004,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     150
+    ],
+    [
+     "assistant",
+     150,
+     410
+    ]
+   ],
+   "tokens": 410
+  },
+  {
+   "id": "hindi-anudesh-00",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     35
+    ],
+    [
+     "assistant",
+     35,
+     1262
+    ]
+   ],
+   "tokens": 1262
+  },
+  {
+   "id": "hindi-anudesh-01",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 1,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     39
+    ],
+    [
+     "assistant",
+     39,
+     327
+    ]
+   ],
+   "tokens": 327
+  },
+  {
+   "id": "hindi-anudesh-02",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 900,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     56
+    ],
+    [
+     "assistant",
+     56,
+     203
+    ]
+   ],
+   "tokens": 203
+  },
+  {
+   "id": "hindi-anudesh-03",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 901,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     36
+    ],
+    [
+     "assistant",
+     36,
+     1510
+    ]
+   ],
+   "tokens": 1510
+  },
+  {
+   "id": "hindi-anudesh-04",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 1800,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     46
+    ],
+    [
+     "assistant",
+     46,
+     450
+    ]
+   ],
+   "tokens": 450
+  },
+  {
+   "id": "hindi-anudesh-05",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 1801,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     36
+    ],
+    [
+     "assistant",
+     36,
+     859
+    ]
+   ],
+   "tokens": 859
+  },
+  {
+   "id": "hindi-anudesh-06",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 2700,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     17
+    ],
+    [
+     "assistant",
+     17,
+     107
+    ]
+   ],
+   "tokens": 107
+  },
+  {
+   "id": "hindi-anudesh-07",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "ai4bharat/indic-instruct-data-v0.1 anudesh",
+   "row": 2701,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     13
+    ],
+    [
+     "assistant",
+     13,
+     1134
+    ]
+   ],
+   "tokens": 1134
+  },
+  {
+   "id": "hindi-hinglish-00",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     7
+    ],
+    [
+     "assistant",
+     7,
+     35
+    ],
+    [
+     "user",
+     35,
+     62
+    ],
+    [
+     "assistant",
+     62,
+     114
+    ],
+    [
+     "user",
+     114,
+     144
+    ],
+    [
+     "assistant",
+     144,
+     185
+    ],
+    [
+     "user",
+     185,
+     202
+    ],
+    [
+     "assistant",
+     202,
+     214
+    ],
+    [
+     "user",
+     214,
+     253
+    ],
+    [
+     "assistant",
+     253,
+     309
+    ],
+    [
+     "user",
+     309,
+     331
+    ],
+    [
+     "assistant",
+     331,
+     376
+    ],
+    [
+     "user",
+     376,
+     391
+    ],
+    [
+     "assistant",
+     391,
+     457
+    ],
+    [
+     "user",
+     457,
+     480
+    ],
+    [
+     "assistant",
+     480,
+     527
+    ]
+   ],
+   "tokens": 527
+  },
+  {
+   "id": "hindi-hinglish-01",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 1000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     22
+    ],
+    [
+     "assistant",
+     22,
+     76
+    ],
+    [
+     "user",
+     76,
+     128
+    ],
+    [
+     "assistant",
+     128,
+     170
+    ],
+    [
+     "user",
+     170,
+     185
+    ],
+    [
+     "assistant",
+     185,
+     195
+    ],
+    [
+     "user",
+     195,
+     234
+    ],
+    [
+     "assistant",
+     234,
+     242
+    ],
+    [
+     "user",
+     242,
+     259
+    ],
+    [
+     "assistant",
+     259,
+     297
+    ],
+    [
+     "user",
+     297,
+     368
+    ],
+    [
+     "assistant",
+     368,
+     457
+    ],
+    [
+     "user",
+     457,
+     524
+    ],
+    [
+     "assistant",
+     524,
+     564
+    ],
+    [
+     "user",
+     564,
+     603
+    ],
+    [
+     "assistant",
+     603,
+     614
+    ]
+   ],
+   "tokens": 614
+  },
+  {
+   "id": "hindi-hinglish-02",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 2000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     5
+    ],
+    [
+     "assistant",
+     5,
+     20
+    ],
+    [
+     "user",
+     20,
+     62
+    ],
+    [
+     "assistant",
+     62,
+     75
+    ],
+    [
+     "user",
+     75,
+     95
+    ],
+    [
+     "assistant",
+     95,
+     116
+    ],
+    [
+     "user",
+     116,
+     141
+    ],
+    [
+     "assistant",
+     141,
+     162
+    ],
+    [
+     "user",
+     162,
+     192
+    ],
+    [
+     "assistant",
+     192,
+     230
+    ],
+    [
+     "user",
+     230,
+     273
+    ],
+    [
+     "assistant",
+     273,
+     289
+    ],
+    [
+     "user",
+     289,
+     317
+    ],
+    [
+     "assistant",
+     317,
+     357
+    ],
+    [
+     "user",
+     357,
+     395
+    ],
+    [
+     "assistant",
+     395,
+     407
+    ],
+    [
+     "user",
+     407,
+     427
+    ],
+    [
+     "assistant",
+     427,
+     443
+    ],
+    [
+     "user",
+     443,
+     469
+    ],
+    [
+     "assistant",
+     469,
+     491
+    ],
+    [
+     "user",
+     491,
+     532
+    ],
+    [
+     "assistant",
+     532,
+     547
+    ],
+    [
+     "user",
+     547,
+     584
+    ],
+    [
+     "assistant",
+     584,
+     598
+    ],
+    [
+     "user",
+     598,
+     619
+    ],
+    [
+     "assistant",
+     619,
+     630
+    ],
+    [
+     "user",
+     630,
+     649
+    ],
+    [
+     "assistant",
+     649,
+     653
+    ]
+   ],
+   "tokens": 653
+  },
+  {
+   "id": "hindi-hinglish-03",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 3000,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     30
+    ],
+    [
+     "assistant",
+     30,
+     46
+    ],
+    [
+     "user",
+     46,
+     79
+    ],
+    [
+     "assistant",
+     79,
+     118
+    ],
+    [
+     "user",
+     118,
+     138
+    ],
+    [
+     "assistant",
+     138,
+     148
+    ],
+    [
+     "user",
+     148,
+     172
+    ],
+    [
+     "assistant",
+     172,
+     190
+    ],
+    [
+     "user",
+     190,
+     310
+    ],
+    [
+     "assistant",
+     310,
+     337
+    ],
+    [
+     "user",
+     337,
+     396
+    ],
+    [
+     "assistant",
+     396,
+     417
+    ],
+    [
+     "user",
+     417,
+     546
+    ],
+    [
+     "assistant",
+     546,
+     588
+    ],
+    [
+     "user",
+     588,
+     659
+    ],
+    [
+     "assistant",
+     659,
+     714
+    ],
+    [
+     "user",
+     714,
+     775
+    ],
+    [
+     "assistant",
+     775,
+     785
+    ],
+    [
+     "user",
+     785,
+     830
+    ],
+    [
+     "assistant",
+     830,
+     850
+    ]
+   ],
+   "tokens": 850
+  },
+  {
+   "id": "hindi-hinglish-04",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 4000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     16
+    ],
+    [
+     "assistant",
+     16,
+     36
+    ],
+    [
+     "user",
+     36,
+     90
+    ],
+    [
+     "assistant",
+     90,
+     109
+    ],
+    [
+     "user",
+     109,
+     146
+    ],
+    [
+     "assistant",
+     146,
+     168
+    ],
+    [
+     "user",
+     168,
+     183
+    ],
+    [
+     "assistant",
+     183,
+     199
+    ],
+    [
+     "user",
+     199,
+     250
+    ],
+    [
+     "assistant",
+     250,
+     255
+    ],
+    [
+     "user",
+     255,
+     285
+    ],
+    [
+     "assistant",
+     285,
+     299
+    ],
+    [
+     "user",
+     299,
+     305
+    ],
+    [
+     "assistant",
+     305,
+     343
+    ],
+    [
+     "user",
+     343,
+     384
+    ],
+    [
+     "assistant",
+     384,
+     409
+    ],
+    [
+     "user",
+     409,
+     446
+    ],
+    [
+     "assistant",
+     446,
+     449
+    ],
+    [
+     "user",
+     449,
+     457
+    ],
+    [
+     "assistant",
+     457,
+     463
+    ],
+    [
+     "user",
+     463,
+     484
+    ],
+    [
+     "assistant",
+     484,
+     498
+    ],
+    [
+     "user",
+     498,
+     513
+    ],
+    [
+     "assistant",
+     513,
+     546
+    ],
+    [
+     "user",
+     546,
+     554
+    ],
+    [
+     "assistant",
+     554,
+     557
+    ],
+    [
+     "user",
+     557,
+     585
+    ],
+    [
+     "assistant",
+     585,
+     615
+    ],
+    [
+     "user",
+     615,
+     622
+    ],
+    [
+     "assistant",
+     622,
+     632
+    ],
+    [
+     "user",
+     632,
+     647
+    ],
+    [
+     "assistant",
+     647,
+     659
+    ],
+    [
+     "user",
+     659,
+     680
+    ],
+    [
+     "assistant",
+     680,
+     700
+    ],
+    [
+     "user",
+     700,
+     752
+    ],
+    [
+     "assistant",
+     752,
+     765
+    ]
+   ],
+   "tokens": 765
+  },
+  {
+   "id": "hindi-hinglish-05",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 5000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     41
+    ],
+    [
+     "assistant",
+     41,
+     71
+    ],
+    [
+     "user",
+     71,
+     119
+    ],
+    [
+     "assistant",
+     119,
+     142
+    ],
+    [
+     "user",
+     142,
+     215
+    ],
+    [
+     "assistant",
+     215,
+     233
+    ],
+    [
+     "user",
+     233,
+     263
+    ],
+    [
+     "assistant",
+     263,
+     296
+    ],
+    [
+     "user",
+     296,
+     364
+    ],
+    [
+     "assistant",
+     364,
+     376
+    ],
+    [
+     "user",
+     376,
+     438
+    ],
+    [
+     "assistant",
+     438,
+     461
+    ],
+    [
+     "user",
+     461,
+     476
+    ],
+    [
+     "assistant",
+     476,
+     484
+    ],
+    [
+     "user",
+     484,
+     524
+    ],
+    [
+     "assistant",
+     524,
+     551
+    ],
+    [
+     "user",
+     551,
+     575
+    ],
+    [
+     "assistant",
+     575,
+     580
+    ],
+    [
+     "user",
+     580,
+     649
+    ],
+    [
+     "assistant",
+     649,
+     674
+    ],
+    [
+     "user",
+     674,
+     710
+    ],
+    [
+     "assistant",
+     710,
+     732
+    ],
+    [
+     "user",
+     732,
+     764
+    ],
+    [
+     "assistant",
+     764,
+     807
+    ]
+   ],
+   "tokens": 807
+  },
+  {
+   "id": "hindi-hinglish-06",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 6000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     5
+    ],
+    [
+     "assistant",
+     5,
+     21
+    ],
+    [
+     "user",
+     21,
+     44
+    ],
+    [
+     "assistant",
+     44,
+     56
+    ],
+    [
+     "user",
+     56,
+     60
+    ],
+    [
+     "assistant",
+     60,
+     96
+    ],
+    [
+     "user",
+     96,
+     116
+    ],
+    [
+     "assistant",
+     116,
+     134
+    ],
+    [
+     "user",
+     134,
+     146
+    ],
+    [
+     "assistant",
+     146,
+     154
+    ],
+    [
+     "user",
+     154,
+     160
+    ],
+    [
+     "assistant",
+     160,
+     164
+    ],
+    [
+     "user",
+     164,
+     183
+    ],
+    [
+     "assistant",
+     183,
+     187
+    ],
+    [
+     "user",
+     187,
+     204
+    ],
+    [
+     "assistant",
+     204,
+     220
+    ],
+    [
+     "user",
+     220,
+     244
+    ],
+    [
+     "assistant",
+     244,
+     283
+    ],
+    [
+     "user",
+     283,
+     305
+    ],
+    [
+     "assistant",
+     305,
+     324
+    ],
+    [
+     "user",
+     324,
+     335
+    ],
+    [
+     "assistant",
+     335,
+     349
+    ],
+    [
+     "user",
+     349,
+     355
+    ],
+    [
+     "assistant",
+     355,
+     391
+    ],
+    [
+     "user",
+     391,
+     424
+    ],
+    [
+     "assistant",
+     424,
+     440
+    ],
+    [
+     "user",
+     440,
+     445
+    ],
+    [
+     "assistant",
+     445,
+     476
+    ],
+    [
+     "user",
+     476,
+     487
+    ],
+    [
+     "assistant",
+     487,
+     502
+    ]
+   ],
+   "tokens": 502
+  },
+  {
+   "id": "hindi-hinglish-07",
+   "kind": "hindi",
+   "shape": "qa",
+   "source": "festvox/cmu_hinglish_dog",
+   "row": 7000,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     6
+    ],
+    [
+     "assistant",
+     6,
+     21
+    ],
+    [
+     "user",
+     21,
+     39
+    ],
+    [
+     "assistant",
+     39,
+     56
+    ],
+    [
+     "user",
+     56,
+     68
+    ],
+    [
+     "assistant",
+     68,
+     85
+    ],
+    [
+     "user",
+     85,
+     93
+    ],
+    [
+     "assistant",
+     93,
+     108
+    ],
+    [
+     "user",
+     108,
+     133
+    ],
+    [
+     "assistant",
+     133,
+     283
+    ],
+    [
+     "user",
+     283,
+     300
+    ],
+    [
+     "assistant",
+     300,
+     351
+    ],
+    [
+     "user",
+     351,
+     382
+    ],
+    [
+     "assistant",
+     382,
+     437
+    ],
+    [
+     "user",
+     437,
+     457
+    ],
+    [
+     "assistant",
+     457,
+     495
+    ],
+    [
+     "user",
+     495,
+     505
+    ],
+    [
+     "assistant",
+     505,
+     519
+    ],
+    [
+     "user",
+     519,
+     530
+    ],
+    [
+     "assistant",
+     530,
+     573
+    ],
+    [
+     "user",
+     573,
+     590
+    ],
+    [
+     "assistant",
+     590,
+     602
+    ]
+   ],
+   "tokens": 602
+  },
+  {
+   "id": "code-torch_code-00",
+   "kind": "code",
+   "shape": "long",
+   "source": "torch (the installed package)",
+   "row": "nn/modules/module.py",
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2630
+    ]
+   ],
+   "tokens": 2630
+  },
+  {
+   "id": "code-torch_code-01",
+   "kind": "code",
+   "shape": "long",
+   "source": "torch (the installed package)",
+   "row": "optim/adam.py",
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2659
+    ]
+   ],
+   "tokens": 2659
+  },
+  {
+   "id": "code-torch_code-02",
+   "kind": "code",
+   "shape": "long",
+   "source": "torch (the installed package)",
+   "row": "utils/data/dataloader.py",
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2656
+    ]
+   ],
+   "tokens": 2656
+  },
+  {
+   "id": "code-torch_code-03",
+   "kind": "code",
+   "shape": "long",
+   "source": "torch (the installed package)",
+   "row": "serialization.py",
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     2624
+    ]
+   ],
+   "tokens": 2624
+  },
+  {
+   "id": "science-wiki_long-00",
+   "kind": "science",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 150048,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2599
+    ]
+   ],
+   "tokens": 2599
+  },
+  {
+   "id": "science-wiki_long-01",
+   "kind": "science",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 550037,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2584
+    ]
+   ],
+   "tokens": 2584
+  },
+  {
+   "id": "science-wiki_long-02",
+   "kind": "science",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 950005,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2653
+    ]
+   ],
+   "tokens": 2653
+  },
+  {
+   "id": "science-wiki_long-03",
+   "kind": "science",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.en",
+   "row": 2150016,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     2598
+    ]
+   ],
+   "tokens": 2598
+  },
+  {
+   "id": "legal-scotus_long-00",
+   "kind": "legal",
+   "shape": "long",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 301,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2413
+    ]
+   ],
+   "tokens": 2413
+  },
+  {
+   "id": "legal-scotus_long-01",
+   "kind": "legal",
+   "shape": "long",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 1303,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2611
+    ]
+   ],
+   "tokens": 2611
+  },
+  {
+   "id": "legal-scotus_long-02",
+   "kind": "legal",
+   "shape": "long",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 2300,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2511
+    ]
+   ],
+   "tokens": 2511
+  },
+  {
+   "id": "legal-scotus_long-03",
+   "kind": "legal",
+   "shape": "long",
+   "source": "coastalcph/lex_glue scotus",
+   "row": 3300,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     2670
+    ]
+   ],
+   "tokens": 2670
+  },
+  {
+   "id": "stories-gutenberg-00",
+   "kind": "stories",
+   "shape": "long",
+   "source": "manu/project_gutenberg",
+   "row": 0,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2681
+    ]
+   ],
+   "tokens": 2681
+  },
+  {
+   "id": "stories-gutenberg-01",
+   "kind": "stories",
+   "shape": "long",
+   "source": "manu/project_gutenberg",
+   "row": 12000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2664
+    ]
+   ],
+   "tokens": 2664
+  },
+  {
+   "id": "stories-gutenberg-02",
+   "kind": "stories",
+   "shape": "long",
+   "source": "manu/project_gutenberg",
+   "row": 24000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2682
+    ]
+   ],
+   "tokens": 2682
+  },
+  {
+   "id": "stories-gutenberg-03",
+   "kind": "stories",
+   "shape": "long",
+   "source": "manu/project_gutenberg",
+   "row": 48000,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     2686
+    ]
+   ],
+   "tokens": 2686
+  },
+  {
+   "id": "news-news_long-00",
+   "kind": "news",
+   "shape": "long",
+   "source": "allenai/c4 realnewslike",
+   "row": 50000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2668
+    ]
+   ],
+   "tokens": 2668
+  },
+  {
+   "id": "news-news_long-01",
+   "kind": "news",
+   "shape": "long",
+   "source": "allenai/c4 realnewslike",
+   "row": 450000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2691
+    ]
+   ],
+   "tokens": 2691
+  },
+  {
+   "id": "news-news_long-02",
+   "kind": "news",
+   "shape": "long",
+   "source": "allenai/c4 realnewslike",
+   "row": 850000,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2628
+    ]
+   ],
+   "tokens": 2628
+  },
+  {
+   "id": "news-news_long-03",
+   "kind": "news",
+   "shape": "long",
+   "source": "allenai/c4 realnewslike",
+   "row": 1250000,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     2615
+    ]
+   ],
+   "tokens": 2615
+  },
+  {
+   "id": "hindi-hindi_long-00",
+   "kind": "hindi",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.hi",
+   "row": 2,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2526
+    ]
+   ],
+   "tokens": 2526
+  },
+  {
+   "id": "hindi-hindi_long-01",
+   "kind": "hindi",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.hi",
+   "row": 20008,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2571
+    ]
+   ],
+   "tokens": 2571
+  },
+  {
+   "id": "hindi-hindi_long-02",
+   "kind": "hindi",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.hi",
+   "row": 40009,
+   "split": "learn",
+   "spans": [
+    [
+     "user",
+     0,
+     2615
+    ]
+   ],
+   "tokens": 2615
+  },
+  {
+   "id": "hindi-hindi_long-03",
+   "kind": "hindi",
+   "shape": "long",
+   "source": "wikimedia/wikipedia 20231101.hi",
+   "row": 160014,
+   "split": "test",
+   "spans": [
+    [
+     "user",
+     0,
+     2580
+    ]
+   ],
+   "tokens": 2580
+  }
+ ]
+}
