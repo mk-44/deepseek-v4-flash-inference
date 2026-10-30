@@ -16,3 +16,6 @@ doubts.txt
 
 # the box's working copy of the notebook (cp arch.ipynb box_run.ipynb): runs there, never committed
 box_run.ipynb
+
+corpus/
+routes/
