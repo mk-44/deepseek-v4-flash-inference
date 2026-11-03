@@ -133,7 +133,7 @@ def check_layer(ckpt : Checkpoint, store : FullStore, layer : int, experts : tup
     return good
 
 
-def load_full(args : ModelArgs, n_layers : int, folder : str = "/v4local/ckpt", path : str = "/v4local/experts.bin"):
+def load_full(args : ModelArgs, n_layers : int, folder : str = "/v4local/ckpt", path : str = "/v4local/experts.bin", gpu_spare : int = 2 * 2**30):
     Path(folder).mkdir(parents = True, exist_ok = True)
     Path(path).unlink(missing_ok = True) # repacked file left by earlier run.
     ckpt = Checkpoint(folder)
@@ -142,7 +142,7 @@ def load_full(args : ModelArgs, n_layers : int, folder : str = "/v4local/ckpt", 
     static = static_bytes(ckpt, layers)
     _, place_bytes = place_layout(expert_on_disk(ckpt, 0, 0))
     gpu_free, ram_free = torch.cuda.mem_get_info()[0], psutil.virtual_memory().available
-    n_gpu, n_ram = tier_sizes(static, n_layers, place_bytes, gpu_free, ram_free)
+    n_gpu, n_ram = tier_sizes(static, n_layers, place_bytes, gpu_free, ram_free, gpu_spare)
     n_disk = 256 - n_gpu - n_ram
     repacked = n_layers * n_disk * place_bytes
     file_bytes = max(e.offset + e.nbytes for e in ckpt.entries.values()) # the largest checkpoint file
