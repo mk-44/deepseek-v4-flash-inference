@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from pathlib import Path
+os.environ.setdefault("PYTORCH_ALLOC_CONF", "expandable_segments:True") # before torch loads: its GPU memory pool grows in pages it can remap, so holes can serve big tensors
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -124,7 +125,8 @@ def run_pass(model : Transformer, store : Store, recorder : RouteRecorder, texts
         "check 4 misses" : check4,
         "disk read s" : round(store.read_s - read0, 3), 
         "copy wait s" : round(store.wait_s - wait0, 3),
-        "GPU peak GB" : round(torch.cuda.max_memory_allocated() / 1e9, 2)
+        "GPU peak GB" : round(torch.cuda.max_memory_allocated() / 1e9, 2), # live tensors only
+        "GPU reserved peak GB" : round(torch.cuda.max_memory_reserved() / 1e9, 2) # everything PyTorch holds: live tensors + holes
     }
     
     return lines, stats
@@ -240,7 +242,7 @@ if __name__ == "__main__":
         model, store, blocks = small_model(args, list(range(int(sys.argv[1]))))
         folder = Path("/tmp/routes_dry")
     else:
-        model, store = load_full(args, args.n_layers, gpu_spare = 3 * 2**30) # leave 3 GiB free for a pass: the biggest needs ~2.4 GB
+        model, store = load_full(args, args.n_layers, gpu_spare = 4 * 2**30) # leave 4 GiB free for a pass: the biggest needs ~2.4 GB plus room for holes
         blocks = dict(enumerate(model.layers))
         folder = ROUTES
     
@@ -271,7 +273,7 @@ if __name__ == "__main__":
         f = stats["loads"]
         checks = "ok" if stats["check 3 ok"] and stats["check 4 ok"] else "FAILED"
         print(f"pass {k + 1}/{len(passes)} [{stats['b']}, {stats['s']}]: {stats['seconds']:.1f} s | loads {f['gpu']}/{f['ram']}/{f['disk']} |"
-              f" checks 3/4 {checks} | disk read {stats['disk read s']:.1f} s, copy {stats['copy wait s']:.1f} s | GPU peak {stats['GPU peak GB']:.2f} GB |"
+              f" checks 3/4 {checks} | disk read {stats['disk read s']:.1f} s, copy {stats['copy wait s']:.1f} s | GPU peak {stats['GPU peak GB']:.2f} GB, reserved {stats['GPU reserved peak GB']:.2f} GB |"
               f" {(time.perf_counter() - t1) / 60:.1f} min so far | " + ", ".join(t["id"] for t in p))
 
     summary["recomputed top 6 differ"] = recorder.mismatch
