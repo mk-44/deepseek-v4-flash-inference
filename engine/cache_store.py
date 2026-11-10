@@ -7,8 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 import psutil
 import torch
-from arch import Checkpoint, read_header
-from expert_store import ExpertDisk, Tiers, copy_to_gpu, expert_on_disk, place_layout, place_tensor, read_expert
+from arch import Checkpoint, read_header, clock, load_weight
+from expert_store import ExpertDisk, Tiers, copy_to_gpu, expert_on_disk, place_layout, place_tensor, read_expert, decode_expert
 from full_store import saved_entries, static_bytes, tier_sizes
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 from expert_plan import E, load_texts, make_plan
@@ -174,6 +174,7 @@ class CacheStore: # 5 tiers on actual bytes
         self.n = dict.fromkeys(KEYS + ("gpu", "ram", "disk"), 0) # bookkeeping counters + fetches by where the bytes are.
         self.read_s = self.wait_s = 0.0 # seconds reading the disk, seconds waiting for copies
         self.frozen = False # True during the teacher forced check
+        self.pending = {} # ram place to cuda event, done once the copies swap queued on that place are done.
     
     def place_of(self, home : CacheHome) -> torch.Tensor: # [place_bytes] uint8 - the bytes in fast place [tiers 1 to 4]
         return self.tiers.gpu[home.place] if home.tier <= 2 else self.tiers.ram_place(home.place)
@@ -246,7 +247,7 @@ class CacheStore: # 5 tiers on actual bytes
             out += [block[0][1], block[-1][1]] if block else []
         return out
     
-    def check_layer(self, ckpt : Checkpoint, layer : int, experts = None) -> list[int]: # the experts whose stored bytes differ from their checkpoint file's
+    def check_layer(self, ckpt : Checkpoint, layer : int, experts = None) -> list[int]: # experts whose stored bytes differ from their checkpoint file's
         differ = []
         for e in self.edges(layer) if experts is None else experts:
             h = self.homes[layer, e]
@@ -260,6 +261,116 @@ class CacheStore: # 5 tiers on actual bytes
                 differ.append(e)
         
         return differ
+    
+    def write_copies(self) -> float: # after the load, write each cache expert's bytes from its fast place into its slot
+        assert self.n["pre kept"] + self.n["down"] + self.n["drop"] == 0, "write the copies before any expert moves" 
+        
+        t = time.perf_counter()
+        
+        for h in self.homes.values():
+            if h.tier == 2:
+                self.stage.copy_(self.tiers.gpu[h.place]) # GPU -> pinned RAM first: the disk can't read GPU memory
+                self.write_slot(h, self.stage)
+            elif h.tier == 4:
+                self.write_slot(h, self.tiers.ram_place(h.place)) # a RAM place is pinned and 4 KB aligned: written as it is
+        return time.perf_counter() - t
+
+    def check_copies(self) -> list[tuple]: # check if cache experts disk copy differs from their fast place
+        differ = []
+        for (l, e), h in self.homes.items():
+            if h.tier not in (2, 4):
+                continue
+            self.read_slot(h, self.stage)
+            if h.tier == 2:
+                self.working.copy_(self.stage) # up to the GPU, to compare it with its GPU place there
+                same = torch.equal(self.working, self.tiers.gpu[h.place])
+            else:
+                same = torch.equal(self.stage, self.tiers.ram_place(h.place))
+            if not same:
+                differ.append((l, e))
+        return differ
+    
+    def stored_on_gpu(self, layer : int, expert : int) -> torch.Tensor: # [place_bytes] on gpu i.e. expert bytes from wherever it is.
+        h = self.homes[layer, expert]
+        
+        if h.tier <= 2:
+            self.n["gpu"] += 1
+            return self.tiers.gpu[h.place] # already on gpu, so no copy.
+        
+        if h.tier <= 4:
+            self.n["ram"] += 1
+            self.working.copy_(self.tiers.ram_place(h.place), non_blocking = True) # one copy up, the decode after it waits on gpu, not here
+            return self.working
+        
+        self.n["disk"] += 1
+        self.read_slot(h, self.stage)
+        t = time.perf_counter()
+        self.working.copy_(self.stage, non_blocking = True)
+        done = torch.cuda.Event()
+        done.record()
+        done.synchronize() # as the next disk read reuses stage
+        self.wait_s += time.perf_counter() - t
+        return self.working
+    
+    def fetch(self, layer : int, expert : int) -> dict[str, torch.Tensor]: # {"w1", "w2", "w3"}: BF16 weights on the GPU, what StoreExpert asks for
+        return decode_expert(self.stored_on_gpu(layer, expert), self.layout)
+    
+    def wait(self, done : torch.cuda.Event): # the cpu waits until the gpu has done everything queued before 'done'
+        t = time.perf_counter()
+        done.synchronize()
+        self.wait_s += time.perf_counter() - t
+        
+    def swap(self, layer : int, e : int, a : int): # e [ram cache] to free gpu place and [gpu cache] down into the ram place e left i.e. 2 copies
+        he, ha = self.homes[layer, e], self.homes[layer, a]
+        p, g, f = he.place, ha.place, self.free.popleft() # e's ram place, a's gpu place, gpu place that holds nobody
+        
+        self.tiers.gpu[f].copy_(self.tiers.ram_place(p), non_blocking = True) # e up
+        self.tiers.ram_place(p).copy_(self.tiers.gpu[g], non_blocking = True) # a down, queued behind e's copy up, so it can't overwrite e's bytes.
+        
+        done = torch.cuda.Event()
+        done.record()
+        
+        self.pending[p] = done # as both copies use p so the cpu must not write into p before they are done.
+        self.free.append(g) # a's old gpu place holds nobody now.
+        he.tier, he.place = 2, f
+        ha.tier, ha.place = 4, p
+    
+    def take_place(self, layer : int, e : int, z : int): # e [read] from its slot takes z's fast place and z is only on its disk copy.
+        he, hz = self.homes[layer, e], self.homes[layer, z]
+        he.tier, he.place = hz.tier, hz.place
+        hz.tier, hz.place = 5, -1
+        
+        if he.tier == 4: # i.e. ram place, so its pinned and 4 KB aligned, so the read lands in it directly.
+            done = self.pending.pop(he.place, None)
+            if done is not None:
+                self.wait(done) # copies a swap queued on this place, so its must finish before the cpu overwrites it.
+            self.read_slot(he, self.tiers.ram_place(he.place))
+            
+        else: # gpu place, so the read lands in stage and then one copy up
+            self.read_slot(he, self.stage)
+            self.tiers.gpu[he.place].copy_(self.stage, non_blocking = True)
+            done = torch.cuda.Event()
+            done.record()
+            self.wait(done)
+    
+    def prepare(self, layer : int, rows : list[list[int]]) -> list[tuple]: 
+        # one gate call picks [tokens][6], so its cache moves, done on the bytes before the MoE loop fetches.
+        
+        if self.frozen: # the teacher-forced check i.e. no move, no bookkeeping count
+            return []
+        
+        cache = self.caches[layer]
+        moves = cache.prefill(rows, self.n) if len(rows) > 1 else cache.decode(rows[0], self.n) # as a prompt has many tokens but a decode one step.
+        
+        for m in moves:
+            if m[0] == "swap": # ("swap", e, a)
+                self.swap(layer, m[1], m[2])
+            else: # ("keep", e, z) or ("miss", e, z, a) i.e. e takes z's place (no ram part as z is the gpu oldest, a is None)
+                self.take_place(layer, m[1], m[2])
+                if m[0] == "miss" and m[3] is not None: # z ram place, so e sits there now and goes up like a ram hit.
+                    self.swap(layer, m[1], m[3])
+        return moves
+
 
 
 if __name__ == "__main__":
@@ -268,33 +379,64 @@ if __name__ == "__main__":
     for l in range(4): # the downloaded files must match those headers, or every offset above is wrong
         file = ckpt.folder / ckpt.file_of[f"layers.{l}.ffn.experts.0.w1.weight"]
         assert all(ckpt.entries[n] == e for n, e in read_header(file).items()), f"{file}: header differs from the saved one"
-    plan = make_plan(load_texts(), 56, 55, 191)
+    texts = load_texts()
+    calls = [c for p in json.load(open(FIXED_HOME))["prompts"].values() for c in p["calls"] if c["layer"] < 4] # the fixed_home run's gate calls at layers 0-3, in run order
     torch.zeros(1, device = "cuda")
-    store = CacheStore(ckpt, plan, 4) # the first 4 layers, with the last decode box's sizes
-    print(f"L3's edges (first and last of tiers 1-5): {store.edges(3)}")
-    t0 = time.perf_counter()
-    for l in range(4):
-        s = store.fill(l)
-        check = f" | check L{l - 1}'s edges: differ {store.check_layer(ckpt, l - 1)}" if l > 0 else "" # one layer late
-        print(f"  L{l}: read {s['read']:.1f} s, to GPU {s['gpu']:.2f} s, to RAM {s['ram']:.2f} s, to experts.bin {s['disk']:.1f} s"
-              f" | experts.bin {os.path.getsize(store.path) / 1e9:.2f} GB{check}")
-    print(f"  check L3's edges: differ {store.check_layer(ckpt, 3)} | 4 layers filled in {time.perf_counter() - t0:.0f} s")
-    t0 = time.perf_counter()
-    differ = [(l, e) for l in range(4) for e in store.check_layer(ckpt, l, range(E))]
-    tiers = [h.tier for h in store.homes.values()]
-    print(f"every expert, against its checkpoint bytes: " + ", ".join(f"tier {k} {tiers.count(k)}" for k in range(1, 6)) +
-          f" | differ {differ} | {time.perf_counter() - t0:.0f} s")
-    h = store.homes[3, plan["layers"][3]["gpu cache"][0]]
-    store.place_of(h)[0] ^= 1 # on purpose: one flipped bit in a GPU place
-    print(f"  one bit flipped in L3 expert {plan['layers'][3]['gpu cache'][0]}'s GPU place: differ {store.check_layer(ckpt, 3)}")
-    store.place_of(h)[0] ^= 1
-    h = store.homes[3, plan["layers"][3]["disk only"][0]]
-    store.read_slot(h, store.stage)
-    store.stage[0] ^= 1
-    store.write_slot(h, store.stage) # on purpose: one flipped bit in an experts.bin slot
-    print(f"  one bit flipped in L3 expert {plan['layers'][3]['disk only'][0]}'s slot: differ {store.check_layer(ckpt, 3)}")
-    store.read_slot(h, store.stage) # again: check_layer used stage for every tier-5 expert it checked
-    store.stage[0] ^= 1
-    store.write_slot(h, store.stage)
-    print(f"  both put back: differ {store.check_layer(ckpt, 3)}")
-    store.close()
+    for sizes in ((56, 55, 191), (2, 1, 256)): # the last decode box's sizes, then a tiny cache: 2 GPU + 1 RAM places per layer, nothing fixed
+        plan = make_plan(texts, *sizes)
+        t = plan["layers"][0]
+        print(f"{sizes[0]} GPU + {sizes[1]} RAM + {sizes[2]} disk places: C = {plan['n_cache']} | per layer GPU {len(t['gpu fixed'])} fixed + {len(t['gpu cache'])} cache,"
+              f" RAM {len(t['ram fixed'])} fixed + {len(t['ram cache'])} cache, {len(t['disk only'])} disk only")
+        store = CacheStore(ckpt, plan, 4)
+        t0 = time.perf_counter()
+        for l in range(4):
+            store.fill(l)
+        store.write_copies() # every cache expert's disk copy: a move may drop any of them
+        print(f"  filled 4 layers and wrote the cache copies in {time.perf_counter() - t0:.0f} s")
+
+        log, broken, differ, checked, refill = [], 0, [], 0, 0
+        t0 = time.perf_counter()
+        for c in calls:
+            l, read0 = c["layer"], store.read_s
+            t = clock()
+            moves = store.prepare(l, c["experts"])
+            log.append((clock() - t, store.read_s - read0, len(c["experts"]) > 1, tuple(m[0] for m in moves))) # clock() waits for the GPU: every copy is done
+            broken += len(store.check_table()) > 0
+            touched = sorted({e for m in moves for e in m[1:] if e is not None}) # every expert a move put somewhere new
+            differ += [(l, e) for e in store.check_layer(ckpt, l, touched)]
+            checked += len(touched)
+            down = set() # experts this call moved down into a RAM place
+            for m in moves:
+                if m[0] == "keep" or m[-1] is None: # keeps, and misses with no RAM part, move nobody down
+                    continue
+                refill += m[0] == "miss" and m[2] in down # z's RAM place still had this call's copies queued: take_place had to wait
+                down.add(m[-1])
+        pre, dec = [r for r in log if r[2]], [r for r in log if not r[2]]
+        print(f"  replayed {len(calls)} gate calls ({len(pre)} prefill + {len(dec)} decode) in {time.perf_counter() - t0:.0f} s, checks included")
+        print(f"    counters: {store.n}")
+        print(f"    calls that broke the table: {broken} | moved experts whose bytes differ: {len(differ)} of {checked} checked {differ[:5]}"
+              f" | a miss dropped an expert this call had just moved down: {refill} times")
+        mid = lambda v : f"{sorted(v)[len(v) // 2] * 1e3:.2f} ms" if v else "-" # the middle value
+        no_move = [r[0] for r in dec if r[3] == ()]
+        one_swap = [r[0] for r in dec if r[3] == ("swap",)]
+        one_miss = [r for r in dec if r[3] == ("miss",)]
+        print(f"    per decode call (middle value): no move {mid(no_move)} ({len(no_move)} calls) | one swap {mid(one_swap)} ({len(one_swap)})"
+              f" | one miss {mid([r[0] for r in one_miss])}, of it disk read {mid([r[1] for r in one_miss])} ({len(one_miss)})")
+        print(f"    in all: prefill {sum(r[0] for r in pre):.2f} s for {store.n['pre kept']} keeps, decode {sum(r[0] for r in dec):.2f} s |"
+              f" of it disk reads {sum(r[1] for r in log):.2f} s, waits for copies {store.wait_s:.2f} s")
+
+        tiers, differ = [0] * 5, []
+        for l in range(4):
+            for e in range(E):
+                tiers[store.homes[l, e].tier - 1] += 1
+            differ += [(l, e) for e in store.check_layer(ckpt, l, range(E))]
+        copies = store.check_copies()
+        print(f"  all 1,024 experts: tiers 1-5 {tiers}, bytes differ {len(differ)} {differ[:5]} | disk copies differ {len(copies)} {copies[:5]} | free places {sorted(store.free)}")
+
+        snap = lambda : ({k : (h.tier, h.place) for k, h in store.homes.items()}, [(list(c.gpu), list(c.ram)) for c in store.caches], dict(store.n))
+        before = snap()
+        store.frozen = True
+        moves = [m for c in calls[: 8] for m in store.prepare(c["layer"], c["experts"])] # the first prompt's prefill and first decode token, all 4 layers
+        store.frozen = False
+        print(f"  frozen: prepare returned {moves}, moved and counted nothing: {snap() == before}")
+        store.close()
