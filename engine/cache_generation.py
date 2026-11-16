@@ -11,7 +11,7 @@ from full_store import saved_entries
 from generation import generate_greedy, teacher_forced_check
 from store_moe import MoEWatch
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
-from expert_plan import INDEX, ROUTES, load_texts, make_plan
+from expert_plan import E, INDEX, ROUTES, load_texts, make_plan
 
 N_FIXED = 32 # new tokens for each of the fixed_home run 4 prompts - as we did same for that run.
 N_TEST = 150 # new tokens for each test prompt
@@ -283,6 +283,7 @@ def profile_tokens(model : Transformer, args : ModelArgs, trace : CacheTrace, id
 if __name__ == "__main__":
     args = ModelArgs(**json.load(open("deepseek_official/0731/inference/config.json")))
     n_layers = int(sys.argv[1]) if len(sys.argv) > 1 else args.n_layers
+    cap = int(sys.argv[2]) if len(sys.argv) > 2 else None # most cache places per layer: 0 = run S, fixed experts only; None = as many as the disk allows
     dry = n_layers < args.n_layers
     ckpt = Checkpoint(FOLDER)
     
@@ -298,7 +299,8 @@ if __name__ == "__main__":
     assert box["load_peak"] <= box["disk_free"], "the downloads and the disk-only experts won't fit on the local disk during the load"
     
     t = time.perf_counter()
-    plan = make_plan(load_texts(), box["n_gpu"], box["n_ram"], box["n_disk"])
+    n_disk = box["n_disk"] if cap is None else min(box["n_disk"], E - box["n_gpu"] - box["n_ram"] + cap) # disk-only experts + at most cap cache copies
+    plan = make_plan(load_texts(), box["n_gpu"], box["n_ram"], n_disk)
     
     print(f"plan in {time.perf_counter() - t:.0f} s: fixed experts by the {plan['order']!r} order | disk reads per token on the learn answers:"
           + "".join(f" {name} {reads:.1f}" for name, reads in plan["learn_reads"].items()))
@@ -316,7 +318,8 @@ if __name__ == "__main__":
     sky = json.load(open(FIXED_HOME))["prompts"]["sky"]["prompt"]
     
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
-    path = "/tmp/cache_generation_dry.json" if dry else f"results/cache_generation_{os.uname().nodename}_{stamp}.json"
+    tag = "" if cap is None else f"_C{cap}" # S's files say so: ..._C0.json
+    path = f"/tmp/cache_generation_dry{tag}.json" if dry else f"results/cache_generation_{os.uname().nodename}_{stamp}{tag}.json"
     with torch.inference_mode():
         out = run_prompts(model, args, tokenizer, trace, log, plan, n_layers, path, n_test = 10 if dry else N_TEST)
         out["box"], out["load seconds"] = box, load_s
