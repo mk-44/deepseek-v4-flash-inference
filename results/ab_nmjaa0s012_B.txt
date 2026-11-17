@@ -1,0 +1,268 @@
+plan, by expert id: 56 GPU + 61 RAM + 139 disk experts per layer, 43 layers
+  GPU 50.88 GB free: static weights 16.36 + tier 32.19 GB
+  RAM 41.4 GiB available: tier 32.7 GiB,   pinned in 33 pieces of 1 GiB
+  disk 101 GB free: repacked file 79.9 GB + up to 4 checkpoint files 14.8 GB
+45 files to /v4local/ckpt, 101 GB free there
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+store ready in 17.1 s | GPU allocated 32.21 GB
+  file model-00001-of-00048.safetensors (embed.*): 1.06 GB downloaded in 20.4 s (0.05 GB/s), waited 3.3 s
+  file model-00045-of-00048.safetensors (head.*): 1.06 GB downloaded in 5.5 s (0.19 GB/s), waited 5.5 s
+  file model-00002-of-00048.safetensors (layers.0.*): 3.57 GB downloaded in 14.9 s (0.24 GB/s), waited 0.0 s
+  L0: static 3.2 s | experts: read 4.4 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | GPU 35.7 GB | RAM available 5.3 GiB | disk free 92 GB
+  file model-00003-of-00048.safetensors (layers.1.*): 3.57 GB downloaded in 20.3 s (0.18 GB/s), waited 8.5 s
+  L1: static 0.5 s | experts: read 7.3 s, to GPU 0.04 s, to RAM 0.08 s, to the repacked file 2.9 s | check L0 6/6 | GPU 35.9 GB | RAM available 4.4 GiB | disk free 88 GB
+  file model-00004-of-00048.safetensors (layers.2.*): 3.60 GB downloaded in 19.4 s (0.19 GB/s), waited 8.2 s
+  L2: static 3.4 s | experts: read 4.7 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 3.1 s | check L1 6/6 | GPU 36.3 GB | RAM available 5.0 GiB | disk free 86 GB
+  file model-00005-of-00048.safetensors (layers.3.*): 3.57 GB downloaded in 20.4 s (0.18 GB/s), waited 8.5 s
+  L3: static 0.5 s | experts: read 7.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L2 6/6 | GPU 36.6 GB | RAM available 5.0 GiB | disk free 84 GB
+  file model-00006-of-00048.safetensors (layers.4.*): 3.59 GB downloaded in 18.4 s (0.20 GB/s), waited 7.4 s
+  L4: static 0.3 s | experts: read 7.4 s, to GPU 0.05 s, to RAM 0.09 s, to the repacked file 2.6 s | check L3 6/6 | GPU 36.9 GB | RAM available 5.3 GiB | disk free 82 GB
+  file model-00007-of-00048.safetensors (layers.5.*): 3.57 GB downloaded in 18.3 s (0.20 GB/s), waited 7.4 s
+  L5: static 0.6 s | experts: read 6.7 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.4 s | check L4 6/6 | GPU 37.2 GB | RAM available 5.1 GiB | disk free 81 GB
+  file model-00008-of-00048.safetensors (layers.6.*): 3.59 GB downloaded in 18.2 s (0.20 GB/s), waited 7.7 s
+  L6: static 3.1 s | experts: read 4.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.8 s | check L5 6/6 | GPU 37.5 GB | RAM available 5.0 GiB | disk free 79 GB
+  file model-00009-of-00048.safetensors (layers.7.*): 3.57 GB downloaded in 18.4 s (0.19 GB/s), waited 7.3 s
+  L7: static 1.3 s | experts: read 6.3 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L6 6/6 | GPU 37.8 GB | RAM available 5.3 GiB | disk free 77 GB
+  file model-00010-of-00048.safetensors (layers.8.*): 3.59 GB downloaded in 18.4 s (0.19 GB/s), waited 7.4 s
+  L8: static 0.2 s | experts: read 7.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L7 6/6 | GPU 38.1 GB | RAM available 5.3 GiB | disk free 75 GB
+  file model-00011-of-00048.safetensors (layers.9.*): 3.57 GB downloaded in 18.8 s (0.19 GB/s), waited 7.8 s
+  L9: static 0.3 s | experts: read 7.0 s, to GPU 0.05 s, to RAM 0.10 s, to the repacked file 2.7 s | check L8 6/6 | GPU 38.4 GB | RAM available 4.4 GiB | disk free 73 GB
+  file model-00012-of-00048.safetensors (layers.10.*): 3.59 GB downloaded in 18.2 s (0.20 GB/s), waited 7.5 s
+  L10: static 1.0 s | experts: read 6.4 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L9 6/6 | GPU 38.7 GB | RAM available 5.1 GiB | disk free 71 GB
+  file model-00013-of-00048.safetensors (layers.11.*): 3.57 GB downloaded in 19.6 s (0.18 GB/s), waited 8.7 s
+  L11: static 0.6 s | experts: read 6.7 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L10 6/6 | GPU 39.0 GB | RAM available 4.8 GiB | disk free 70 GB
+  file model-00014-of-00048.safetensors (layers.12.*): 3.59 GB downloaded in 18.1 s (0.20 GB/s), waited 7.5 s
+  L12: static 3.0 s | experts: read 5.3 s, to GPU 0.04 s, to RAM 0.08 s, to the repacked file 2.9 s | check L11 6/6 | GPU 39.4 GB | RAM available 5.2 GiB | disk free 68 GB
+  file model-00015-of-00048.safetensors (layers.13.*): 3.57 GB downloaded in 19.6 s (0.18 GB/s), waited 7.7 s
+  L13: static 0.2 s | experts: read 7.0 s, to GPU 0.04 s, to RAM 0.08 s, to the repacked file 2.9 s | check L12 6/6 | GPU 39.7 GB | RAM available 4.8 GiB | disk free 66 GB
+  file model-00016-of-00048.safetensors (layers.14.*): 3.59 GB downloaded in 18.5 s (0.19 GB/s), waited 7.9 s
+  L14: static 2.8 s | experts: read 4.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L13 6/6 | GPU 40.0 GB | RAM available 4.5 GiB | disk free 64 GB
+  file model-00017-of-00048.safetensors (layers.15.*): 3.57 GB downloaded in 17.7 s (0.20 GB/s), waited 7.0 s
+  L15: static 0.2 s | experts: read 6.8 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L14 6/6 | GPU 40.3 GB | RAM available 4.9 GiB | disk free 62 GB
+  file model-00018-of-00048.safetensors (layers.16.*): 3.59 GB downloaded in 17.2 s (0.21 GB/s), waited 6.9 s
+  L16: static 2.9 s | experts: read 5.3 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 3.2 s | check L15 6/6 | GPU 40.6 GB | RAM available 5.0 GiB | disk free 60 GB
+  file model-00019-of-00048.safetensors (layers.17.*): 3.57 GB downloaded in 19.6 s (0.18 GB/s), waited 7.5 s
+  L17: static 1.1 s | experts: read 7.3 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.8 s | check L16 6/6 | GPU 40.9 GB | RAM available 4.1 GiB | disk free 59 GB
+  file model-00020-of-00048.safetensors (layers.18.*): 3.59 GB downloaded in 19.7 s (0.18 GB/s), waited 7.8 s
+  L18: static 0.6 s | experts: read 7.0 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 3.0 s | check L17 6/6 | GPU 41.2 GB | RAM available 4.8 GiB | disk free 57 GB
+  file model-00021-of-00048.safetensors (layers.19.*): 3.57 GB downloaded in 18.5 s (0.19 GB/s), waited 7.2 s
+  L19: static 2.4 s | experts: read 5.3 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L18 6/6 | GPU 41.5 GB | RAM available 4.4 GiB | disk free 55 GB
+  file model-00022-of-00048.safetensors (layers.20.*): 3.59 GB downloaded in 18.5 s (0.19 GB/s), waited 7.5 s
+  L20: static 1.0 s | experts: read 6.7 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L19 6/6 | GPU 41.8 GB | RAM available 4.9 GiB | disk free 53 GB
+  file model-00023-of-00048.safetensors (layers.21.*): 3.57 GB downloaded in 18.8 s (0.19 GB/s), waited 7.7 s
+  L21: static 2.7 s | experts: read 5.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 3.2 s | check L20 6/6 | GPU 42.1 GB | RAM available 4.5 GiB | disk free 51 GB
+  file model-00024-of-00048.safetensors (layers.22.*): 3.59 GB downloaded in 34.3 s (0.10 GB/s), waited 22.7 s
+  L22: static 0.2 s | experts: read 7.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L21 6/6 | GPU 42.5 GB | RAM available 4.6 GiB | disk free 50 GB
+  file model-00025-of-00048.safetensors (layers.23.*): 3.57 GB downloaded in 27.3 s (0.13 GB/s), waited 16.6 s
+  L23: static 0.4 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L22 6/6 | GPU 42.7 GB | RAM available 4.6 GiB | disk free 48 GB
+  file model-00026-of-00048.safetensors (layers.24.*): 3.59 GB downloaded in 28.2 s (0.13 GB/s), waited 17.9 s
+  L24: static 3.5 s | experts: read 4.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L23 6/6 | GPU 43.1 GB | RAM available 4.4 GiB | disk free 45 GB
+  file model-00027-of-00048.safetensors (layers.25.*): 3.57 GB downloaded in 30.2 s (0.12 GB/s), waited 18.7 s
+  L25: static 2.9 s | experts: read 4.6 s, to GPU 0.05 s, to RAM 0.10 s, to the repacked file 2.8 s | check L24 6/6 | GPU 43.4 GB | RAM available 4.2 GiB | disk free 44 GB
+  file model-00028-of-00048.safetensors (layers.26.*): 3.59 GB downloaded in 18.3 s (0.20 GB/s), waited 7.3 s
+  L26: static 0.2 s | experts: read 6.9 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.2 s | check L25 6/6 | GPU 43.7 GB | RAM available 5.2 GiB | disk free 42 GB
+  file model-00029-of-00048.safetensors (layers.27.*): 3.57 GB downloaded in 17.6 s (0.20 GB/s), waited 7.7 s
+  L27: static 0.4 s | experts: read 6.8 s, to GPU 0.05 s, to RAM 0.09 s, to the repacked file 2.9 s | check L26 6/6 | GPU 44.0 GB | RAM available 4.7 GiB | disk free 40 GB
+  file model-00030-of-00048.safetensors (layers.28.*): 3.59 GB downloaded in 17.9 s (0.20 GB/s), waited 7.0 s
+  L28: static 0.4 s | experts: read 6.8 s, to GPU 0.05 s, to RAM 0.09 s, to the repacked file 2.7 s | check L27 6/6 | GPU 44.3 GB | RAM available 4.7 GiB | disk free 38 GB
+  file model-00031-of-00048.safetensors (layers.29.*): 3.57 GB downloaded in 19.8 s (0.18 GB/s), waited 9.3 s
+  L29: static 3.0 s | experts: read 4.6 s, to GPU 0.05 s, to RAM 0.09 s, to the repacked file 3.0 s | check L28 6/6 | GPU 44.6 GB | RAM available 4.8 GiB | disk free 38 GB
+  file model-00032-of-00048.safetensors (layers.30.*): 3.59 GB downloaded in 21.6 s (0.17 GB/s), waited 10.4 s
+  L30: static 0.3 s | experts: read 7.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.8 s | check L29 6/6 | GPU 44.9 GB | RAM available 5.2 GiB | disk free 45 GB
+  file model-00033-of-00048.safetensors (layers.31.*): 3.57 GB downloaded in 20.8 s (0.17 GB/s), waited 9.8 s
+  L31: static 0.5 s | experts: read 6.9 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.8 s | check L30 6/6 | GPU 45.2 GB | RAM available 4.5 GiB | disk free 68 GB
+  file model-00034-of-00048.safetensors (layers.32.*): 3.59 GB downloaded in 20.2 s (0.18 GB/s), waited 9.4 s
+  L32: static 3.1 s | experts: read 4.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L31 6/6 | GPU 45.6 GB | RAM available 4.9 GiB | disk free 97 GB
+  file model-00035-of-00048.safetensors (layers.33.*): 3.57 GB downloaded in 19.5 s (0.18 GB/s), waited 8.8 s
+  L33: static 2.6 s | experts: read 4.4 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L32 6/6 | GPU 45.8 GB | RAM available 4.7 GiB | disk free 117 GB
+  file model-00036-of-00048.safetensors (layers.34.*): 3.59 GB downloaded in 20.7 s (0.17 GB/s), waited 10.2 s
+  L34: static 3.0 s | experts: read 4.4 s, to GPU 0.05 s, to RAM 0.09 s, to the repacked file 2.6 s | check L33 6/6 | GPU 46.2 GB | RAM available 4.6 GiB | disk free 126 GB
+  file model-00037-of-00048.safetensors (layers.35.*): 3.57 GB downloaded in 17.5 s (0.20 GB/s), waited 6.9 s
+  L35: static 2.7 s | experts: read 6.7 s, to GPU 0.05 s, to RAM 0.09 s, to the repacked file 3.1 s | check L34 6/6 | GPU 46.5 GB | RAM available 4.7 GiB | disk free 124 GB
+  file model-00038-of-00048.safetensors (layers.36.*): 3.59 GB downloaded in 20.8 s (0.17 GB/s), waited 7.6 s
+  L36: static 0.7 s | experts: read 7.0 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.6 s | check L35 6/6 | GPU 46.8 GB | RAM available 4.2 GiB | disk free 122 GB
+  file model-00039-of-00048.safetensors (layers.37.*): 3.57 GB downloaded in 19.7 s (0.18 GB/s), waited 8.7 s
+  L37: static 2.5 s | experts: read 5.2 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 3.0 s | check L36 6/6 | GPU 47.1 GB | RAM available 4.8 GiB | disk free 120 GB
+  file model-00040-of-00048.safetensors (layers.38.*): 3.59 GB downloaded in 21.5 s (0.17 GB/s), waited 10.0 s
+  L38: static 3.1 s | experts: read 4.3 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.7 s | check L37 6/6 | GPU 47.4 GB | RAM available 4.0 GiB | disk free 119 GB
+  file model-00041-of-00048.safetensors (layers.39.*): 3.57 GB downloaded in 19.0 s (0.19 GB/s), waited 8.2 s
+  L39: static 0.8 s | experts: read 6.9 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.8 s | check L38 6/6 | GPU 47.7 GB | RAM available 4.5 GiB | disk free 117 GB
+  file model-00042-of-00048.safetensors (layers.40.*): 3.59 GB downloaded in 18.7 s (0.19 GB/s), waited 7.6 s
+  L40: static 3.1 s | experts: read 4.6 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.9 s | check L39 6/6 | GPU 48.0 GB | RAM available 5.0 GiB | disk free 115 GB
+  file model-00043-of-00048.safetensors (layers.41.*): 3.57 GB downloaded in 18.6 s (0.19 GB/s), waited 7.4 s
+  L41: static 3.2 s | experts: read 4.5 s, to GPU 0.05 s, to RAM 0.08 s, to the repacked file 2.8 s | check L40 6/6 | GPU 48.3 GB | RAM available 4.4 GiB | disk free 113 GB
+  file model-00044-of-00048.safetensors (layers.42.*): 3.59 GB downloaded in 18.3 s (0.20 GB/s), waited 7.1 s
+  L42: static 0.7 s | experts: read 3.6 s, to GPU 0.06 s, to RAM 0.10 s, to the repacked file 2.5 s | check L41 6/6 | GPU 48.7 GB | RAM available 6.8 GiB | disk free 113 GB
+checks: 258/258 experts reach the GPU with exactly their file's bytes
+model ready in 14.9 min | GPU allocated 48.65 GB
+prompt 'france', 6 tokens:
+  step 0: 13,704 ms |  MoE 12,884 ms (disk read 10,866, copy 363) |  fetched 254/266/588 | -> ' Paris'
+  step 1: 2,852 ms |  MoE 2,539 ms (disk read 2,071, copy 82) |  fetched 56/66/136 | -> '.'
+  step 2: 2,960 ms |  MoE 2,650 ms (disk read 2,178, copy 85) |  fetched 57/61/140 | -> ' It'
+  step 3: 2,920 ms |  MoE 2,630 ms (disk read 2,144, copy 88) |  fetched 48/65/145 | -> ' is'
+  step 4: 2,768 ms |  MoE 2,486 ms (disk read 2,012, copy 87) |  fetched 52/61/145 | -> ' the'
+  step 5: 3,241 ms |  MoE 2,819 ms (disk read 2,126, copy 91) |  fetched 50/65/143 | -> ' largest'
+  step 6: 3,864 ms |  MoE 3,030 ms (disk read 1,944, copy 89) |  fetched 57/73/128 | -> ' city'
+  step 7: 3,829 ms |  MoE 3,098 ms (disk read 2,027, copy 92) |  fetched 54/68/136 | -> ' in'
+  step 8: 3,615 ms |  MoE 2,921 ms (disk read 1,908, copy 84) |  fetched 60/74/124 | -> ' France'
+  step 9: 3,683 ms |  MoE 2,989 ms (disk read 1,922, copy 94) |  fetched 62/62/134 | -> ' and'
+  step 10: 3,823 ms |  MoE 3,044 ms (disk read 1,971, copy 92) |  fetched 57/68/133 | -> ' one'
+  step 11: 4,120 ms |  MoE 3,382 ms (disk read 2,285, copy 103) |  fetched 42/62/154 | -> ' of'
+  step 12: 3,723 ms |  MoE 3,028 ms (disk read 2,002, copy 98) |  fetched 51/61/146 | -> ' the'
+  step 13: 3,553 ms |  MoE 2,886 ms (disk read 1,889, copy 89) |  fetched 57/69/132 | -> ' most'
+  step 14: 4,082 ms |  MoE 3,263 ms (disk read 2,136, copy 100) |  fetched 57/57/144 | -> ' important'
+  step 15: 3,990 ms |  MoE 3,225 ms (disk read 2,117, copy 89) |  fetched 58/67/133 | -> ' cities'
+  step 16: 3,962 ms |  MoE 3,177 ms (disk read 2,018, copy 97) |  fetched 62/60/136 | -> ' in'
+  step 17: 3,684 ms |  MoE 3,016 ms (disk read 1,989, copy 96) |  fetched 56/65/137 | -> ' Europe'
+  step 18: 4,120 ms |  MoE 3,270 ms (disk read 2,097, copy 102) |  fetched 56/60/142 | -> '.'
+  step 19: 3,593 ms |  MoE 2,884 ms (disk read 1,846, copy 87) |  fetched 64/66/128 | -> ' Paris'
+  step 20: 3,886 ms |  MoE 3,113 ms (disk read 1,965, copy 95) |  fetched 58/62/138 | -> ' is'
+  step 21: 3,365 ms |  MoE 2,793 ms (disk read 1,931, copy 91) |  fetched 50/67/141 | -> ' known'
+  step 22: 2,718 ms |  MoE 2,400 ms (disk read 1,922, copy 77) |  fetched 64/66/128 | -> ' for'
+  step 23: 2,724 ms |  MoE 2,449 ms (disk read 1,985, copy 79) |  fetched 57/69/132 | -> ' its'
+  step 24: 2,660 ms |  MoE 2,380 ms (disk read 1,914, copy 81) |  fetched 56/68/134 | -> ' rich'
+  step 25: 2,875 ms |  MoE 2,597 ms (disk read 2,115, copy 87) |  fetched 56/58/144 | -> ' history'
+  step 26: 3,021 ms |  MoE 2,705 ms (disk read 2,226, copy 88) |  fetched 53/59/146 | -> ','
+  step 27: 2,609 ms |  MoE 2,321 ms (disk read 1,845, copy 78) |  fetched 58/71/129 | -> ' art'
+  step 28: 2,716 ms |  MoE 2,440 ms (disk read 1,976, copy 81) |  fetched 58/66/134 | -> ','
+  step 29: 2,646 ms |  MoE 2,366 ms (disk read 1,898, copy 83) |  fetched 57/62/139 | -> ' culture'
+  step 30: 2,748 ms |  MoE 2,436 ms (disk read 1,955, copy 86) |  fetched 55/62/141 | -> ','
+  step 31: 2,511 ms |  MoE 2,246 ms (disk read 1,813, copy 75) |  fetched 59/71/128 | -> ' and'
+TTFT 13.7 s | first token's top-5: ' Paris' -0.21 | ' **' -3.36 | ' ________' -4.00 | ' PAR' -4.72 | ' __________' -4.75
+  31 decode steps : per token p50 3.36 s, p90 3.99 s, max 4.12 s (0.30 tokens/s)
+  per token: disk read 2.01 s, copy waits 0.09 s, rest of the MoE 0.70 s, outside the MoE 0.53 s | fetched 56/65/137
+  GPU peak 48.86 GB | text ' Paris. It is the largest city in France and one of the most important cities in Europe. Paris is known for its rich history, art, culture, and'
+  check, one prefill over prompt + new tokens: same tokens 29/32 | largest score difference 2.66 | smallest top-2 margin 0.0609
+  step 4 differs: score difference 1.55, top-2 margin 0.127
+  step 21 differs: score difference 1.08, top-2 margin 0.26
+  step 27 differs: score difference 1.56, top-2 margin 0.0609
+prompt '2+2', 11 tokens:
+  step 0: 14,915 ms |  MoE 14,602 ms (disk read 12,173, copy 523) |  fetched 310/352/743 | -> '4'
+  step 1: 2,839 ms |  MoE 2,523 ms (disk read 2,046, copy 85) |  fetched 58/60/140 | -> '<｜end▁of▁sentence｜>'
+TTFT 14.9 s | first token's top-5: '4' -0.01 | '2' -5.45 | 'The' -5.67 | 'It' -6.29 | 'That' -6.74
+  1 decode steps : per token p50 2.84 s, p90 2.84 s, max 2.84 s (0.35 tokens/s)
+  per token: disk read 2.05 s, copy waits 0.09 s, rest of the MoE 0.39 s, outside the MoE 0.32 s | fetched 58/60/140
+  GPU peak 48.88 GB | text '4<｜end▁of▁sentence｜>'
+  check, one prefill over prompt + new tokens: same tokens 2/2 | largest score difference 2.31 | smallest top-2 margin 5.44
+prompt 'sky', 14 tokens:
+  step 0: 18,968 ms |  MoE 18,658 ms (disk read 15,326, copy 854) |  fetched 379/447/1016 | -> 'The'
+  step 1: 2,769 ms |  MoE 2,485 ms (disk read 2,014, copy 82) |  fetched 50/71/137 | -> ' sky'
+  step 2: 2,958 ms |  MoE 2,656 ms (disk read 2,178, copy 89) |  fetched 50/61/147 | -> ' appears'
+  step 3: 2,865 ms |  MoE 2,587 ms (disk read 2,113, copy 82) |  fetched 64/58/136 | -> ' blue'
+  step 4: 2,634 ms |  MoE 2,366 ms (disk read 1,910, copy 79) |  fetched 66/62/130 | -> ' because'
+  step 5: 3,765 ms |  MoE 3,049 ms (disk read 2,005, copy 92) |  fetched 57/67/134 | -> ' sunlight'
+  step 6: 4,580 ms |  MoE 3,763 ms (disk read 2,608, copy 111) |  fetched 51/50/157 | -> ' is'
+  step 7: 4,272 ms |  MoE 3,502 ms (disk read 2,325, copy 104) |  fetched 58/54/146 | -> ' scattered'
+  step 8: 3,173 ms |  MoE 2,736 ms (disk read 2,039, copy 85) |  fetched 64/60/134 | -> ' in'
+  step 9: 2,619 ms |  MoE 2,334 ms (disk read 1,866, copy 80) |  fetched 61/64/133 | -> ' all'
+  step 10: 2,999 ms |  MoE 2,688 ms (disk read 2,210, copy 88) |  fetched 48/63/147 | -> ' directions'
+  step 11: 2,930 ms |  MoE 2,645 ms (disk read 2,166, copy 84) |  fetched 60/60/138 | -> ' by'
+  step 12: 2,593 ms |  MoE 2,301 ms (disk read 1,838, copy 77) |  fetched 68/62/128 | -> ' the'
+  step 13: 2,714 ms |  MoE 2,427 ms (disk read 1,940, copy 82) |  fetched 59/65/134 | -> ' gases'
+  step 14: 2,766 ms |  MoE 2,448 ms (disk read 1,959, copy 81) |  fetched 65/62/131 | -> ' and'
+  step 15: 2,568 ms |  MoE 2,282 ms (disk read 1,802, copy 79) |  fetched 69/59/130 | -> ' particles'
+  step 16: 2,758 ms |  MoE 2,473 ms (disk read 1,983, copy 86) |  fetched 53/65/140 | -> ' in'
+  step 17: 2,711 ms |  MoE 2,427 ms (disk read 1,940, copy 85) |  fetched 55/63/140 | -> ' Earth'
+  step 18: 2,721 ms |  MoE 2,401 ms (disk read 1,916, copy 83) |  fetched 62/61/135 | -> "'s"
+  step 19: 2,710 ms |  MoE 2,427 ms (disk read 1,943, copy 82) |  fetched 63/62/133 | -> ' atmosphere'
+  step 20: 3,694 ms |  MoE 3,021 ms (disk read 2,003, copy 95) |  fetched 57/62/139 | -> ','
+  step 21: 3,846 ms |  MoE 3,095 ms (disk read 1,987, copy 94) |  fetched 53/66/139 | -> ' and'
+  step 22: 3,953 ms |  MoE 3,140 ms (disk read 2,045, copy 94) |  fetched 60/62/136 | -> ' blue'
+  step 23: 4,612 ms |  MoE 4,057 ms (disk read 3,183, copy 100) |  fetched 54/56/148 | -> ' light'
+  step 24: 4,219 ms |  MoE 3,924 ms (disk read 3,400, copy 93) |  fetched 55/55/148 | -> ' is'
+  step 25: 2,865 ms |  MoE 2,577 ms (disk read 2,087, copy 92) |  fetched 55/51/152 | -> ' scattered'
+  step 26: 2,734 ms |  MoE 2,415 ms (disk read 1,931, copy 85) |  fetched 63/56/139 | -> ' much'
+  step 27: 2,912 ms |  MoE 2,624 ms (disk read 2,136, copy 87) |  fetched 63/53/142 | -> ' more'
+  step 28: 3,094 ms |  MoE 2,805 ms (disk read 2,294, copy 96) |  fetched 51/51/156 | -> ' strongly'
+  step 29: 3,403 ms |  MoE 3,093 ms (disk read 2,555, copy 94) |  fetched 58/51/149 | -> ' than'
+  step 30: 3,623 ms |  MoE 3,285 ms (disk read 2,758, copy 91) |  fetched 62/53/143 | -> ' other'
+  step 31: 3,491 ms |  MoE 3,200 ms (disk read 2,708, copy 84) |  fetched 61/62/135 | -> ' colors'
+TTFT 19.0 s | first token's top-5: 'The' -0.00 | 'Sun' -9.75 | 'Sk' -10.21 | 'Sky' -11.42 | 'Because' -11.47
+  31 decode steps : per token p50 2.93 s, p90 4.22 s, max 4.61 s (0.31 tokens/s)
+  per token: disk read 2.19 s, copy waits 0.09 s, rest of the MoE 0.54 s, outside the MoE 0.40 s | fetched 59/60/140
+  GPU peak 48.86 GB | text "The sky appears blue because sunlight is scattered in all directions by the gases and particles in Earth's atmosphere, and blue light is scattered much more strongly than other colors"
+  check, one prefill over prompt + new tokens: same tokens 32/32 | largest score difference 2.39 | smallest top-2 margin 0.395
+prompt 'license', 266 tokens:
+  step 0: 97,115 ms |  MoE 96,654 ms (disk read 80,877, copy 2,658) |  fetched 1434/1540/3572 | -> 'This'
+  step 1: 4,562 ms |  MoE 3,834 ms (disk read 2,722, copy 103) |  fetched 51/61/146 | -> ' license'
+  step 2: 4,308 ms |  MoE 3,441 ms (disk read 2,294, copy 92) |  fetched 50/73/135 | -> ' allows'
+  step 3: 3,337 ms |  MoE 2,747 ms (disk read 1,903, copy 78) |  fetched 56/81/121 | -> ' anyone'
+  step 4: 2,734 ms |  MoE 2,447 ms (disk read 1,966, copy 82) |  fetched 55/69/134 | -> ' to'
+  step 5: 3,299 ms |  MoE 3,018 ms (disk read 2,535, copy 82) |  fetched 52/73/133 | -> ' freely'
+  step 6: 2,949 ms |  MoE 2,622 ms (disk read 2,118, copy 91) |  fetched 52/59/147 | -> ' use'
+  step 7: 3,157 ms |  MoE 2,873 ms (disk read 2,406, copy 77) |  fetched 69/61/128 | -> ','
+  step 8: 2,444 ms |  MoE 2,161 ms (disk read 1,704, copy 74) |  fetched 54/81/123 | -> ' modify'
+  step 9: 3,350 ms |  MoE 3,061 ms (disk read 2,579, copy 83) |  fetched 60/61/137 | -> ','
+  step 10: 2,772 ms |  MoE 2,444 ms (disk read 1,940, copy 79) |  fetched 53/77/128 | -> ' and'
+  step 11: 3,645 ms |  MoE 3,358 ms (disk read 2,860, copy 88) |  fetched 58/59/141 | -> ' distribute'
+  step 12: 3,358 ms |  MoE 3,078 ms (disk read 2,593, copy 89) |  fetched 49/64/145 | -> ' the'
+  step 13: 2,710 ms |  MoE 2,420 ms (disk read 1,914, copy 85) |  fetched 44/77/137 | -> ' software'
+  step 14: 3,613 ms |  MoE 2,930 ms (disk read 2,002, copy 86) |  fetched 62/70/126 | -> ' for'
+  step 15: 4,297 ms |  MoE 3,562 ms (disk read 2,433, copy 96) |  fetched 59/61/138 | -> ' any'
+  step 16: 4,778 ms |  MoE 4,005 ms (disk read 2,808, copy 104) |  fetched 53/59/146 | -> ' purpose'
+  step 17: 3,983 ms |  MoE 3,505 ms (disk read 2,743, copy 91) |  fetched 62/58/138 | -> ','
+  step 18: 3,034 ms |  MoE 2,706 ms (disk read 2,226, copy 76) |  fetched 57/77/124 | -> ' provided'
+  step 19: 2,696 ms |  MoE 2,411 ms (disk read 1,938, copy 80) |  fetched 56/70/132 | -> ' they'
+  step 20: 2,924 ms |  MoE 2,623 ms (disk read 2,105, copy 87) |  fetched 49/69/140 | -> ' include'
+  step 21: 2,793 ms |  MoE 2,496 ms (disk read 1,994, copy 85) |  fetched 52/69/137 | -> ' the'
+  step 22: 2,791 ms |  MoE 2,457 ms (disk read 1,943, copy 86) |  fetched 52/68/138 | -> ' original'
+  step 23: 2,921 ms |  MoE 2,632 ms (disk read 2,130, copy 89) |  fetched 63/52/143 | -> ' copyright'
+  step 24: 2,689 ms |  MoE 2,397 ms (disk read 1,896, copy 79) |  fetched 64/67/127 | -> ' and'
+  step 25: 2,789 ms |  MoE 2,504 ms (disk read 2,008, copy 89) |  fetched 55/58/145 | -> ' permission'
+  step 26: 2,771 ms |  MoE 2,457 ms (disk read 1,969, copy 83) |  fetched 47/76/135 | -> ' notice'
+  step 27: 2,580 ms |  MoE 2,295 ms (disk read 1,815, copy 80) |  fetched 64/65/129 | -> ','
+  step 28: 2,766 ms |  MoE 2,432 ms (disk read 1,880, copy 85) |  fetched 49/74/135 | -> ' and'
+  step 29: 4,002 ms |  MoE 3,187 ms (disk read 1,931, copy 102) |  fetched 57/66/135 | -> ' it'
+  step 30: 3,741 ms |  MoE 2,973 ms (disk read 1,930, copy 93) |  fetched 52/67/139 | -> ' comes'
+  step 31: 3,720 ms |  MoE 2,946 ms (disk read 1,821, copy 88) |  fetched 71/61/126 | -> ' with'
+TTFT 97.1 s | first token's top-5: 'This' -0.03 | 'The' -3.64 | 'Under' -9.11 | 'You' -11.24 | 'MIT' -13.44
+  31 decode steps : per token p50 3.03 s, p90 4.30 s, max 4.78 s (0.31 tokens/s)
+  per token: disk read 2.16 s, copy waits 0.09 s, rest of the MoE 0.59 s, outside the MoE 0.44 s | fetched 56/67/135
+  GPU peak 49.07 GB | text 'This license allows anyone to freely use, modify, and distribute the software for any purpose, provided they include the original copyright and permission notice, and it comes with'
+  check, one prefill over prompt + new tokens: same tokens 32/32 | largest score difference 2.08 | smallest top-2 margin 0.133
+per layer, decode steps: MoE ms per token | hits gpu/ram/disk | experts used | the 5 most hit (expert x hits)
+  L00 SWA hash |   68 ms | 136/138/290 | 198 of 256 | 132 x16, 29 x13, 106 x13, 50 x12, 62 x11
+  L01 SWA hash |   64 ms | 124/170/270 | 212 of 256 | 155 x12, 19 x11, 36 x9, 114 x9, 229 x9
+  L02 CSA hash |   69 ms | 126/142/296 | 201 of 256 | 74 x13, 20 x11, 77 x11, 141 x10, 125 x9
+  L03 HCA      |   58 ms | 144/170/250 | 128 of 256 | 101 x49, 45 x30, 52 x24, 149 x21, 63 x20
+  L04 CSA      |   70 ms | 122/122/320 | 121 of 256 | 233 x56, 239 x33, 8 x26, 53 x20, 146 x17
+  L05 HCA      |   82 ms | 85/95/384 | 107 of 256 | 142 x30, 151 x23, 240 x21, 253 x21, 34 x20
+  L06 CSA      |   54 ms | 184/150/230 | 106 of 256 | 53 x58, 111 x54, 64 x24, 113 x24, 138 x17
+  L07 HCA      |   80 ms | 105/79/380 | 101 of 256 | 140 x32, 53 x29, 215 x28, 191 x26, 138 x25
+  L08 CSA      |   71 ms | 135/98/331 | 105 of 256 | 200 x40, 53 x34, 146 x31, 116 x30, 115 x28
+  L09 HCA      |   61 ms | 172/124/268 | 126 of 256 | 35 x28, 242 x25, 5 x21, 39 x21, 22 x17
+  L10 CSA      |   64 ms | 150/134/280 | 120 of 256 | 50 x23, 247 x23, 35 x20, 40 x20, 78 x15
+  L11 HCA      |   64 ms | 132/141/291 |  99 of 256 | 9 x38, 164 x30, 192 x29, 188 x22, 213 x22
+  L12 CSA      |   66 ms | 175/94/295 |  97 of 256 | 28 x29, 22 x28, 94 x28, 122 x27, 218 x26
+  L13 HCA      |   57 ms | 208/108/248 |  86 of 256 | 17 x29, 124 x29, 18 x28, 159 x28, 13 x27
+  L14 CSA      |   62 ms | 167/117/280 |  94 of 256 | 1 x53, 5 x28, 117 x28, 126 x24, 62 x22
+  L15 HCA      |   70 ms | 121/125/318 |  95 of 256 | 249 x55, 20 x29, 104 x26, 204 x26, 176 x23
+  L16 CSA      |   75 ms | 80/132/352 |  87 of 256 | 96 x44, 176 x32, 240 x24, 21 x23, 203 x22
+  L17 HCA      |   52 ms | 124/224/216 |  90 of 256 | 3 x72, 112 x54, 93 x26, 164 x25, 61 x22
+  L18 CSA      |   59 ms | 87/220/257 | 101 of 256 | 79 x45, 166 x40, 75 x28, 83 x26, 70 x25
+  L19 HCA      |   75 ms | 114/116/334 | 116 of 256 | 181 x44, 107 x28, 35 x24, 172 x20, 243 x20
+  L20 CSA      |   61 ms | 120/175/269 | 111 of 256 | 60 x37, 3 x34, 112 x27, 206 x23, 105 x17
+  L21 HCA      |   75 ms | 97/115/352 | 122 of 256 | 186 x34, 241 x20, 94 x18, 151 x15, 146 x14
+  L22 CSA      |   62 ms | 101/190/273 |  97 of 256 | 66 x65, 110 x28, 13 x27, 222 x24, 88 x22
+  L23 HCA      |   78 ms | 73/112/379 |  95 of 256 | 222 x47, 242 x31, 176 x30, 241 x30, 163 x29
+  L24 CSA      |   47 ms | 136/228/200 |  80 of 256 | 68 x31, 76 x31, 184 x31, 108 x29, 112 x29
+  L25 HCA      |   64 ms | 151/119/294 |  80 of 256 | 135 x31, 144 x31, 64 x30, 127 x30, 55 x29
+  L26 CSA      |   68 ms | 70/176/318 |  87 of 256 | 44 x31, 60 x31, 73 x30, 203 x30, 220 x29
+  L27 HCA      |   65 ms | 125/137/302 | 100 of 256 | 24 x31, 27 x31, 84 x30, 198 x30, 7 x27
+  L28 CSA      |   71 ms | 108/114/342 |  85 of 256 | 142 x72, 31 x32, 116 x27, 211 x24, 137 x22
+  L29 HCA      |   61 ms | 153/134/277 | 112 of 256 | 149 x36, 56 x33, 23 x31, 162 x29, 45 x22
+  L30 CSA      |   69 ms | 126/106/332 | 107 of 256 | 219 x49, 253 x32, 15 x31, 124 x31, 132 x30
+  L31 HCA      |   54 ms | 154/164/246 | 111 of 256 | 10 x39, 0 x31, 115 x30, 129 x29, 215 x28
+  L32 CSA      |   61 ms | 138/135/291 | 105 of 256 | 47 x31, 65 x31, 124 x31, 132 x31, 34 x22
+  L33 HCA      |   66 ms | 109/144/311 | 106 of 256 | 213 x43, 70 x31, 120 x30, 167 x30, 131 x21
+  L34 CSA      |   66 ms | 86/164/314 |  89 of 256 | 246 x46, 79 x44, 152 x32, 69 x27, 251 x26
+  L35 HCA      |   61 ms | 103/182/279 | 111 of 256 | 87 x31, 85 x15, 25 x14, 101 x14, 127 x13
+  L36 CSA      |   68 ms | 124/113/327 |  98 of 256 | 251 x33, 52 x32, 55 x31, 202 x31, 176 x28
+  L37 HCA      |   69 ms | 110/121/333 | 105 of 256 | 162 x41, 147 x32, 178 x31, 233 x28, 171 x18
+  L38 CSA      |   65 ms | 134/117/313 |  84 of 256 | 178 x39, 161 x31, 45 x29, 194 x29, 2 x27
+  L39 HCA      |   68 ms | 70/160/334 | 122 of 256 | 106 x31, 125 x31, 159 x29, 214 x15, 89 x13
+  L40 CSA      |   66 ms | 112/129/323 |  89 of 256 | 252 x35, 56 x31, 243 x31, 105 x29, 30 x28
+  L41 HCA      |   60 ms | 166/111/287 |  92 of 256 | 44 x63, 247 x55, 35 x31, 197 x31, 212 x30
+  L42 CSA      |   66 ms | 80/156/328 |  78 of 256 | 98 x73, 221 x31, 243 x29, 174 x28, 51 x19
+decode hits: 24,252 | GPU 22%, RAM 25%, disk 53%
+saved -> results/full_generation_nmjaa0s012_20261116T195740Z.json
