@@ -8,7 +8,7 @@ import torch
 from arch import ChatTokenizer, Checkpoint, ModelArgs, SequenceState, Transformer, clock
 from cache_store import FIXED_HOME, FOLDER, CacheStore, box_sizes, load_cache
 from full_store import saved_entries
-from generation import generate_greedy, teacher_forced_check
+from generation import LAST_STEP, generate_greedy, teacher_forced_check
 from store_moe import MoEWatch
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 from expert_plan import E, INDEX, ROUTES, load_texts, make_plan
@@ -17,11 +17,40 @@ N_FIXED = 32 # new tokens for each of the fixed_home run 4 prompts - as we did s
 N_TEST = 150 # new tokens for each test prompt
 EVERY = 10 # a step line every 10 tokens
 
+def steal_seconds() -> float: # cpu time stolen so far, summed over all cpus i.e. the VM's host ran someone else while ours had work.
+    try:
+        return int(open("/proc/stat").readline().split()[8]) / os.sysconf("SC_CLK_TCK")
+    except (OSError, IndexError, ValueError):
+        return float("nan")
+
+def disk_busy_seconds(path : str = "/v4local") -> float: # time so far that the disk under path had a request in flight, by the kernel's count/
+    try:
+        dev = os.stat(path).st_dev
+        for line in open("/proc/diskstats"):
+            f = line.split()
+            if (int(f[0]), int(f[1])) == (os.major(dev), os.minor(dev)):
+                return int(f[12]) / 1000
+    except (OSError, IndexError, ValueError):
+        pass
+    return float("nan")
+
+def map_line(rows : list[dict]) -> str: # the time map, averaged over the given steps.
+    avg = lambda f : sum(f(r["map"]) for r in rows) / len(rows)
+    
+    return (f"CPU working {avg(lambda m : m['cpu work']):.3f} s | waiting for the GPU {avg(lambda m : sum(m['gpu waits'].values())):.3f} s"
+            f" (gate {avg(lambda m : m['gpu waits']['gate']):.3f}, step end {avg(lambda m : m['gpu waits']['step end']):.3f},"
+            f" copies {avg(lambda m : m['gpu waits']['copies']):.3f}, MoE timer {avg(lambda m : m['gpu waits']['moe clock']):.3f})"
+            f" | waiting for the disk {avg(lambda m : m['disk wait']):.3f} s | not running {avg(lambda m : m['not running']):.3f} s"
+            f" (steal, all CPUs {avg(lambda m : m['steal']):.3f} s) | disk busy {avg(lambda m : m['disk busy']):.3f} s")
+
+
 class CacheTrace: # one hook on every gate, picks go to the store first (the cache moves) and then into the record.
     def __init__(self, blocks : dict, store : CacheStore):
         self.store = store
         self.calls = [] # every gate call {layer, experts [tokens][6], weights [tokens][6]} - as RouteTrace recorded them
         self.prepare_s = 0.0 # seconds inside store.prepare i.e. the moves list and their disk reads
+        self.gate_wait_s = 0.0 # seconds the cpu waited for the gpu to reach the gates.
+
         
         for layer, block in blocks.items():
             block.ffn.gate.register_forward_hook(self.hook(layer))
@@ -29,8 +58,12 @@ class CacheTrace: # one hook on every gate, picks go to the store first (the cac
     def hook(self, layer : int):
         def after_gate(gate, inputs, outputs): # runs as the gate returns, before the MoE loop asks the store for any expert
             weights, indices = outputs # [tokens, 6], [tokens, 6]
-            rows, w = indices.tolist(), weights.tolist() # cpu waits for the gate here before prepare queues any copy
+            
             t = time.perf_counter()
+            rows, w = indices.tolist(), weights.tolist() # cpu waits for the gate here before prepare queues any copy.
+            self.gate_wait_s += time.perf_counter() - t
+            t = time.perf_counter()
+
             self.store.prepare(layer, rows) # the cache moves on the bytes: every expert of this call is then where the table says
             self.prepare_s += time.perf_counter() - t
             self.calls.append({"layer" : layer, "experts" : rows, "weights" : w})
@@ -45,26 +78,49 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
     
     def mark(self): # the store current values.
         self.n0, self.read0, self.wait0, self.prepare0 = dict(self.store.n), self.store.read_s, self.store.wait_s, self.trace.prepare_s
+        self.gate0, self.moe_wait0, self.steal0, self.disk0 = self.trace.gate_wait_s, MoEWatch.waited, steal_seconds(), disk_busy_seconds()
+        self.cpu0 = time.thread_time() # last, so the readings above don't count in the step's cpu time.
     
     def __call__(self, step : int, seconds : float, token : torch.Tensor):
+        cpu = time.thread_time() - self.cpu0 # cpu time this thread used in the step. its waits for the GPU spin, so they count here too.
         n = {k : v - self.n0[k] for k, v in self.store.n.items()} # current step counters
-        row = {"seconds" : seconds,
-               "moe" : sum(w.seconds for w in self.watches.values()), # current step MoE calls [prepare included.]
-               "prepare" : self.trace.prepare_s - self.prepare0,
-               "read" : self.store.read_s - self.read0,
-               "wait" : self.store.wait_s - self.wait0,
-               "reads" : n["pre kept"] + n["miss"] + n["disk"], # experts read from experts.bin [keeps and misses in prepare, disk only fetches]
-               "peak" : max([w.mem0 + w.peak for w in self.watches.values()] + [torch.cuda.max_memory_allocated()]),
-               "counts" : n,
-               "token" : token.item()}
+        read = self.store.read_s - self.read0
+        waits = {
+            "gate" : self.trace.gate_wait_s - self.gate0, # for the gpu to reach each layer's gate
+            "step end" : seconds - LAST_STEP["cpu"], # for the gpu to finish the token
+            "copies" : self.store.wait_s - self.wait0, # for queued copies
+            "moe clock" : MoEWatch.waited - self.moe_wait0 # the old MoE timer's own waits, 0 with GPU timestamps
+        }
+        
+        row = {
+            "seconds" : seconds,
+            "moe" : sum(w.gpu_seconds() for w in self.watches.values()), # current step MoE calls [prepare included.]
+            "prepare" : self.trace.prepare_s - self.prepare0,
+            "read" : read,
+            "wait" : self.store.wait_s - self.wait0,
+            "reads" : n["pre kept"] + n["miss"] + n["disk"], # experts read from experts.bin [keeps and misses in prepare, disk only fetches]
+            "peak" : max([w.mem0 + w.peak for w in self.watches.values()] + [torch.cuda.max_memory_allocated()]),
+            "counts" : n,
+            "token" : token.item(),
+            "map" : {
+                "cpu work" : cpu - sum(waits.values()), 
+                "gpu waits" : waits, 
+                "disk wait" : read, 
+                "not running" : seconds - cpu - read,
+                "steal" : steal_seconds() - self.steal0, 
+                "disk busy" : disk_busy_seconds() - self.disk0
+            }
+        }
+        
         self.rows.append(row)
-        self.mark()
         if step % self.every == 0:
             gpu, ram, disk = (n["t1"] + n["pre t1"], n["t2"] + n["pre t2"]), (n["t3"] + n["pre t3"], n["t4"] + n["pre t4"]), n["miss"] + n["pre t5"]
             print(f"  step {step}: {seconds * 1e3:,.0f} ms | MoE {row['moe'] * 1e3:,.0f} ms (disk read {row['read'] * 1e3:,.0f} ms for {row['reads']:,} experts,"
                   f" copy wait {row['wait'] * 1e3:,.0f} ms) | GPU {gpu[0]:,} + {gpu[1]:,}, RAM {ram[0]:,} + {ram[1]:,}, disk {disk:,}"
                   f" | -> {self.tokenizer.tokenizer.decode([row['token']], skip_special_tokens = False)!r}")
-
+            print(f"    time map: {map_line([row])}")
+        self.mark()
+        
 def frozen_check(model : Transformer, trace : CacheTrace, prompt : torch.Tensor, tokens : torch.Tensor, scores : torch.Tensor) -> dict:
     # teacher forced check (one prefill over prompt + answer) with the cache frozen, so no move and none of the fetches counted.
     store = trace.store
@@ -116,6 +172,8 @@ def run_prompt(
     if decode:
         print(f"  prefill {seconds[0]:.1f} s | {len(decode)} decode steps: {sum(r['seconds'] for r in decode) / len(decode):.2f} s and"
               f" {sum(r['reads'] for r in decode) / len(decode):.1f} disk reads per token | text {record['text']!r}")
+        print(f"  per decode token: {map_line(decode)}")
+
     if check:
         c = frozen_check(model, trace, prompt, tokens, scores)
         record["check"] = c

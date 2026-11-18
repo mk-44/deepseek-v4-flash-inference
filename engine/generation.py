@@ -19,12 +19,15 @@ class RouteTrace:
             self.calls.append({"layer" : layer, "experts" : indices.tolist(), "weights" : weights.tolist()})
         return record
 
+LAST_STEP = {"cpu" : 0.0} # seconds the cpu spent issuing the last step work, before the step end waiting for the gpu.
 def generate_greedy(model : Transformer, args : ModelArgs, ids : torch.Tensor, n_new : int, after_step = None, stop : int | None = None):
     state = SequenceState(args, 1, model.embed.weight.dtype, device = ids.device)
     tokens, scores, seconds, x = [], [], [], ids
     for step in range(n_new):
         t = clock()
         logits = model(x, state) # [1, vocab]
+        LAST_STEP["cpu"] = time.perf_counter() - t # every job of this token is queued here. the gpu may still be busy.
+
         seconds.append(clock() - t)
         x = logits.argmax(dim = -1, keepdim = True) # [1, 1]
         tokens.append(x)

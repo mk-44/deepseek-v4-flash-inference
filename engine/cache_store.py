@@ -176,7 +176,8 @@ class CacheStore: # 5 tiers on actual bytes
         self.path = path
         self.out = os.open(path, os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_DIRECT) # experts.bin
         self.n = dict.fromkeys(KEYS + ("gpu", "ram", "disk"), 0) # bookkeeping counters + fetches by where the bytes are.
-        self.read_s = self.wait_s = 0.0 # seconds reading the disk, seconds waiting for copies
+        self.read_s = self.wait_s = self.read_cpu_s = 0.0 # seconds reading the disk, seconds waiting for copies, cpu seconds inside those reads
+
         self.frozen = False # True during the teacher forced check
         self.pending = {} # ram place to cuda event, done once the copies swap queued on that place are done.
     
@@ -206,6 +207,15 @@ class CacheStore: # 5 tiers on actual bytes
         n = os.preadv(self.out, [place.numpy()], home.slot * self.place_bytes)
         assert n == self.place_bytes, f"short read: {n} of {self.place_bytes} bytes"
         self.read_s += time.perf_counter() - t
+        
+    def read_slot(self, home : CacheHome, place : torch.Tensor): # a expert bytes from its experts.bin slot into a pinned place (stage or ram)
+        t, c = time.perf_counter(), time.thread_time()
+        n = os.preadv(self.out, [place.numpy()], home.slot * self.place_bytes)
+        assert n == self.place_bytes, f"short read: {n} of {self.place_bytes} bytes"
+        self.read_s += time.perf_counter() - t
+        # the kernel own work for the read (pinning the pages) runs on our thread: cpu time, not waiting.
+        self.read_cpu_s += time.thread_time() - c 
+
 
     def write_slot(self, home : CacheHome, place : torch.Tensor): # one expert's bytes from a pinned place into its experts.bin slot
         n = os.pwritev(self.out, [place.numpy()], home.slot * self.place_bytes)
@@ -378,7 +388,30 @@ class CacheStore: # 5 tiers on actual bytes
     def reset(self): # zero every counter and timer - in place at the end of the wt load.
         for k in self.n:
             self.n[k] = 0
-        self.read_s = self.wait_s = 0.0
+        self.read_s = self.wait_s = self.read_cpu_s = 0.0
+    
+    def restore(self, ckpt : Checkpoint, plan : dict, n_layers : int) -> int: 
+        # every expert back where the load left it, bytes too. each continuous run starts from the same cache.
+        torch.cuda.synchronize() # queued swaps land first
+        now, self.homes = self.homes, plan_places(ckpt, plan, n_layers) # where each expert is now and where the load put it
+        self.caches = [LayerCache(plan["layers"][l], plan["rate"][l]) for l in range(n_layers)]
+        self.free = deque(range(n_layers * plan["n_gpu"], n_layers * plan["n_gpu"] + N_FREE))
+        self.pending = {}
+        moved = 0
+        for key, h in self.homes.items():
+            if h.tier not in (2, 4) or (now[key].tier, now[key].place) == (h.tier, h.place):
+                continue # disk-only and fixed experts never move. this cache expert is still in its place
+            if h.tier == 2:
+                self.read_slot(h, self.stage) # its disk copy, written after the load
+                self.tiers.gpu[h.place].copy_(self.stage)
+            else:
+                self.read_slot(h, self.tiers.ram_place(h.place)) # a ram place is pinned and 4 KB aligned, the read lands in it.
+            moved += 1
+        torch.cuda.synchronize()
+        self.reset()
+        return moved
+
+
     
     def fingerprints(self): # (layer, expert) -> number made from all its bytes but non-cryptographic.
         return {k : self.place_of(h).view(torch.int32).sum(dtype = torch.int64).item() for k, h in self.homes.items() if h.tier <= 4}

@@ -28,7 +28,12 @@ def store_block(ckpt : Checkpoint, args : ModelArgs, store : Store, layer : int,
 def reference_moe(ckpt : Checkpoint, args : ModelArgs, layer : int, device = "cuda") -> MoE:
     return load_module(lambda: MoE(layer, args), ckpt, f"layers.{layer}.ffn.", args, device) # check with all 256 experts decoded at load.
 
-class MoEWatch: # for each call of one MoE - its input and output, its time, GPU memory and what the store fetched
+class MoEWatch: # for each call of one MoE, its input and output, its time, GPU memory and what the store fetched
+    sync = True # True - clock() waits for the GPU at both ends of each MoE (the old timer). False - GPU timestamps, nothing waits.
+    waited = 0.0 # seconds the CPU spent inside those clock() waits, all MoEs, since the start.
+    cpu = 0.0 # cpu seconds our thread spent inside the MoEs. the old timer's waits left out, all MoEs, since the start.
+
+
     def __init__(self, moe : MoE, store : Store):
         self.store = store
         moe.register_forward_pre_hook(self.before)
@@ -38,16 +43,38 @@ class MoEWatch: # for each call of one MoE - its input and output, its time, GPU
         torch.cuda.reset_peak_memory_stats()
         self.mem0 = torch.cuda.memory_allocated()
         self.n0, self.read0, self.wait0 = dict(self.store.n), self.store.read_s, self.store.wait_s
-        self.t0 = clock() # waits for the attention to finish, so only the MoE is timed
+        self.label = torch.profiler.record_function("moe")
+        self.label.__enter__()
+        if MoEWatch.sync:
+            t = time.perf_counter()
+            self.t0 = clock() # waits for the attention to finish, so only the MoE is timed.
+            MoEWatch.waited += self.t0 - t
+        else:
+            self.e0 = torch.cuda.Event(enable_timing = True)
+            self.e0.record() # the gpu notes the time when it reaches this point. the CPU does not wait here.\
+        
+        self.c0 = time.thread_time() # the MoE own cpu time starts after the old timer's wait
 
     def after(self, moe, inputs, output):
-        self.seconds = clock() - self.t0
-        self.kept = torch.cuda.memory_allocated() - self.mem0 # only the output should stay
+        if MoEWatch.sync:
+            t = time.perf_counter()
+            end = clock()
+            MoEWatch.waited += end - t
+            self.seconds = end - self.t0
+        else:
+            self.e1 = torch.cuda.Event(enable_timing = True)
+            self.e1.record()
+        self.label.__exit__(None, None, None)
+        self.kept = torch.cuda.memory_allocated() - self.mem0 # only the output should stay.
         self.peak = torch.cuda.max_memory_allocated() - self.mem0
         self.x, self.ids = inputs # [b, s, d], [b, s]
         self.y = output # [b, s, d]
         self.fetched = {tier : self.store.n[tier] - self.n0[tier] for tier in self.n0}
         self.read, self.wait = self.store.read_s - self.read0, self.store.wait_s - self.wait0
+
+    def gpu_seconds(self) -> float:
+        return self.seconds if MoEWatch.sync else self.e0.elapsed_time(self.e1) / 1e3
+
 
 def report(watch : MoEWatch, ref_seconds : float, y_ref : torch.Tensor) -> str:
     f = watch.fetched
