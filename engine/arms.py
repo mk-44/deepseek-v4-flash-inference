@@ -18,6 +18,7 @@ ARMS = [ # (name, MoEWatch.sync, compiled expand)
     ("C0 old timer", True, False),
     ("C0 new timer", False, False),
     ("C1 compiled expand", False, True),
+    ("C0 new timer, again", False, False), # arm 1 again at the end, to see how much the box drifted during the run
 ]
 
 if __name__ == "__main__":
@@ -81,6 +82,8 @@ if __name__ == "__main__":
             print(f"  {name}: {decode_stats(list(arm['prompts'].values()))}")
             if decode:
                 print(f"  {name}, per decode token: {map_line(decode)}")
+                t, r, n = (sum(s[k] for s in decode) / len(decode) for k in ("seconds", "read", "reads"))
+                print(f"  {name}, per decode token: {t:.3f} s = reading the disk {r:.3f} s ({n:.1f} reads, {r / n * 1e3 if n else 0:.1f} ms each) + the rest {t - r:.3f} s")
             try:
                 arm["profile"] = profile_tokens(model, args, trace, runs["sky"]["prompt"], 3, path.removesuffix(".json") + f"_arm{i}_trace.json.gz")
             except Exception: # the profile must not cost the results

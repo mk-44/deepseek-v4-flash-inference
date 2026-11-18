@@ -203,19 +203,12 @@ class CacheStore: # 5 tiers on actual bytes
         os.remove(self.path)
     
     def read_slot(self, home : CacheHome, place : torch.Tensor): # a expert bytes from its experts.bin slot into a pinned place (stage or ram)
-        t = time.perf_counter()
-        n = os.preadv(self.out, [place.numpy()], home.slot * self.place_bytes)
-        assert n == self.place_bytes, f"short read: {n} of {self.place_bytes} bytes"
-        self.read_s += time.perf_counter() - t
-        
-    def read_slot(self, home : CacheHome, place : torch.Tensor): # a expert bytes from its experts.bin slot into a pinned place (stage or ram)
         t, c = time.perf_counter(), time.thread_time()
         n = os.preadv(self.out, [place.numpy()], home.slot * self.place_bytes)
         assert n == self.place_bytes, f"short read: {n} of {self.place_bytes} bytes"
         self.read_s += time.perf_counter() - t
         # the kernel own work for the read (pinning the pages) runs on our thread: cpu time, not waiting.
-        self.read_cpu_s += time.thread_time() - c 
-
+        self.read_cpu_s += time.thread_time() - c
 
     def write_slot(self, home : CacheHome, place : torch.Tensor): # one expert's bytes from a pinned place into its experts.bin slot
         n = os.pwritev(self.out, [place.numpy()], home.slot * self.place_bytes)

@@ -51,11 +51,12 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
             MoEWatch.waited += self.t0 - t
         else:
             self.e0 = torch.cuda.Event(enable_timing = True)
-            self.e0.record() # the gpu notes the time when it reaches this point. the CPU does not wait here.\
+            self.e0.record() # the gpu notes the time when it reaches this point. the CPU does not wait here.
         
         self.c0 = time.thread_time() # the MoE own cpu time starts after the old timer's wait
 
     def after(self, moe, inputs, output):
+        MoEWatch.cpu += time.thread_time() - self.c0 # the MoE own cpu time ends before the old timer's wait
         if MoEWatch.sync:
             t = time.perf_counter()
             end = clock()

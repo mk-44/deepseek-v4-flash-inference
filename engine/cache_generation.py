@@ -23,25 +23,28 @@ def steal_seconds() -> float: # cpu time stolen so far, summed over all cpus i.e
     except (OSError, IndexError, ValueError):
         return float("nan")
 
-def disk_busy_seconds(path : str = "/v4local") -> float: # time so far that the disk under path had a request in flight, by the kernel's count/
+DISK = {} # name of the disk under /v4local, found on the first call. / is an overlay, so os.stat gives no disk we can look up
+
+def disk_counters() -> tuple[float, float]: # the disk under /v4local so far: seconds with a request in flight, and GB written
     try:
-        dev = os.stat(path).st_dev
-        for line in open("/proc/diskstats"):
-            f = line.split()
-            if (int(f[0]), int(f[1])) == (os.major(dev), os.minor(dev)):
-                return int(f[12]) / 1000
-    except (OSError, IndexError, ValueError):
-        pass
-    return float("nan")
+        rows = {f[2] : f for f in map(str.split, open("/proc/diskstats"))} # disk name to its counters
+        if not DISK: # the first call comes after the load, so the disk that read the most since boot is ours
+            DISK["name"] = max(rows, key = lambda name : int(rows[name][5])) # field 5 is sectors read
+            print(f"time map: disk busy and written are {DISK['name']}'s, by /proc/diskstats")
+        f = rows[DISK["name"]]
+        return int(f[12]) / 1000, int(f[9]) * 512 / 1e9 # field 12 is ms with a request in flight, field 9 is sectors written of 512 bytes
+    except (OSError, IndexError, ValueError, KeyError):
+        return float("nan"), float("nan")
 
 def map_line(rows : list[dict]) -> str: # the time map, averaged over the given steps.
     avg = lambda f : sum(f(r["map"]) for r in rows) / len(rows)
-    
-    return (f"CPU working {avg(lambda m : m['cpu work']):.3f} s | waiting for the GPU {avg(lambda m : sum(m['gpu waits'].values())):.3f} s"
-            f" (gate {avg(lambda m : m['gpu waits']['gate']):.3f}, step end {avg(lambda m : m['gpu waits']['step end']):.3f},"
-            f" copies {avg(lambda m : m['gpu waits']['copies']):.3f}, MoE timer {avg(lambda m : m['gpu waits']['moe clock']):.3f})"
+    wait = lambda k : avg(lambda m : m["gpu waits"][k])
+
+    return (f"CPU working {avg(lambda m : m['cpu work']):.3f} s (in the MoE {avg(lambda m : m['cpu work in moe']):.3f}, of it in disk read calls"
+            f" {avg(lambda m : m['read cpu']):.3f}) | waiting for the GPU {avg(lambda m : sum(m['gpu waits'].values())):.3f} s (gate {wait('gate'):.3f},"
+            f" swaps {wait('swaps'):.3f}, copies {wait('copies'):.3f}, step end {wait('step end'):.3f}, MoE timer {wait('moe clock'):.3f})"
             f" | waiting for the disk {avg(lambda m : m['disk wait']):.3f} s | not running {avg(lambda m : m['not running']):.3f} s"
-            f" (steal, all CPUs {avg(lambda m : m['steal']):.3f} s) | disk busy {avg(lambda m : m['disk busy']):.3f} s")
+            f" (steal, all CPUs {avg(lambda m : m['steal']):.3f} s) | disk busy {avg(lambda m : m['disk busy']):.3f} s, written {avg(lambda m : m['disk written']):.2f} GB")
 
 
 class CacheTrace: # one hook on every gate, picks go to the store first (the cache moves) and then into the record.
@@ -50,6 +53,7 @@ class CacheTrace: # one hook on every gate, picks go to the store first (the cac
         self.calls = [] # every gate call {layer, experts [tokens][6], weights [tokens][6]} - as RouteTrace recorded them
         self.prepare_s = 0.0 # seconds inside store.prepare i.e. the moves list and their disk reads
         self.gate_wait_s = 0.0 # seconds the cpu waited for the gpu to reach the gates.
+        self.swap_wait_s = 0.0 # seconds the cpu waited for the swaps that prepare queued
 
         
         for layer, block in blocks.items():
@@ -66,6 +70,9 @@ class CacheTrace: # one hook on every gate, picks go to the store first (the cac
 
             self.store.prepare(layer, rows) # the cache moves on the bytes: every expert of this call is then where the table says
             self.prepare_s += time.perf_counter() - t
+            t = time.perf_counter()
+            torch.cuda.synchronize() # wait for the swaps prepare queued. the MoE counts.tolist() would wait for them anyway, here the wait is timed
+            self.swap_wait_s += time.perf_counter() - t
             self.calls.append({"layer" : layer, "experts" : rows, "weights" : w})
         return after_gate
 
@@ -78,19 +85,23 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
     
     def mark(self): # the store current values.
         self.n0, self.read0, self.wait0, self.prepare0 = dict(self.store.n), self.store.read_s, self.store.wait_s, self.trace.prepare_s
-        self.gate0, self.moe_wait0, self.steal0, self.disk0 = self.trace.gate_wait_s, MoEWatch.waited, steal_seconds(), disk_busy_seconds()
+        self.gate0, self.moe_wait0, self.steal0, self.disk0 = self.trace.gate_wait_s, MoEWatch.waited, steal_seconds(), disk_counters()
+        self.swap0, self.read_cpu0, self.moe_cpu0 = self.trace.swap_wait_s, self.store.read_cpu_s, MoEWatch.cpu
         self.cpu0 = time.thread_time() # last, so the readings above don't count in the step's cpu time.
     
     def __call__(self, step : int, seconds : float, token : torch.Tensor):
         cpu = time.thread_time() - self.cpu0 # cpu time this thread used in the step. its waits for the GPU spin, so they count here too.
         n = {k : v - self.n0[k] for k, v in self.store.n.items()} # current step counters
-        read = self.store.read_s - self.read0
+        read, read_cpu = self.store.read_s - self.read0, self.store.read_cpu_s - self.read_cpu0 # time inside the disk read calls, and the cpu part of it
         waits = {
             "gate" : self.trace.gate_wait_s - self.gate0, # for the gpu to reach each layer's gate
+            "swaps" : self.trace.swap_wait_s - self.swap0, # for the swaps each layer's prepare queued
             "step end" : seconds - LAST_STEP["cpu"], # for the gpu to finish the token
             "copies" : self.store.wait_s - self.wait0, # for queued copies
             "moe clock" : MoEWatch.waited - self.moe_wait0 # the old MoE timer's own waits, 0 with GPU timestamps
         }
+        in_moe = MoEWatch.cpu - self.moe_cpu0 - waits["gate"] - waits["swaps"] - waits["copies"] # cpu work inside the MoEs, without their waits for the gpu
+        busy, written = (now - then for now, then in zip(disk_counters(), self.disk0))
         
         row = {
             "seconds" : seconds,
@@ -103,12 +114,15 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
             "counts" : n,
             "token" : token.item(),
             "map" : {
-                "cpu work" : cpu - sum(waits.values()), 
-                "gpu waits" : waits, 
-                "disk wait" : read, 
-                "not running" : seconds - cpu - read,
-                "steal" : steal_seconds() - self.steal0, 
-                "disk busy" : disk_busy_seconds() - self.disk0
+                "cpu work" : cpu - sum(waits.values()),
+                "cpu work in moe" : in_moe,
+                "read cpu" : read_cpu,
+                "gpu waits" : waits,
+                "disk wait" : read - read_cpu, # read time without its cpu part
+                "not running" : seconds - cpu - (read - read_cpu), # the cpu part of the reads is already in cpu
+                "steal" : steal_seconds() - self.steal0,
+                "disk busy" : busy,
+                "disk written" : written
             }
         }
         
@@ -284,7 +298,7 @@ def profile_tokens(model : Transformer, args : ModelArgs, trace : CacheTrace, id
     if path:
         prof.export_chrome_trace(path) # every cpu op and gpu kernel on one timeline, for ui.perfetto.dev
     
-    gpu = [e for e in prof.events() if e.device_type == torch.autograd.DeviceType.CUDA] # kernels, copies and memsets, all on one stream
+    gpu = [e for e in prof.events() if e.device_type == torch.autograd.DeviceType.CUDA and not e.is_user_annotation] # kernels, copies and memsets on one stream, without the GPU spans of our labels
     kernels = {} # kernel name -> [gpu_seconds, count]
     
     for e in gpu:
