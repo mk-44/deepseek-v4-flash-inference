@@ -40,13 +40,14 @@ def map_line(rows : list[dict]) -> str: # the time map, averaged over the given 
     avg = lambda f : sum(f(r["map"]) for r in rows) / len(rows)
     wait = lambda k : avg(lambda m : m["gpu waits"][k])
 
-        return (
-            f"CPU working {avg(lambda m : m['cpu work']):.3f} s (our logging {avg(lambda m : m.get('log cpu', 0.0)) * 1e3:.2f} ms "
-            "| in the MoE {avg(lambda m : m['cpu work in moe']):.3f}, of it in disk read calls"
-            f" {avg(lambda m : m['read cpu']):.3f}) | waiting for the GPU {avg(lambda m : sum(m['gpu waits'].values())):.3f} s (gate {wait('gate'):.3f},"
-            f" swaps {wait('swaps'):.3f}, copies {wait('copies'):.3f}, step end {wait('step end'):.3f}, MoE timer {wait('moe clock'):.3f})"
-            f" | waiting for the disk {avg(lambda m : m['disk wait']):.3f} s | not running {avg(lambda m : m['not running']):.3f} s"
-            f" (steal, all CPUs {avg(lambda m : m['steal']):.3f} s) | disk busy {avg(lambda m : m['disk busy']):.3f} s, written {avg(lambda m : m['disk written']):.2f} GB")
+    return (
+        f"CPU working {avg(lambda m : m['cpu work']):.3f} s (our logging {avg(lambda m : m.get('log cpu', 0.0)) * 1e3:.2f} ms "
+        f"| in the MoE {avg(lambda m : m['cpu work in moe']):.3f}, of it in disk read calls"
+        f" {avg(lambda m : m['read cpu']):.3f}) | waiting for the GPU {avg(lambda m : sum(m['gpu waits'].values())):.3f} s (gate {wait('gate'):.3f},"
+        f" swaps {wait('swaps'):.3f}, copies {wait('copies'):.3f}, step end {wait('step end'):.3f}, MoE timer {wait('moe clock'):.3f})"
+        f" | waiting for the disk {avg(lambda m : m['disk wait']):.3f} s | not running {avg(lambda m : m['not running']):.3f} s"
+        f" (steal, all CPUs {avg(lambda m : m['steal']):.3f} s) | disk busy {avg(lambda m : m['disk busy']):.3f} s, written {avg(lambda m : m['disk written']):.2f} GB"
+    )
 
 
 class CacheTrace: # one hook on every gate, picks go to the store first (the cache moves) and then into the record.
