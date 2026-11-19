@@ -29,9 +29,11 @@ def reference_moe(ckpt : Checkpoint, args : ModelArgs, layer : int, device = "cu
     return load_module(lambda: MoE(layer, args), ckpt, f"layers.{layer}.ffn.", args, device) # check with all 256 experts decoded at load.
 
 class MoEWatch: # for each call of one MoE, its input and output, its time, GPU memory and what the store fetched
-    sync = True # True - clock() waits for the GPU at both ends of each MoE (the old timer). False - GPU timestamps, nothing waits.
+    sync = False # True - clock() waits for the GPU at both ends of each MoE (the old timer). False - GPU timestamps, nothing waits.
     waited = 0.0 # seconds the CPU spent inside those clock() waits, all MoEs, since the start.
     cpu = 0.0 # cpu seconds our thread spent inside the MoEs. the old timer's waits left out, all MoEs, since the start.
+    log_cpu = 0.0 # cpu seconds our thread spent in these two hooks themselves, i.e. measuring, not the model. the old timer's waits left out.
+
 
 
     def __init__(self, moe : MoE, store : Store):
@@ -40,6 +42,8 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
         moe.register_forward_hook(self.after)
 
     def before(self, moe, inputs):
+        c, w0 = time.thread_time(), MoEWatch.waited # this hook's own cpu time starts here.
+        
         torch.cuda.reset_peak_memory_stats()
         self.mem0 = torch.cuda.memory_allocated()
         self.n0, self.read0, self.wait0 = dict(self.store.n), self.store.read_s, self.store.wait_s
@@ -54,9 +58,12 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
             self.e0.record() # the gpu notes the time when it reaches this point. the CPU does not wait here.
         
         self.c0 = time.thread_time() # the MoE own cpu time starts after the old timer's wait
+        MoEWatch.log_cpu += self.c0 - c - (MoEWatch.waited - w0) # this hook's own cpu, without the old timer's wait.
 
     def after(self, moe, inputs, output):
-        MoEWatch.cpu += time.thread_time() - self.c0 # the MoE own cpu time ends before the old timer's wait
+        c, w0 = time.thread_time(), MoEWatch.waited
+        MoEWatch.cpu += c - self.c0 # the MoE own cpu time ends before the old timer's wait.
+        
         if MoEWatch.sync:
             t = time.perf_counter()
             end = clock()
@@ -72,6 +79,9 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
         self.y = output # [b, s, d]
         self.fetched = {tier : self.store.n[tier] - self.n0[tier] for tier in self.n0}
         self.read, self.wait = self.store.read_s - self.read0, self.store.wait_s - self.wait0
+        
+        MoEWatch.log_cpu += time.thread_time() - c - (MoEWatch.waited - w0) # this hook's own cpu, without the old timer's wait.
+
 
     def gpu_seconds(self) -> float:
         return self.seconds if MoEWatch.sync else self.e0.elapsed_time(self.e1) / 1e3
@@ -81,7 +91,7 @@ def report(watch : MoEWatch, ref_seconds : float, y_ref : torch.Tensor) -> str:
     f = watch.fetched
     same = torch.equal(watch.y, y_ref)
     diff = "" if same else f" (largest difference {(watch.y.float() - y_ref.float()).abs().max().item():.3g})"
-    return (f"{sum(f.values())} experts (gpu {f['gpu']}, ram {f['ram']}, disk {f['disk']}) | ours {watch.seconds * 1e3:.1f} ms"
+    return (f"{sum(f.values())} experts (gpu {f['gpu']}, ram {f['ram']}, disk {f['disk']}) | ours {watch.gpu_seconds() * 1e3:.1f} ms"
             f" (disk read {watch.read * 1e3:.1f}, copy wait {watch.wait * 1e3:.1f}) | A's MoE {ref_seconds * 1e3:.1f} ms |"
             f" GPU kept {watch.kept:,} B, peak +{watch.peak / 2**20:.0f} MiB | equal {same}{diff}")
 

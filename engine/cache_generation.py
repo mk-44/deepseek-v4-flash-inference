@@ -40,7 +40,9 @@ def map_line(rows : list[dict]) -> str: # the time map, averaged over the given 
     avg = lambda f : sum(f(r["map"]) for r in rows) / len(rows)
     wait = lambda k : avg(lambda m : m["gpu waits"][k])
 
-    return (f"CPU working {avg(lambda m : m['cpu work']):.3f} s (in the MoE {avg(lambda m : m['cpu work in moe']):.3f}, of it in disk read calls"
+        return (
+            f"CPU working {avg(lambda m : m['cpu work']):.3f} s (our logging {avg(lambda m : m.get('log cpu', 0.0)) * 1e3:.2f} ms "
+            "| in the MoE {avg(lambda m : m['cpu work in moe']):.3f}, of it in disk read calls"
             f" {avg(lambda m : m['read cpu']):.3f}) | waiting for the GPU {avg(lambda m : sum(m['gpu waits'].values())):.3f} s (gate {wait('gate'):.3f},"
             f" swaps {wait('swaps'):.3f}, copies {wait('copies'):.3f}, step end {wait('step end'):.3f}, MoE timer {wait('moe clock'):.3f})"
             f" | waiting for the disk {avg(lambda m : m['disk wait']):.3f} s | not running {avg(lambda m : m['not running']):.3f} s"
@@ -50,11 +52,12 @@ def map_line(rows : list[dict]) -> str: # the time map, averaged over the given 
 class CacheTrace: # one hook on every gate, picks go to the store first (the cache moves) and then into the record.
     def __init__(self, blocks : dict, store : CacheStore):
         self.store = store
-        self.calls = [] # every gate call {layer, experts [tokens][6], weights [tokens][6]} - as RouteTrace recorded them
-        self.prepare_s = 0.0 # seconds inside store.prepare i.e. the moves list and their disk reads
+        self.calls = [] # every gate call {layer, experts [tokens][6], weights [tokens][6]} - as RouteTrace recorded them.
+        self.prepare_s = 0.0 # seconds inside store.prepare i.e. the moves list and their disk reads.
         self.gate_wait_s = 0.0 # seconds the cpu waited for the gpu to reach the gates.
-        self.swap_wait_s = 0.0 # seconds the cpu waited for the swaps that prepare queued
-
+        self.swap_wait_s = 0.0 # seconds the cpu waited for the swaps that prepare queued.
+        self.log_cpu = 0.0 # cpu seconds spent keeping the record: the gate weights read back and the calls list.
+        
         
         for layer, block in blocks.items():
             block.ffn.gate.register_forward_hook(self.hook(layer))
@@ -64,8 +67,11 @@ class CacheTrace: # one hook on every gate, picks go to the store first (the cac
             weights, indices = outputs # [tokens, 6], [tokens, 6]
             
             t = time.perf_counter()
-            rows, w = indices.tolist(), weights.tolist() # cpu waits for the gate here before prepare queues any copy.
+            rows = indices.tolist() # cpu waits for the gate here before prepare queues any copy.
             self.gate_wait_s += time.perf_counter() - t
+            c = time.thread_time()
+            w = weights.tolist() # for the record only. the gate is done on the gpu, so this does not wait.
+            self.log_cpu += time.thread_time() - c
             t = time.perf_counter()
 
             self.store.prepare(layer, rows) # the cache moves on the bytes: every expert of this call is then where the table says
@@ -73,7 +79,10 @@ class CacheTrace: # one hook on every gate, picks go to the store first (the cac
             t = time.perf_counter()
             torch.cuda.synchronize() # wait for the swaps prepare queued. the MoE counts.tolist() would wait for them anyway, here the wait is timed
             self.swap_wait_s += time.perf_counter() - t
+            
+            c = time.thread_time()
             self.calls.append({"layer" : layer, "experts" : rows, "weights" : w})
+            self.log_cpu += time.thread_time() - c
         return after_gate
 
 class StepLog: # after each generated token - log its [time], [MoE time], [the store reads and moves in that step] and [the token].
@@ -81,16 +90,20 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
         self.watches, self.trace, self.store, self.tokenizer = watches, trace, trace.store, tokenizer
         self.every = every
         self.rows = []
+        self.own_s = 0.0 # cpu seconds inside this logger, after the steps.
         self.mark()
     
     def mark(self): # the store current values.
         self.n0, self.read0, self.wait0, self.prepare0 = dict(self.store.n), self.store.read_s, self.store.wait_s, self.trace.prepare_s
         self.gate0, self.moe_wait0, self.steal0, self.disk0 = self.trace.gate_wait_s, MoEWatch.waited, steal_seconds(), disk_counters()
         self.swap0, self.read_cpu0, self.moe_cpu0 = self.trace.swap_wait_s, self.store.read_cpu_s, MoEWatch.cpu
+        self.log0 = MoEWatch.log_cpu + self.trace.log_cpu # our own measuring code, so far
         self.cpu0 = time.thread_time() # last, so the readings above don't count in the step's cpu time.
     
     def __call__(self, step : int, seconds : float, token : torch.Tensor):
-        cpu = time.thread_time() - self.cpu0 # cpu time this thread used in the step. its waits for the GPU spin, so they count here too.
+        entry = time.thread_time()
+        cpu = entry - self.cpu0 # cpu time this thread used in the step. its waits for the GPU spin, so they count here too.
+        
         n = {k : v - self.n0[k] for k, v in self.store.n.items()} # current step counters
         read, read_cpu = self.store.read_s - self.read0, self.store.read_cpu_s - self.read_cpu0 # time inside the disk read calls, and the cpu part of it
         waits = {
@@ -117,6 +130,7 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
                 "cpu work" : cpu - sum(waits.values()),
                 "cpu work in moe" : in_moe,
                 "read cpu" : read_cpu,
+                "log cpu" : MoEWatch.log_cpu + self.trace.log_cpu - self.log0, # our own measuring code inside the step
                 "gpu waits" : waits,
                 "disk wait" : read - read_cpu, # read time without its cpu part
                 "not running" : seconds - cpu - (read - read_cpu), # the cpu part of the reads is already in cpu
@@ -134,6 +148,7 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
                   f" | -> {self.tokenizer.tokenizer.decode([row['token']], skip_special_tokens = False)!r}")
             print(f"    time map: {map_line([row])}")
         self.mark()
+        self.own_s += self.cpu0 - entry # this call's own cpu. it runs after the step's clock, so it is in no step's time.
         
 def frozen_check(model : Transformer, trace : CacheTrace, prompt : torch.Tensor, tokens : torch.Tensor, scores : torch.Tensor) -> dict:
     # teacher forced check (one prefill over prompt + answer) with the cache frozen, so no move and none of the fetches counted.
@@ -161,7 +176,7 @@ def run_prompt(
 ) -> dict: # one prompt - greedy generation and its record.
     store = trace.store
     prompt = torch.tensor([ids], device = "cuda") # [1, s]
-    trace.calls, log.rows = [], []
+    trace.calls, log.rows, log.own_s = [], [], 0.0
     log.mark()
     
     n0, read0, wait0 = dict(store.n), store.read_s, store.wait_s
@@ -187,6 +202,8 @@ def run_prompt(
         print(f"  prefill {seconds[0]:.1f} s | {len(decode)} decode steps: {sum(r['seconds'] for r in decode) / len(decode):.2f} s and"
               f" {sum(r['reads'] for r in decode) / len(decode):.1f} disk reads per token | text {record['text']!r}")
         print(f"  per decode token: {map_line(decode)}")
+        print(f"  the step logger itself: {log.own_s / len(log.rows) * 1e3:.2f} ms per step, after each step's clock, so in no step's time")
+
 
     if check:
         c = frozen_check(model, trace, prompt, tokens, scores)

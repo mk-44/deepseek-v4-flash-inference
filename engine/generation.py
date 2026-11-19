@@ -74,7 +74,7 @@ if __name__ == "__main__":
     store.fetch(0, 0) # the first decode also loads CUDA's kernels (one-time)
     
     def show(step, seconds, token): # after each step: its time, each layer's MoE time and fetches (gpu/ram/disk), the token
-        moe = " | ".join(f"L{l} {w.seconds * 1e3:.0f} ms ({w.fetched['gpu']}/{w.fetched['ram']}/{w.fetched['disk']})"
+        moe = " | ".join(f"L{l} {w.gpu_seconds() * 1e3:.0f} ms ({w.fetched['gpu']}/{w.fetched['ram']}/{w.fetched['disk']})"
                          for l, w in watches.items())
         print(f"  step {step}: {seconds * 1e3:.0f} ms | MoE {moe} | -> {chat.tokenizer.decode(token[0].tolist())!r}")
     

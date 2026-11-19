@@ -21,7 +21,7 @@ class StepLog: # log after each generated token
         w = list(self.watches.values())
         row = {
             "seconds" : seconds, 
-            "moe" : sum(x.seconds for x in w), 
+            "moe" : sum(x.gpu_seconds() for x in w), 
             "read" : sum(x.read for x in w), 
             "wait" : sum(x.wait for x in w),
             "fetched" : {tier : sum(x.fetched[tier] for x in w) for tier in ("gpu", "ram", "disk")},
@@ -33,7 +33,7 @@ class StepLog: # log after each generated token
         
         if step > 0: # a decode step
             for layer, x in self.watches.items():
-                self.layer_s[layer][0] += x.seconds
+                self.layer_s[layer][0] += x.gpu_seconds()
                 self.layer_s[layer][1] += 1
         f = row["fetched"]
         

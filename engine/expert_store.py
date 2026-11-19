@@ -67,7 +67,7 @@ def copy_to_gpu(buf : torch.Tensor, where : ExpertDisk, layout : dict, place : t
     return done
 
 
-COMPILED_EXPAND = False # True = fp4_decode through torch.compile, one fused GPU job per matrix.
+COMPILED_EXPAND = True # True = fp4_decode through torch.compile, one fused GPU job per matrix.
 fast_fp4_decode = torch.compile(fp4_decode, dynamic = False) # compiles on its first call for each shape: w1 and w3 share one, w2 has its own.
 
 def decode_expert(place : torch.Tensor, layout : dict) -> dict[str, torch.Tensor]:
