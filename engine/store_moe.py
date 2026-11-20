@@ -1,3 +1,4 @@
+import contextlib
 import json
 import time
 import torch
@@ -33,6 +34,7 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
     waited = 0.0 # seconds the CPU spent inside those clock() waits, all MoEs, since the start.
     cpu = 0.0 # cpu seconds our thread spent inside the MoEs. the old timer's waits left out, all MoEs, since the start.
     log_cpu = 0.0 # cpu seconds our thread spent in these two hooks themselves, i.e. measuring, not the model. the old timer's waits left out.
+    memory = True # True: gpu memory read at both ends of each MoE, 3 reads and a reset. False: none here, the step logger reads the step's peak once.
 
 
 
@@ -44,10 +46,11 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
     def before(self, moe, inputs):
         c, w0 = time.thread_time(), MoEWatch.waited # this hook's own cpu time starts here.
         
-        torch.cuda.reset_peak_memory_stats()
-        self.mem0 = torch.cuda.memory_allocated()
+        if MoEWatch.memory: # each read builds and sorts all 122 allocator numbers in python
+            torch.cuda.reset_peak_memory_stats()
+            self.mem0 = torch.cuda.memory_allocated()
         self.n0, self.read0, self.wait0 = dict(self.store.n), self.store.read_s, self.store.wait_s
-        self.label = torch.profiler.record_function("moe")
+        self.label = torch.profiler.record_function("moe") if torch.autograd._profiler_enabled() else contextlib.nullcontext() # a label only while a profiler runs. without one it costs about 9 us for nothing
         self.label.__enter__()
         if MoEWatch.sync:
             t = time.perf_counter()
@@ -73,8 +76,9 @@ class MoEWatch: # for each call of one MoE, its input and output, its time, GPU 
             self.e1 = torch.cuda.Event(enable_timing = True)
             self.e1.record()
         self.label.__exit__(None, None, None)
-        self.kept = torch.cuda.memory_allocated() - self.mem0 # only the output should stay.
-        self.peak = torch.cuda.max_memory_allocated() - self.mem0
+        if MoEWatch.memory:
+            self.kept = torch.cuda.memory_allocated() - self.mem0 # only the output should stay.
+            self.peak = torch.cuda.max_memory_allocated() - self.mem0
         self.x, self.ids = inputs # [b, s, d], [b, s]
         self.y = output # [b, s, d]
         self.fetched = {tier : self.store.n[tier] - self.n0[tier] for tier in self.n0}

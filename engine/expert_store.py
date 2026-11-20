@@ -1,3 +1,4 @@
+import contextlib
 import math
 import os
 import time
@@ -72,7 +73,7 @@ fast_fp4_decode = torch.compile(fp4_decode, dynamic = False) # compiles on its f
 
 def decode_expert(place : torch.Tensor, layout : dict) -> dict[str, torch.Tensor]:
     decode = fast_fp4_decode if COMPILED_EXPAND else fp4_decode
-    with torch.profiler.record_function("expand"):
+    with torch.profiler.record_function("expand") if torch.autograd._profiler_enabled() else contextlib.nullcontext(): # a label only while a profiler runs
         return {w : decode(place_tensor(place, layout, f"{w}.weight"), place_tensor(place, layout, f"{w}.scale")) for w in ("w1", "w2", "w3")}
 
 @dataclass

@@ -99,6 +99,7 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
         self.gate0, self.moe_wait0, self.steal0, self.disk0 = self.trace.gate_wait_s, MoEWatch.waited, steal_seconds(), disk_counters()
         self.swap0, self.read_cpu0, self.moe_cpu0 = self.trace.swap_wait_s, self.store.read_cpu_s, MoEWatch.cpu
         self.log0 = MoEWatch.log_cpu + self.trace.log_cpu # our own measuring code, so far
+        torch.cuda.reset_peak_memory_stats() # the step's gpu memory peak starts here. it is read once, when the step ends
         self.cpu0 = time.thread_time() # last, so the readings above don't count in the step's cpu time.
     
     def __call__(self, step : int, seconds : float, token : torch.Tensor):
@@ -124,7 +125,7 @@ class StepLog: # after each generated token - log its [time], [MoE time], [the s
             "read" : read,
             "wait" : self.store.wait_s - self.wait0,
             "reads" : n["pre kept"] + n["miss"] + n["disk"], # experts read from experts.bin [keeps and misses in prepare, disk only fetches]
-            "peak" : max([w.mem0 + w.peak for w in self.watches.values()] + [torch.cuda.max_memory_allocated()]),
+            "peak" : max([w.mem0 + w.peak for w in self.watches.values() if MoEWatch.memory] + [torch.cuda.max_memory_allocated()]), # MoE reads off: the step's own peak, since mark()
             "counts" : n,
             "token" : token.item(),
             "map" : {

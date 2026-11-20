@@ -16,6 +16,7 @@ from expert_plan import load_texts, make_plan
 DEFAULTS = {
     "old_timer" : False, # True : the MoE timer that waits for the gpu at both ends of each MoE. False : gpu timestamps, nothing waits.
     "compiled_expand" : True, # True : fp4_decode through torch.compile. False : the plain fp4_decode.
+    "moe_memory_readings" : False, # True : gpu memory read at both ends of each MoE, the old way. False : the step logger reads the step's peak once, outside the step's clock.
 }
 
 ARM_SETS = {
@@ -29,12 +30,18 @@ ARM_SETS = {
         "about" : "the baseline twice, both profiled, then the baseline once more: does a profile leave every later CUDA call slower?",
         "arms" : [("baseline", {}), ("baseline, again", {})],
         "after" : [("baseline, after the profiles", {})],
-    }
+    },
+    "logging_cost" : {
+        "about" : "the baseline, then the old gpu memory reads in every MoE, then the baseline again: what those reads cost",
+        "arms" : [("baseline", {}), ("GPU memory read in every MoE", {"moe_memory_readings" : True}), ("baseline, again", {})],
+        "after" : [],
+        "profile" : False, # no profiles: this set only compares timings
+    },
 }
 
 def apply(switches : dict) -> dict: # sets one arm's switches, returns all of them.
     s = {**DEFAULTS, **switches}
-    MoEWatch.sync, expert_store.COMPILED_EXPAND = s["old_timer"], s["compiled_expand"]
+    MoEWatch.sync, expert_store.COMPILED_EXPAND, MoEWatch.memory = s["old_timer"], s["compiled_expand"], s["moe_memory_readings"]
     return s
 
 
@@ -93,7 +100,8 @@ if __name__ == "__main__":
         
         
         first = arms[0][0] # every arm is compared with this one
-        jobs = [("timed", n, sw) for n, sw in arms] + [("profile", n, sw) for n, sw in arms] + [("timed", n, sw) for n, sw in after]
+        profiles = [("profile", n, sw) for n, sw in arms] if ARM_SETS[arm_set].get("profile", True) else [] # a set can skip its profiles with "profile" : False
+        jobs = [("timed", n, sw) for n, sw in arms] + profiles + [("timed", n, sw) for n, sw in after]
         for kind, name, switches in jobs:
             s = apply(switches)
             if s["compiled_expand"] and not compiled_ok:
@@ -152,7 +160,8 @@ if __name__ == "__main__":
             save(path, out)
         
         tokens = {n : a["profile"]["tokens"] for n, a in out["arms"].items() if "profile" in a}
-        print(f"profiled tokens {tokens} | the same in every arm: {len({str(v) for v in tokens.values()}) <= 1}")
+        if tokens: # a set without profiles has none to compare
+            print(f"profiled tokens {tokens} | the same in every arm: {len({str(v) for v in tokens.values()}) <= 1}")
 
         out["end check"] = store.check_end(fp0)
         print(f"end check: {out['end check']}")
