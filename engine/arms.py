@@ -10,6 +10,7 @@ from arch import ChatTokenizer, Checkpoint, ModelArgs
 from cache_store import FIXED_HOME, FOLDER, box_sizes, load_cache
 from cache_generation import EVERY, N_FIXED, CacheTrace, StepLog, compare, decode_stats, map_line, profile_tokens, run_prompt, save
 from full_store import saved_entries
+from recordings import RECORDINGS, make_recordings, use_recordings
 from store_moe import MoEWatch
 from expert_plan import load_texts, make_plan 
 
@@ -17,6 +18,7 @@ DEFAULTS = {
     "old_timer" : False, # True : the MoE timer that waits for the gpu at both ends of each MoE. False : gpu timestamps, nothing waits.
     "compiled_expand" : True, # True : fp4_decode through torch.compile. False : the plain fp4_decode.
     "moe_memory_readings" : False, # True : gpu memory read at both ends of each MoE, the old way. False : the step logger reads the step's peak once, outside the step's clock.
+    "hc_pre_recordings" : False, # True : every 1 token step replays one recording per hc_pre call site. False : the plain hc_pre, about 140 GPU jobs per call.
 }
 
 ARM_SETS = {
@@ -37,11 +39,18 @@ ARM_SETS = {
         "after" : [],
         "profile" : False, # no profiles: this set only compares timings
     },
+    "hc_pre_recordings" : {
+        "about" : "the baseline, then hc_pre replayed from its recordings in every 1 token step, then the baseline again: what the recordings save",
+        "arms" : [("baseline", {}), ("hc_pre recordings", {"hc_pre_recordings" : True}), ("baseline, again", {})],
+        "after" : [],
+        "profile" : True, # profiles after all the timed arms: they count each arm's kernel launches
+    },
 }
 
 def apply(switches : dict) -> dict: # sets one arm's switches, returns all of them.
     s = {**DEFAULTS, **switches}
     MoEWatch.sync, expert_store.COMPILED_EXPAND, MoEWatch.memory = s["old_timer"], s["compiled_expand"], s["moe_memory_readings"]
+    use_recordings(s["hc_pre_recordings"]) # Block.forward finds the recorded hc_pre or the plain one from its next call
     return s
 
 
@@ -94,6 +103,17 @@ if __name__ == "__main__":
             traceback.print_exc()
             print("FAILED: the expand did not compile, so the arms that need it are skipped")
             compiled_ok, expert_store.COMPILED_EXPAND = False, False
+
+        torch.cuda.empty_cache() # so the reserved memory read below counts only what the recordings hold
+        reserved, t = torch.cuda.memory_reserved(), time.perf_counter()
+        try: # one recording per hc_pre call site, made once before any prompt runs. a failure costs only the arms that use them
+            make_recordings(model.layers, args, model.embed.weight.dtype)
+            recorded_ok = True
+            print(f"hc_pre recordings: {len(RECORDINGS)} made in {time.perf_counter() - t:.1f} s | GPU memory they hold {(torch.cuda.memory_reserved() - reserved) / 2**20:.0f} MiB")
+        except Exception: # log it, the arms that need them are skipped, the others still run.
+            traceback.print_exc()
+            print("FAILED: the hc_pre recordings were not made, so the arms that need them are skipped")
+            recorded_ok = False
     
         print("warm-up: '2+2' once, so first-call costs land in no arm")
         run_prompt(model, args, tokenizer, trace, log, runs["2+2"]["prompt"], 2, False)
@@ -107,6 +127,10 @@ if __name__ == "__main__":
             if s["compiled_expand"] and not compiled_ok:
                 print(f"=== {kind} {name}: FAILED, skipped as the expand did not compile")
                 out["arms"][name] = {"failed" : "the expand did not compile"}
+                continue
+            if s["hc_pre_recordings"] and not recorded_ok: # without them the arm would run the plain hc_pre under the recordings label
+                print(f"=== {kind} {name}: FAILED, skipped as the hc_pre recordings were not made")
+                out["arms"][name] = {"failed" : "the hc_pre recordings were not made"}
                 continue
             t = time.perf_counter()
             moved = store.restore(ckpt, plan, n_layers)
