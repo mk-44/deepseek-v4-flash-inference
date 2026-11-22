@@ -1,0 +1,533 @@
+arm set expand_hc_pre_copy_stream: the baseline, then the plain expand, then hc_pre recordings, then hc_pre recordings and the swap copy stream, then the baseline again: what the compiled expand, the recordings and the copy stream each save at full size
+plan: 56 GPU + 59 RAM places per layer -> C = 30, 85 fixed experts per layer
+45 files to /v4local/ckpt, 101 GB free there
+56 GPU + 59 RAM + 171 disk places: C = 30 | per layer GPU 35 fixed + 21 cache, RAM 50 fixed + 9 cache, 141 disk only
+store ready in 52.8 s | GPU allocated 32.29 GB
+  file model-00001-of-00048.safetensors (embed.*): 1.06 GB already on disk, waited 0.0 s
+  file model-00045-of-00048.safetensors (head.*): 1.06 GB already on disk, waited 0.0 s
+  file model-00002-of-00048.safetensors (layers.0.*): 3.57 GB already on disk, waited 0.0 s
+  L0: static 1.3 s | experts: read 3.2 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.2 s | GPU 35.7 GB | RAM available 8.3 GiB | disk free 101 GB
+  file model-00003-of-00048.safetensors (layers.1.*): 3.57 GB already on disk, waited 0.0 s
+  L1: static 0.8 s | experts: read 3.2 s, to GPU 0.07 s, to RAM 0.10 s, to experts.bin 2.3 s | check L0: differ [] | GPU 36.0 GB | RAM available 8.2 GiB | disk free 100 GB
+  file model-00004-of-00048.safetensors (layers.2.*): 3.60 GB already on disk, waited 0.0 s
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  L2: static 1.0 s | experts: read 6.5 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.7 s | check L1: differ [] | GPU 36.3 GB | RAM available 5.9 GiB | disk free 100 GB
+  file model-00005-of-00048.safetensors (layers.3.*): 3.57 GB already on disk, waited 0.0 s
+  L3: static 1.4 s | experts: read 4.4 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.7 s | check L2: differ [] | GPU 36.6 GB | RAM available 7.3 GiB | disk free 100 GB
+  file model-00006-of-00048.safetensors (layers.4.*): 3.59 GB downloaded in 23.6 s (0.15 GB/s), waited 2.9 s
+  L4: static 3.6 s | experts: read 3.7 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 2.4 s | check L3: differ [] | GPU 37.0 GB | RAM available 6.0 GiB | disk free 99 GB
+  file model-00007-of-00048.safetensors (layers.5.*): 3.57 GB downloaded in 16.3 s (0.22 GB/s), waited 5.6 s
+  L5: static 0.8 s | experts: read 6.1 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 2.5 s | check L4: differ [] | GPU 37.3 GB | RAM available 5.8 GiB | disk free 97 GB
+  file model-00008-of-00048.safetensors (layers.6.*): 3.59 GB downloaded in 16.2 s (0.22 GB/s), waited 5.8 s
+  L6: static 3.6 s | experts: read 3.8 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.2 s | check L5: differ [] | GPU 37.6 GB | RAM available 6.3 GiB | disk free 95 GB
+  file model-00009-of-00048.safetensors (layers.7.*): 3.57 GB downloaded in 16.7 s (0.21 GB/s), waited 5.9 s
+  L7: static 3.3 s | experts: read 3.7 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 2.3 s | check L6: differ [] | GPU 37.9 GB | RAM available 5.6 GiB | disk free 94 GB
+  file model-00010-of-00048.safetensors (layers.8.*): 3.59 GB downloaded in 16.3 s (0.22 GB/s), waited 6.2 s
+  L8: static 4.0 s | experts: read 4.0 s, to GPU 0.06 s, to RAM 0.09 s, to experts.bin 2.4 s | check L7: differ [] | GPU 38.2 GB | RAM available 5.7 GiB | disk free 92 GB
+  file model-00011-of-00048.safetensors (layers.9.*): 3.57 GB downloaded in 16.9 s (0.21 GB/s), waited 5.7 s
+  L9: static 2.6 s | experts: read 4.6 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 2.7 s | check L8: differ [] | GPU 38.5 GB | RAM available 5.7 GiB | disk free 90 GB
+  file model-00012-of-00048.safetensors (layers.10.*): 3.59 GB downloaded in 17.2 s (0.21 GB/s), waited 6.3 s
+  L10: static 3.2 s | experts: read 5.9 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 2.6 s | check L9: differ [] | GPU 38.8 GB | RAM available 5.8 GiB | disk free 88 GB
+  file model-00013-of-00048.safetensors (layers.11.*): 3.57 GB downloaded in 18.2 s (0.20 GB/s), waited 5.5 s
+  L11: static 0.8 s | experts: read 6.3 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 2.6 s | check L10: differ [] | GPU 39.1 GB | RAM available 5.5 GiB | disk free 86 GB
+  file model-00014-of-00048.safetensors (layers.12.*): 3.59 GB downloaded in 16.6 s (0.22 GB/s), waited 6.2 s
+  L12: static 3.1 s | experts: read 6.0 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.7 s | check L11: differ [] | GPU 39.4 GB | RAM available 5.8 GiB | disk free 84 GB
+  file model-00015-of-00048.safetensors (layers.13.*): 3.57 GB downloaded in 19.3 s (0.18 GB/s), waited 6.2 s
+  L13: static 2.7 s | experts: read 6.2 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.5 s | check L12: differ [] | GPU 39.7 GB | RAM available 5.9 GiB | disk free 82 GB
+  file model-00016-of-00048.safetensors (layers.14.*): 3.59 GB downloaded in 18.0 s (0.20 GB/s), waited 5.8 s
+  L14: static 2.7 s | experts: read 4.2 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.4 s | check L13: differ [] | GPU 40.1 GB | RAM available 6.1 GiB | disk free 81 GB
+  file model-00017-of-00048.safetensors (layers.15.*): 3.57 GB downloaded in 17.9 s (0.20 GB/s), waited 7.5 s
+  L15: static 3.5 s | experts: read 3.7 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 2.5 s | check L14: differ [] | GPU 40.4 GB | RAM available 5.7 GiB | disk free 79 GB
+  file model-00018-of-00048.safetensors (layers.16.*): 3.59 GB downloaded in 17.5 s (0.21 GB/s), waited 6.9 s
+  L16: static 0.5 s | experts: read 6.1 s, to GPU 0.06 s, to RAM 0.09 s, to experts.bin 2.6 s | check L15: differ [] | GPU 40.7 GB | RAM available 6.1 GiB | disk free 77 GB
+  file model-00019-of-00048.safetensors (layers.17.*): 3.57 GB downloaded in 16.9 s (0.21 GB/s), waited 6.6 s
+  L17: static 0.5 s | experts: read 8.7 s, to GPU 0.07 s, to RAM 0.10 s, to experts.bin 2.8 s | check L16: differ [] | GPU 41.0 GB | RAM available 5.8 GiB | disk free 75 GB
+  file model-00020-of-00048.safetensors (layers.18.*): 3.59 GB downloaded in 19.7 s (0.18 GB/s), waited 6.3 s
+  L18: static 0.5 s | experts: read 8.2 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.7 s | check L17: differ [] | GPU 41.3 GB | RAM available 5.8 GiB | disk free 73 GB
+  file model-00021-of-00048.safetensors (layers.19.*): 3.57 GB downloaded in 19.7 s (0.18 GB/s), waited 7.0 s
+  L19: static 0.3 s | experts: read 8.4 s, to GPU 0.07 s, to RAM 0.10 s, to experts.bin 2.7 s | check L18: differ [] | GPU 41.6 GB | RAM available 5.7 GiB | disk free 71 GB
+  file model-00022-of-00048.safetensors (layers.20.*): 3.59 GB downloaded in 18.7 s (0.19 GB/s), waited 6.2 s
+  L20: static 0.9 s | experts: read 7.8 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 2.9 s | check L19: differ [] | GPU 41.9 GB | RAM available 5.6 GiB | disk free 69 GB
+  file model-00023-of-00048.safetensors (layers.21.*): 3.57 GB downloaded in 18.8 s (0.19 GB/s), waited 6.2 s
+  L21: static 0.2 s | experts: read 6.9 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.5 s | check L20: differ [] | GPU 42.2 GB | RAM available 5.8 GiB | disk free 67 GB
+  file model-00024-of-00048.safetensors (layers.22.*): 3.59 GB downloaded in 17.5 s (0.21 GB/s), waited 6.6 s
+  L22: static 0.2 s | experts: read 7.7 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 3.8 s | check L21: differ [] | GPU 42.5 GB | RAM available 5.6 GiB | disk free 65 GB
+  file model-00025-of-00048.safetensors (layers.23.*): 3.57 GB downloaded in 19.8 s (0.18 GB/s), waited 7.1 s
+  L23: static 0.2 s | experts: read 7.2 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 3.1 s | check L22: differ [] | GPU 42.8 GB | RAM available 4.8 GiB | disk free 65 GB
+  file model-00026-of-00048.safetensors (layers.24.*): 3.59 GB downloaded in 20.7 s (0.17 GB/s), waited 8.3 s
+  L24: static 0.5 s | experts: read 7.2 s, to GPU 0.07 s, to RAM 0.10 s, to experts.bin 2.6 s | check L23: differ [] | GPU 43.2 GB | RAM available 5.6 GiB | disk free 62 GB
+  file model-00027-of-00048.safetensors (layers.25.*): 3.57 GB downloaded in 17.9 s (0.20 GB/s), waited 6.3 s
+  L25: static 0.6 s | experts: read 6.4 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.6 s | check L24: differ [] | GPU 43.5 GB | RAM available 5.0 GiB | disk free 60 GB
+  file model-00028-of-00048.safetensors (layers.26.*): 3.59 GB downloaded in 18.1 s (0.20 GB/s), waited 7.3 s
+  L26: static 0.6 s | experts: read 6.6 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 3.1 s | check L25: differ [] | GPU 43.8 GB | RAM available 5.7 GiB | disk free 58 GB
+  file model-00029-of-00048.safetensors (layers.27.*): 3.57 GB downloaded in 18.0 s (0.20 GB/s), waited 6.7 s
+  L27: static 0.2 s | experts: read 7.0 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 3.3 s | check L26: differ [] | GPU 44.1 GB | RAM available 5.6 GiB | disk free 56 GB
+  file model-00030-of-00048.safetensors (layers.28.*): 3.59 GB downloaded in 17.9 s (0.20 GB/s), waited 6.3 s
+  L28: static 0.2 s | experts: read 6.3 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 3.4 s | check L27: differ [] | GPU 44.4 GB | RAM available 6.1 GiB | disk free 54 GB
+  file model-00031-of-00048.safetensors (layers.29.*): 3.57 GB downloaded in 18.7 s (0.19 GB/s), waited 7.5 s
+  L29: static 0.2 s | experts: read 7.5 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.9 s | check L28: differ [] | GPU 44.7 GB | RAM available 5.4 GiB | disk free 52 GB
+  file model-00032-of-00048.safetensors (layers.30.*): 3.59 GB downloaded in 18.2 s (0.20 GB/s), waited 6.1 s
+  L30: static 0.2 s | experts: read 7.7 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.7 s | check L29: differ [] | GPU 45.0 GB | RAM available 5.7 GiB | disk free 50 GB
+  file model-00033-of-00048.safetensors (layers.31.*): 3.57 GB downloaded in 18.5 s (0.19 GB/s), waited 6.4 s
+  L31: static 0.5 s | experts: read 7.5 s, to GPU 0.06 s, to RAM 0.09 s, to experts.bin 2.7 s | check L30: differ [] | GPU 45.3 GB | RAM available 5.5 GiB | disk free 48 GB
+  file model-00034-of-00048.safetensors (layers.32.*): 3.59 GB downloaded in 18.3 s (0.20 GB/s), waited 5.5 s
+  L32: static 0.5 s | experts: read 6.4 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 2.7 s | check L31: differ [] | GPU 45.6 GB | RAM available 4.9 GiB | disk free 47 GB
+  file model-00035-of-00048.safetensors (layers.33.*): 3.57 GB downloaded in 18.1 s (0.20 GB/s), waited 7.2 s
+  L33: static 0.4 s | experts: read 7.2 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 3.8 s | check L32: differ [] | GPU 45.9 GB | RAM available 5.6 GiB | disk free 45 GB
+  file model-00036-of-00048.safetensors (layers.34.*): 3.59 GB downloaded in 21.1 s (0.17 GB/s), waited 7.9 s
+  L34: static 0.2 s | experts: read 8.4 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 3.9 s | check L33: differ [] | GPU 46.3 GB | RAM available 6.0 GiB | disk free 43 GB
+  file model-00037-of-00048.safetensors (layers.35.*): 3.57 GB downloaded in 22.7 s (0.16 GB/s), waited 8.6 s
+  L35: static 0.2 s | experts: read 7.6 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 3.7 s | check L34: differ [] | GPU 46.5 GB | RAM available 5.8 GiB | disk free 41 GB
+  file model-00038-of-00048.safetensors (layers.36.*): 3.59 GB downloaded in 20.1 s (0.18 GB/s), waited 7.2 s
+  L36: static 0.5 s | experts: read 9.9 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 3.5 s | check L35: differ [] | GPU 46.9 GB | RAM available 5.5 GiB | disk free 39 GB
+  file model-00039-of-00048.safetensors (layers.37.*): 3.57 GB downloaded in 28.3 s (0.13 GB/s), waited 13.2 s
+  L37: static 0.2 s | experts: read 6.7 s, to GPU 0.06 s, to RAM 0.10 s, to experts.bin 2.9 s | check L36: differ [] | GPU 47.2 GB | RAM available 5.2 GiB | disk free 39 GB
+  file model-00040-of-00048.safetensors (layers.38.*): 3.59 GB downloaded in 20.8 s (0.17 GB/s), waited 9.8 s
+  L38: static 0.4 s | experts: read 6.6 s, to GPU 0.05 s, to RAM 0.09 s, to experts.bin 2.5 s | check L37: differ [] | GPU 47.5 GB | RAM available 5.1 GiB | disk free 44 GB
+  file model-00041-of-00048.safetensors (layers.39.*): 3.57 GB downloaded in 19.8 s (0.18 GB/s), waited 9.1 s
+  L39: static 0.4 s | experts: read 6.7 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.6 s | check L38: differ [] | GPU 47.8 GB | RAM available 5.2 GiB | disk free 64 GB
+  file model-00042-of-00048.safetensors (layers.40.*): 3.59 GB downloaded in 20.4 s (0.18 GB/s), waited 9.5 s
+  L40: static 0.2 s | experts: read 7.0 s, to GPU 0.05 s, to RAM 0.08 s, to experts.bin 2.6 s | check L39: differ [] | GPU 48.1 GB | RAM available 5.3 GiB | disk free 73 GB
+  file model-00043-of-00048.safetensors (layers.41.*): 3.57 GB downloaded in 18.2 s (0.20 GB/s), waited 7.6 s
+  L41: static 3.4 s | experts: read 4.2 s, to GPU 0.04 s, to RAM 0.08 s, to experts.bin 2.4 s | check L40: differ [] | GPU 48.4 GB | RAM available 5.6 GiB | disk free 88 GB
+  file model-00044-of-00048.safetensors (layers.42.*): 3.59 GB downloaded in 18.4 s (0.20 GB/s), waited 7.2 s
+  L42: static 0.5 s | experts: read 3.8 s, to GPU 0.06 s, to RAM 0.09 s, to experts.bin 2.6 s | check L41: differ [] | GPU 48.7 GB | RAM available 7.8 GiB | disk free 96 GB
+edge checks: 430/430 experts hold exactly their checkpoint file's bytes
+cache copies: 1,290 written in 21.1 s, read back in 22.9 s | differ []
+fingerprints of 4,945 experts in fast places in 31.2 s
+load done in 15.1 min | GPU allocated 48.74 GB, free 1.67 GB | RAM available 7.8 GiB | experts.bin 98.3 GB, disk free 101 GB
+time map: disk busy and written are xvda's, by /proc/diskstats
+/root/v4venv/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2056: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS="+dynamo" for a DEBUG stack trace.
+  torch._dynamo.utils.warn_once(msg)
+the expand compiled in 6.9 s
+hc_pre recordings: 86 made in 0.6 s | GPU memory they hold 26 MiB
+warm-up: '2+2' once, so first-call costs land in no arm
+  step 0: 10,768 ms | MoE 10,116 ms (disk read 8,537 ms for 530 experts, copy wait 226 ms) | GPU 316 + 78, RAM 431 + 50, disk 530 | -> '4'
+    time map: CPU working 2.195 s (our logging 7.82 ms | in the MoE 1.724, of it in disk read calls 0.445) | waiting for the GPU 0.234 s (gate 0.002, swaps 0.003, copies 0.226, step end 0.003, MoE timer 0.000) | waiting for the disk 8.092 s | not running 0.248 s (steal, all CPUs 0.880 s) | disk busy 8.109 s, written 0.00 GB
+  prefill 10.8 s | 1 decode steps: 1.03 s and 23.0 disk reads per token | text '4<｜end▁of▁sentence｜>'
+  per decode token: CPU working 0.597 s (our logging 6.81 ms | in the MoE 0.272, of it in disk read calls 0.021) | waiting for the GPU 0.028 s (gate 0.002, swaps 0.023, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.380 s | not running 0.023 s (steal, all CPUs 0.060 s) | disk busy 0.400 s, written 0.00 GB
+  the step logger itself: 1.06 ms per step, after each step's clock, so in no step's time
+=== timed baseline {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': False, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 31 s (584 experts re-read) | fast places hold the load's bytes: True
+prompt 'france', 6 tokens:
+  step 0: 16,551 ms | MoE 15,911 ms (disk read 13,748 ms for 370 experts, copy wait 124 ms) | GPU 284 + 139, RAM 262 + 53, disk 370 | -> ' Paris'
+    time map: CPU working 3.247 s (our logging 16.78 ms | in the MoE 2.608, of it in disk read calls 0.611) | waiting for the GPU 0.136 s (gate 0.005, swaps 0.005, copies 0.124, step end 0.003, MoE timer 0.000) | waiting for the disk 13.137 s | not running 0.030 s (steal, all CPUs 0.940 s) | disk busy 12.857 s, written 0.00 GB
+  step 10: 663 ms | MoE 391 ms (disk read 166 ms for 9 experts, copy wait 0 ms) | GPU 113 + 98, RAM 37 + 1, disk 9 | -> ' one'
+    time map: CPU working 0.487 s (our logging 4.92 ms | in the MoE 0.218, of it in disk read calls 0.008) | waiting for the GPU 0.015 s (gate 0.001, swaps 0.010, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.158 s | not running 0.003 s (steal, all CPUs 0.020 s) | disk busy 0.157 s, written 0.00 GB
+  step 20: 1,090 ms | MoE 836 ms (disk read 584 ms for 22 experts, copy wait 0 ms) | GPU 68 + 128, RAM 37 + 3, disk 22 | -> ' is'
+    time map: CPU working 0.501 s (our logging 5.39 ms | in the MoE 0.250, of it in disk read calls 0.019) | waiting for the GPU 0.021 s (gate 0.002, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.565 s | not running 0.003 s (steal, all CPUs 0.070 s) | disk busy 0.543 s, written 0.00 GB
+  step 30: 3,357 ms | MoE 2,530 ms (disk read 1,800 ms for 22 experts, copy wait 0 ms) | GPU 59 + 130, RAM 47 + 0, disk 22 | -> ','
+    time map: CPU working 1.581 s (our logging 21.20 ms | in the MoE 0.749, of it in disk read calls 0.045) | waiting for the GPU 0.021 s (gate 0.005, swaps 0.013, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 1.754 s | not running 0.001 s (steal, all CPUs 0.110 s) | disk busy 1.748 s, written 0.00 GB
+  prefill 16.6 s | 31 decode steps: 1.49 s and 22.0 disk reads per token | text ' Paris. It is the largest city in France and one of the most important cities in Europe. Paris is known for its rich history, art, culture, and'
+  per decode token: CPU working 0.764 s (our logging 9.24 ms | in the MoE 0.372, of it in disk read calls 0.025) | waiting for the GPU 0.025 s (gate 0.003, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.703 s | not running 0.003 s (steal, all CPUs 0.067 s) | disk busy 0.692 s, written 0.00 GB
+  the step logger itself: 1.17 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 29/32 | largest score difference 2.66 | smallest top-2 margin 0.0609
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+prompt '2+2', 11 tokens:
+  step 0: 14,233 ms | MoE 13,940 ms (disk read 12,561 ms for 455 experts, copy wait 195 ms) | GPU 316 + 109, RAM 431 + 94, disk 455 | -> '4'
+    time map: CPU working 1.902 s (our logging 7.35 ms | in the MoE 1.606, of it in disk read calls 0.441) | waiting for the GPU 0.203 s (gate 0.002, swaps 0.003, copies 0.195, step end 0.003, MoE timer 0.000) | waiting for the disk 12.119 s | not running 0.009 s (steal, all CPUs 1.140 s) | disk busy 11.839 s, written 0.00 GB
+  prefill 14.2 s | 1 decode steps: 1.05 s and 24.0 disk reads per token | text '4<｜end▁of▁sentence｜>'
+  per decode token: CPU working 0.559 s (our logging 6.40 ms | in the MoE 0.267, of it in disk read calls 0.021) | waiting for the GPU 0.027 s (gate 0.002, swaps 0.022, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.454 s | not running 0.006 s (steal, all CPUs 0.080 s) | disk busy 0.447 s, written 0.00 GB
+  the step logger itself: 0.92 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 2/2 | largest score difference 2.31 | smallest top-2 margin 5.44
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+prompt 'sky', 14 tokens:
+  step 0: 13,661 ms | MoE 12,939 ms (disk read 9,418 ms for 351 experts, copy wait 109 ms) | GPU 525 + 314, RAM 524 + 128, disk 351 | -> 'The'
+    time map: CPU working 4.641 s (our logging 18.74 ms | in the MoE 3.915, of it in disk read calls 0.542) | waiting for the GPU 0.123 s (gate 0.005, swaps 0.006, copies 0.109, step end 0.003, MoE timer 0.000) | waiting for the disk 8.876 s | not running 0.020 s (steal, all CPUs 0.920 s) | disk busy 8.703 s, written 0.00 GB
+  step 10: 1,032 ms | MoE 731 ms (disk read 463 ms for 27 experts, copy wait 0 ms) | GPU 56 + 112, RAM 60 + 3, disk 27 | -> ' directions'
+    time map: CPU working 0.562 s (our logging 5.97 ms | in the MoE 0.265, of it in disk read calls 0.022) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.441 s | not running 0.005 s (steal, all CPUs 0.040 s) | disk busy 0.424 s, written 0.00 GB
+  step 20: 901 ms | MoE 641 ms (disk read 388 ms for 20 experts, copy wait 0 ms) | GPU 74 + 122, RAM 39 + 3, disk 20 | -> ','
+    time map: CPU working 0.509 s (our logging 5.94 ms | in the MoE 0.250, of it in disk read calls 0.018) | waiting for the GPU 0.021 s (gate 0.002, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.370 s | not running 0.000 s (steal, all CPUs 0.050 s) | disk busy 0.353 s, written 0.00 GB
+  step 30: 1,284 ms | MoE 1,001 ms (disk read 752 ms for 25 experts, copy wait 0 ms) | GPU 64 + 116, RAM 52 + 1, disk 25 | -> ' other'
+    time map: CPU working 0.533 s (our logging 5.23 ms | in the MoE 0.252, of it in disk read calls 0.023) | waiting for the GPU 0.020 s (gate 0.001, swaps 0.015, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.729 s | not running 0.002 s (steal, all CPUs 0.090 s) | disk busy 0.719 s, written 0.00 GB
+  prefill 13.7 s | 31 decode steps: 1.12 s and 23.6 disk reads per token | text "The sky appears blue because sunlight is scattered in all directions by the gases and particles in Earth's atmosphere, and blue light is scattered much more strongly than other colors"
+  per decode token: CPU working 0.556 s (our logging 6.04 ms | in the MoE 0.272, of it in disk read calls 0.021) | waiting for the GPU 0.023 s (gate 0.002, swaps 0.018, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.540 s | not running 0.002 s (steal, all CPUs 0.055 s) | disk busy 0.527 s, written 0.00 GB
+  the step logger itself: 0.95 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.39 | smallest top-2 margin 0.395
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+prompt 'license', 266 tokens:
+  step 0: 91,977 ms | MoE 91,471 ms (disk read 80,831 ms for 2,761 experts, copy wait 1,609 ms) | GPU 1,253 + 502, RAM 1,776 + 254, disk 2,761 | -> 'This'
+    time map: CPU working 12.690 s (our logging 15.40 ms | in the MoE 12.202, of it in disk read calls 3.275) | waiting for the GPU 1.646 s (gate 0.028, swaps 0.006, copies 1.609, step end 0.003, MoE timer 0.000) | waiting for the disk 77.557 s | not running 0.084 s (steal, all CPUs 8.140 s) | disk busy 75.939 s, written 0.00 GB
+  step 10: 898 ms | MoE 617 ms (disk read 383 ms for 11 experts, copy wait 0 ms) | GPU 149 + 49, RAM 47 + 2, disk 11 | -> ' and'
+    time map: CPU working 0.510 s (our logging 5.15 ms | in the MoE 0.230, of it in disk read calls 0.011) | waiting for the GPU 0.015 s (gate 0.001, swaps 0.011, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.372 s | not running 0.001 s (steal, all CPUs 0.030 s) | disk busy 0.361 s, written 0.00 GB
+  step 20: 939 ms | MoE 662 ms (disk read 397 ms for 16 experts, copy wait 0 ms) | GPU 80 + 113, RAM 43 + 6, disk 16 | -> ' include'
+    time map: CPU working 0.535 s (our logging 7.52 ms | in the MoE 0.259, of it in disk read calls 0.014) | waiting for the GPU 0.020 s (gate 0.002, swaps 0.015, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.383 s | not running 0.000 s (steal, all CPUs 0.040 s) | disk busy 0.376 s, written 0.00 GB
+  step 30: 1,783 ms | MoE 969 ms (disk read 297 ms for 13 experts, copy wait 0 ms) | GPU 100 + 94, RAM 47 + 4, disk 13 | -> ' comes'
+    time map: CPU working 1.485 s (our logging 19.51 ms | in the MoE 0.667, of it in disk read calls 0.022) | waiting for the GPU 0.022 s (gate 0.005, swaps 0.014, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.275 s | not running 0.000 s (steal, all CPUs 0.050 s) | disk busy 0.275 s, written 0.00 GB
+  prefill 92.0 s | 31 decode steps: 1.31 s and 21.4 disk reads per token | text 'This license allows anyone to freely use, modify, and distribute the software for any purpose, provided they include the original copyright and permission notice, and it comes with'
+  per decode token: CPU working 0.729 s (our logging 9.34 ms | in the MoE 0.353, of it in disk read calls 0.023) | waiting for the GPU 0.023 s (gate 0.003, swaps 0.018, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.559 s | not running 0.002 s (steal, all CPUs 0.066 s) | disk busy 0.548 s, written 0.00 GB
+  the step logger itself: 1.19 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.08 | smallest top-2 margin 0.133
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  baseline: 94 tokens | 1.31 s and 22.4 disk reads per token | picks GPU 31% + 40%, RAM 18% + 2%, disk 9%
+baseline, per decode token: CPU working 0.682 s (our logging 8.19 ms | in the MoE 0.332, of it in disk read calls 0.023) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.018, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.599 s | not running 0.002 s (steal, all CPUs 0.063 s) | disk busy 0.588 s, written 0.00 GB
+baseline, per decode token: 1.307 s = reading the disk 0.622 s (22.4 reads, 27.8 ms each) + the rest 0.685 s
+=== timed plain expand {'old_timer': False, 'compiled_expand': False, 'moe_memory_readings': False, 'hc_pre_recordings': False, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 60 s (1,281 experts re-read) | fast places hold the load's bytes: True
+prompt 'france', 6 tokens:
+  step 0: 11,284 ms | MoE 10,876 ms (disk read 7,773 ms for 370 experts, copy wait 131 ms) | GPU 284 + 139, RAM 262 + 53, disk 370 | -> ' Paris'
+    time map: CPU working 3.587 s (our logging 16.19 ms | in the MoE 3.033, of it in disk read calls 0.545) | waiting for the GPU 0.453 s (gate 0.294, swaps 0.004, copies 0.131, step end 0.024, MoE timer 0.000) | waiting for the disk 7.228 s | not running 0.016 s (steal, all CPUs 1.000 s) | disk busy 7.002 s, written 0.00 GB
+  step 10: 1,064 ms | MoE 927 ms (disk read 395 ms for 9 experts, copy wait 0 ms) | GPU 113 + 98, RAM 37 + 1, disk 9 | -> ' one'
+    time map: CPU working 0.655 s (our logging 8.09 ms | in the MoE 0.354, of it in disk read calls 0.009) | waiting for the GPU 0.022 s (gate 0.005, swaps 0.010, copies 0.000, step end 0.007, MoE timer 0.000) | waiting for the disk 0.385 s | not running 0.002 s (steal, all CPUs 0.040 s) | disk busy 0.375 s, written 0.00 GB
+  step 20: 1,164 ms | MoE 1,042 ms (disk read 500 ms for 22 experts, copy wait 0 ms) | GPU 68 + 128, RAM 37 + 3, disk 22 | -> ' is'
+    time map: CPU working 0.656 s (our logging 7.87 ms | in the MoE 0.377, of it in disk read calls 0.021) | waiting for the GPU 0.028 s (gate 0.005, swaps 0.017, copies 0.000, step end 0.006, MoE timer 0.000) | waiting for the disk 0.479 s | not running 0.001 s (steal, all CPUs 0.090 s) | disk busy 0.469 s, written 0.00 GB
+  step 30: 2,061 ms | MoE 1,313 ms (disk read 420 ms for 22 experts, copy wait 0 ms) | GPU 59 + 130, RAM 47 + 0, disk 22 | -> ','
+    time map: CPU working 1.652 s (our logging 15.37 ms | in the MoE 0.901, of it in disk read calls 0.032) | waiting for the GPU 0.021 s (gate 0.004, swaps 0.014, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.388 s | not running 0.000 s (steal, all CPUs 0.030 s) | disk busy 0.388 s, written 0.00 GB
+  prefill 11.3 s | 31 decode steps: 1.55 s and 22.0 disk reads per token | text ' Paris. It is the largest city in France and one of the most important cities in Europe. Paris is known for its rich history, art, culture, and'
+  per decode token: CPU working 0.983 s (our logging 10.62 ms | in the MoE 0.561, of it in disk read calls 0.026) | waiting for the GPU 0.030 s (gate 0.006, swaps 0.019, copies 0.000, step end 0.005, MoE timer 0.000) | waiting for the disk 0.534 s | not running 0.003 s (steal, all CPUs 0.070 s) | disk busy 0.523 s, written 0.00 GB
+  the step logger itself: 1.35 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 29/32 | largest score difference 2.66 | smallest top-2 margin 0.0609
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt '2+2', 11 tokens:
+  step 0: 14,368 ms | MoE 14,286 ms (disk read 11,132 ms for 455 experts, copy wait 198 ms) | GPU 316 + 109, RAM 431 + 94, disk 455 | -> '4'
+    time map: CPU working 2.834 s (our logging 11.77 ms | in the MoE 2.411, of it in disk read calls 0.483) | waiting for the GPU 0.864 s (gate 0.631, swaps 0.003, copies 0.198, step end 0.031, MoE timer 0.000) | waiting for the disk 10.648 s | not running 0.021 s (steal, all CPUs 1.190 s) | disk busy 10.343 s, written 0.00 GB
+  prefill 14.4 s | 1 decode steps: 1.32 s and 24.0 disk reads per token | text '4<｜end▁of▁sentence｜>'
+  per decode token: CPU working 0.703 s (our logging 8.24 ms | in the MoE 0.388, of it in disk read calls 0.023) | waiting for the GPU 0.038 s (gate 0.007, swaps 0.022, copies 0.000, step end 0.009, MoE timer 0.000) | waiting for the disk 0.575 s | not running 0.003 s (steal, all CPUs 0.080 s) | disk busy 0.550 s, written 0.00 GB
+  the step logger itself: 1.13 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 2/2 | largest score difference 2.31 | smallest top-2 margin 5.44
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'sky', 14 tokens:
+  step 0: 15,357 ms | MoE 14,973 ms (disk read 9,988 ms for 351 experts, copy wait 138 ms) | GPU 525 + 314, RAM 524 + 128, disk 351 | -> 'The'
+    time map: CPU working 5.347 s (our logging 16.37 ms | in the MoE 4.706, of it in disk read calls 0.510) | waiting for the GPU 0.513 s (gate 0.368, swaps 0.005, copies 0.138, step end 0.003, MoE timer 0.000) | waiting for the disk 9.478 s | not running 0.019 s (steal, all CPUs 0.930 s) | disk busy 9.305 s, written 0.00 GB
+  step 10: 1,123 ms | MoE 995 ms (disk read 443 ms for 27 experts, copy wait 0 ms) | GPU 56 + 112, RAM 60 + 3, disk 27 | -> ' directions'
+    time map: CPU working 0.659 s (our logging 6.13 ms | in the MoE 0.366, of it in disk read calls 0.022) | waiting for the GPU 0.039 s (gate 0.014, swaps 0.019, copies 0.000, step end 0.005, MoE timer 0.000) | waiting for the disk 0.421 s | not running 0.005 s (steal, all CPUs 0.050 s) | disk busy 0.400 s, written 0.00 GB
+  step 20: 1,083 ms | MoE 992 ms (disk read 456 ms for 20 experts, copy wait 0 ms) | GPU 74 + 122, RAM 39 + 3, disk 20 | -> ','
+    time map: CPU working 0.613 s (our logging 5.56 ms | in the MoE 0.357, of it in disk read calls 0.019) | waiting for the GPU 0.033 s (gate 0.009, swaps 0.017, copies 0.000, step end 0.007, MoE timer 0.000) | waiting for the disk 0.437 s | not running 0.000 s (steal, all CPUs 0.080 s) | disk busy 0.420 s, written 0.00 GB
+  step 30: 1,534 ms | MoE 1,405 ms (disk read 859 ms for 25 experts, copy wait 0 ms) | GPU 64 + 116, RAM 52 + 1, disk 25 | -> ' other'
+    time map: CPU working 0.658 s (our logging 6.23 ms | in the MoE 0.366, of it in disk read calls 0.019) | waiting for the GPU 0.034 s (gate 0.011, swaps 0.016, copies 0.000, step end 0.007, MoE timer 0.000) | waiting for the disk 0.840 s | not running 0.001 s (steal, all CPUs 0.150 s) | disk busy 0.826 s, written 0.00 GB
+  prefill 15.4 s | 31 decode steps: 1.33 s and 23.6 disk reads per token | text "The sky appears blue because sunlight is scattered in all directions by the gases and particles in Earth's atmosphere, and blue light is scattered much more strongly than other colors"
+  per decode token: CPU working 0.790 s (our logging 7.62 ms | in the MoE 0.454, of it in disk read calls 0.024) | waiting for the GPU 0.036 s (gate 0.012, swaps 0.018, copies 0.000, step end 0.006, MoE timer 0.000) | waiting for the disk 0.501 s | not running 0.002 s (steal, all CPUs 0.074 s) | disk busy 0.488 s, written 0.00 GB
+  the step logger itself: 1.13 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.39 | smallest top-2 margin 0.395
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'license', 266 tokens:
+  step 0: 68,059 ms | MoE 67,637 ms (disk read 53,776 ms for 2,761 experts, copy wait 1,594 ms) | GPU 1,253 + 502, RAM 1,776 + 254, disk 2,761 | -> 'This'
+    time map: CPU working 15.498 s (our logging 14.82 ms | in the MoE 15.055, of it in disk read calls 2.974) | waiting for the GPU 1.676 s (gate 0.072, swaps 0.006, copies 1.594, step end 0.004, MoE timer 0.000) | waiting for the disk 50.802 s | not running 0.083 s (steal, all CPUs 5.860 s) | disk busy 49.599 s, written 0.01 GB
+  step 10: 2,167 ms | MoE 1,320 ms (disk read 263 ms for 11 experts, copy wait 0 ms) | GPU 149 + 49, RAM 47 + 2, disk 11 | -> ' and'
+    time map: CPU working 1.899 s (our logging 23.39 ms | in the MoE 1.049, of it in disk read calls 0.022) | waiting for the GPU 0.021 s (gate 0.005, swaps 0.012, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.241 s | not running 0.007 s (steal, all CPUs 0.100 s) | disk busy 0.240 s, written 0.00 GB
+  step 20: 1,832 ms | MoE 1,170 ms (disk read 278 ms for 16 experts, copy wait 0 ms) | GPU 80 + 113, RAM 43 + 6, disk 16 | -> ' include'
+    time map: CPU working 1.556 s (our logging 14.25 ms | in the MoE 0.892, of it in disk read calls 0.027) | waiting for the GPU 0.023 s (gate 0.004, swaps 0.015, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.251 s | not running 0.002 s (steal, all CPUs 0.040 s) | disk busy 0.251 s, written 0.00 GB
+  step 30: 840 ms | MoE 735 ms (disk read 204 ms for 13 experts, copy wait 0 ms) | GPU 100 + 94, RAM 47 + 4, disk 13 | -> ' comes'
+    time map: CPU working 0.608 s (our logging 5.30 ms | in the MoE 0.332, of it in disk read calls 0.009) | waiting for the GPU 0.037 s (gate 0.018, swaps 0.013, copies 0.000, step end 0.006, MoE timer 0.000) | waiting for the disk 0.195 s | not running 0.001 s (steal, all CPUs 0.040 s) | disk busy 0.189 s, written 0.00 GB
+  prefill 68.1 s | 31 decode steps: 1.54 s and 21.4 disk reads per token | text 'This license allows anyone to freely use, modify, and distribute the software for any purpose, provided they include the original copyright and permission notice, and it comes with'
+  per decode token: CPU working 1.113 s (our logging 11.96 ms | in the MoE 0.636, of it in disk read calls 0.024) | waiting for the GPU 0.032 s (gate 0.010, swaps 0.017, copies 0.000, step end 0.005, MoE timer 0.000) | waiting for the disk 0.396 s | not running 0.002 s (steal, all CPUs 0.065 s) | disk busy 0.388 s, written 0.00 GB
+  the step logger itself: 1.50 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.08 | smallest top-2 margin 0.133
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+  plain expand: 94 tokens | 1.47 s and 22.4 disk reads per token | picks GPU 31% + 40%, RAM 18% + 2%, disk 9%
+plain expand, per decode token: CPU working 0.960 s (our logging 10.05 ms | in the MoE 0.549, of it in disk read calls 0.025) | waiting for the GPU 0.033 s (gate 0.009, swaps 0.018, copies 0.000, step end 0.005, MoE timer 0.000) | waiting for the disk 0.478 s | not running 0.002 s (steal, all CPUs 0.070 s) | disk busy 0.467 s, written 0.00 GB
+plain expand, per decode token: 1.473 s = reading the disk 0.503 s (22.4 reads, 22.5 ms each) + the rest 0.970 s
+=== timed hc_pre recordings {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': True, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 39 s (1,281 experts re-read) | fast places hold the load's bytes: True
+prompt 'france', 6 tokens:
+  step 0: 19,250 ms | MoE 18,734 ms (disk read 16,947 ms for 370 experts, copy wait 139 ms) | GPU 284 + 139, RAM 262 + 53, disk 370 | -> ' Paris'
+    time map: CPU working 2.633 s (our logging 13.76 ms | in the MoE 2.122, of it in disk read calls 0.502) | waiting for the GPU 0.149 s (gate 0.003, swaps 0.004, copies 0.139, step end 0.003, MoE timer 0.000) | waiting for the disk 16.444 s | not running 0.023 s (steal, all CPUs 1.400 s) | disk busy 16.172 s, written 0.00 GB
+  step 10: 747 ms | MoE 552 ms (disk read 309 ms for 9 experts, copy wait 0 ms) | GPU 113 + 98, RAM 37 + 1, disk 9 | -> ' one'
+    time map: CPU working 0.433 s (our logging 7.17 ms | in the MoE 0.242, of it in disk read calls 0.012) | waiting for the GPU 0.015 s (gate 0.002, swaps 0.010, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.297 s | not running 0.000 s (steal, all CPUs 0.050 s) | disk busy 0.282 s, written 0.00 GB
+  step 20: 767 ms | MoE 594 ms (disk read 325 ms for 22 experts, copy wait 0 ms) | GPU 68 + 128, RAM 37 + 3, disk 22 | -> ' is'
+    time map: CPU working 0.437 s (our logging 7.73 ms | in the MoE 0.267, of it in disk read calls 0.020) | waiting for the GPU 0.022 s (gate 0.002, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.306 s | not running 0.002 s (steal, all CPUs 0.030 s) | disk busy 0.292 s, written 0.00 GB
+  step 30: 826 ms | MoE 641 ms (disk read 399 ms for 22 experts, copy wait 0 ms) | GPU 59 + 130, RAM 47 + 0, disk 22 | -> ','
+    time map: CPU working 0.428 s (our logging 5.97 ms | in the MoE 0.247, of it in disk read calls 0.018) | waiting for the GPU 0.018 s (gate 0.002, swaps 0.013, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.381 s | not running 0.000 s (steal, all CPUs 0.020 s) | disk busy 0.379 s, written 0.00 GB
+  prefill 19.2 s | 31 decode steps: 1.01 s and 22.0 disk reads per token | text ' Paris. It is the largest city in France and one of the most important cities in Europe. Paris is known for its rich history, art, culture, and'
+  per decode token: CPU working 0.457 s (our logging 6.65 ms | in the MoE 0.279, of it in disk read calls 0.022) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.528 s | not running 0.002 s (steal, all CPUs 0.067 s) | disk busy 0.514 s, written 0.00 GB
+  the step logger itself: 0.96 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 29/32 | largest score difference 2.66 | smallest top-2 margin 0.0609
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt '2+2', 11 tokens:
+  step 0: 14,827 ms | MoE 14,052 ms (disk read 10,811 ms for 455 experts, copy wait 131 ms) | GPU 316 + 109, RAM 431 + 94, disk 455 | -> '4'
+    time map: CPU working 4.653 s (our logging 19.95 ms | in the MoE 3.874, of it in disk read calls 0.814) | waiting for the GPU 0.146 s (gate 0.006, swaps 0.007, copies 0.131, step end 0.003, MoE timer 0.000) | waiting for the disk 9.997 s | not running 0.031 s (steal, all CPUs 1.100 s) | disk busy 9.840 s, written 0.00 GB
+  prefill 14.8 s | 1 decode steps: 1.34 s and 24.0 disk reads per token | text '4<｜end▁of▁sentence｜>'
+  per decode token: CPU working 0.511 s (our logging 7.71 ms | in the MoE 0.299, of it in disk read calls 0.029) | waiting for the GPU 0.027 s (gate 0.002, swaps 0.022, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.789 s | not running 0.009 s (steal, all CPUs 0.060 s) | disk busy 0.763 s, written 0.00 GB
+  the step logger itself: 1.22 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 2/2 | largest score difference 2.31 | smallest top-2 margin 5.44
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'sky', 14 tokens:
+  step 0: 10,063 ms | MoE 9,756 ms (disk read 8,083 ms for 351 experts, copy wait 145 ms) | GPU 525 + 314, RAM 524 + 128, disk 351 | -> 'The'
+    time map: CPU working 2.136 s (our logging 8.58 ms | in the MoE 1.831, of it in disk read calls 0.337) | waiting for the GPU 0.153 s (gate 0.002, swaps 0.003, copies 0.145, step end 0.003, MoE timer 0.000) | waiting for the disk 7.746 s | not running 0.028 s (steal, all CPUs 0.890 s) | disk busy 7.504 s, written 0.00 GB
+  step 10: 946 ms | MoE 757 ms (disk read 500 ms for 27 experts, copy wait 0 ms) | GPU 56 + 112, RAM 60 + 3, disk 27 | -> ' directions'
+    time map: CPU working 0.443 s (our logging 5.81 ms | in the MoE 0.258, of it in disk read calls 0.022) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.478 s | not running 0.000 s (steal, all CPUs 0.040 s) | disk busy 0.459 s, written 0.00 GB
+  step 20: 1,576 ms | MoE 1,142 ms (disk read 466 ms for 20 experts, copy wait 0 ms) | GPU 74 + 122, RAM 39 + 3, disk 20 | -> ','
+    time map: CPU working 1.115 s (our logging 18.27 ms | in the MoE 0.679, of it in disk read calls 0.032) | waiting for the GPU 0.024 s (gate 0.005, swaps 0.016, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.434 s | not running 0.002 s (steal, all CPUs 0.070 s) | disk busy 0.414 s, written 0.00 GB
+  step 30: 1,983 ms | MoE 1,376 ms (disk read 549 ms for 25 experts, copy wait 0 ms) | GPU 64 + 116, RAM 52 + 1, disk 25 | -> ' other'
+    time map: CPU working 1.454 s (our logging 21.69 ms | in the MoE 0.843, of it in disk read calls 0.051) | waiting for the GPU 0.025 s (gate 0.005, swaps 0.016, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.498 s | not running 0.006 s (steal, all CPUs 0.120 s) | disk busy 0.497 s, written 0.00 GB
+  prefill 10.1 s | 31 decode steps: 1.21 s and 23.6 disk reads per token | text "The sky appears blue because sunlight is scattered in all directions by the gases and particles in Earth's atmosphere, and blue light is scattered much more strongly than other colors"
+  per decode token: CPU working 0.750 s (our logging 11.60 ms | in the MoE 0.452, of it in disk read calls 0.028) | waiting for the GPU 0.025 s (gate 0.003, swaps 0.018, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.429 s | not running 0.002 s (steal, all CPUs 0.068 s) | disk busy 0.416 s, written 0.00 GB
+  the step logger itself: 1.55 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.39 | smallest top-2 margin 0.395
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'license', 266 tokens:
+  step 0: 66,228 ms | MoE 65,771 ms (disk read 55,767 ms for 2,761 experts, copy wait 1,589 ms) | GPU 1,253 + 502, RAM 1,776 + 254, disk 2,761 | -> 'This'
+    time map: CPU working 11.651 s (our logging 13.70 ms | in the MoE 11.217, of it in disk read calls 2.872) | waiting for the GPU 1.628 s (gate 0.030, swaps 0.006, copies 1.589, step end 0.003, MoE timer 0.000) | waiting for the disk 52.896 s | not running 0.053 s (steal, all CPUs 5.720 s) | disk busy 51.364 s, written 0.02 GB
+  step 10: 1,359 ms | MoE 871 ms (disk read 244 ms for 11 experts, copy wait 0 ms) | GPU 149 + 49, RAM 47 + 2, disk 11 | -> ' and'
+    time map: CPU working 1.105 s (our logging 16.29 ms | in the MoE 0.615, of it in disk read calls 0.017) | waiting for the GPU 0.021 s (gate 0.005, swaps 0.013, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.226 s | not running 0.007 s (steal, all CPUs 0.040 s) | disk busy 0.217 s, written 0.00 GB
+  step 20: 895 ms | MoE 724 ms (disk read 461 ms for 16 experts, copy wait 0 ms) | GPU 80 + 113, RAM 43 + 6, disk 16 | -> ' include'
+    time map: CPU working 0.427 s (our logging 7.11 ms | in the MoE 0.258, of it in disk read calls 0.015) | waiting for the GPU 0.020 s (gate 0.002, swaps 0.015, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.446 s | not running 0.002 s (steal, all CPUs 0.020 s) | disk busy 0.443 s, written 0.00 GB
+  step 30: 661 ms | MoE 486 ms (disk read 262 ms for 13 experts, copy wait 0 ms) | GPU 100 + 94, RAM 47 + 4, disk 13 | -> ' comes'
+    time map: CPU working 0.393 s (our logging 4.89 ms | in the MoE 0.224, of it in disk read calls 0.011) | waiting for the GPU 0.017 s (gate 0.001, swaps 0.013, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.250 s | not running 0.000 s (steal, all CPUs 0.010 s) | disk busy 0.244 s, written 0.00 GB
+  prefill 66.2 s | 31 decode steps: 1.18 s and 21.4 disk reads per token | text 'This license allows anyone to freely use, modify, and distribute the software for any purpose, provided they include the original copyright and permission notice, and it comes with'
+  per decode token: CPU working 0.734 s (our logging 10.67 ms | in the MoE 0.441, of it in disk read calls 0.027) | waiting for the GPU 0.023 s (gate 0.003, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.417 s | not running 0.002 s (steal, all CPUs 0.054 s) | disk busy 0.407 s, written 0.00 GB
+  the step logger itself: 1.55 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.08 | smallest top-2 margin 0.133
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+  hc_pre recordings: 94 tokens | 1.13 s and 22.4 disk reads per token | picks GPU 31% + 40%, RAM 18% + 2%, disk 9%
+hc_pre recordings, per decode token: CPU working 0.645 s (our logging 9.62 ms | in the MoE 0.389, of it in disk read calls 0.026) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.018, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.461 s | not running 0.002 s (steal, all CPUs 0.063 s) | disk busy 0.449 s, written 0.00 GB
+hc_pre recordings, per decode token: 1.133 s = reading the disk 0.487 s (22.4 reads, 21.8 ms each) + the rest 0.646 s
+=== timed hc_pre recordings and swap copy stream {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': True, 'swap_copy_stream': True, 'late_swap_copies': False}: the cache is back to its state after the load, in 35 s (1,281 experts re-read) | fast places hold the load's bytes: True
+prompt 'france', 6 tokens:
+  step 0: 11,911 ms | MoE 11,085 ms (disk read 8,233 ms for 370 experts, copy wait 97 ms) | GPU 284 + 139, RAM 262 + 53, disk 370 | -> ' Paris'
+    time map: CPU working 4.287 s (our logging 23.25 ms | in the MoE 3.461, of it in disk read calls 0.744) | waiting for the GPU 0.107 s (gate 0.006, swaps 0.000, copies 0.097, step end 0.003, MoE timer 0.000) | waiting for the disk 7.489 s | not running 0.029 s (steal, all CPUs 0.730 s) | disk busy 7.216 s, written 0.00 GB
+  step 10: 520 ms | MoE 347 ms (disk read 137 ms for 9 experts, copy wait 0 ms) | GPU 113 + 98, RAM 37 + 1, disk 9 | -> ' one'
+    time map: CPU working 0.387 s (our logging 4.95 ms | in the MoE 0.219, of it in disk read calls 0.007) | waiting for the GPU 0.004 s (gate 0.001, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.129 s | not running 0.000 s (steal, all CPUs 0.030 s) | disk busy 0.132 s, written 0.00 GB
+  step 20: 689 ms | MoE 538 ms (disk read 318 ms for 22 experts, copy wait 0 ms) | GPU 68 + 128, RAM 37 + 3, disk 22 | -> ' is'
+    time map: CPU working 0.382 s (our logging 4.91 ms | in the MoE 0.235, of it in disk read calls 0.015) | waiting for the GPU 0.005 s (gate 0.002, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.303 s | not running 0.000 s (steal, all CPUs 0.040 s) | disk busy 0.306 s, written 0.00 GB
+  step 30: 871 ms | MoE 688 ms (disk read 463 ms for 22 experts, copy wait 0 ms) | GPU 59 + 130, RAM 47 + 0, disk 22 | -> ','
+    time map: CPU working 0.422 s (our logging 5.35 ms | in the MoE 0.244, of it in disk read calls 0.019) | waiting for the GPU 0.005 s (gate 0.001, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.444 s | not running 0.000 s (steal, all CPUs 0.080 s) | disk busy 0.428 s, written 0.00 GB
+  prefill 11.9 s | 31 decode steps: 0.87 s and 22.0 disk reads per token | text ' Paris. It is the largest city in France and one of the most important cities in Europe. Paris is known for its rich history, art, culture, and'
+  per decode token: CPU working 0.472 s (our logging 6.65 ms | in the MoE 0.288, of it in disk read calls 0.021) | waiting for the GPU 0.005 s (gate 0.002, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.392 s | not running 0.001 s (steal, all CPUs 0.051 s) | disk busy 0.381 s, written 0.00 GB
+  the step logger itself: 1.02 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 29/32 | largest score difference 2.66 | smallest top-2 margin 0.0609
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt '2+2', 11 tokens:
+  step 0: 16,171 ms | MoE 15,424 ms (disk read 12,522 ms for 455 experts, copy wait 144 ms) | GPU 316 + 109, RAM 431 + 94, disk 455 | -> '4'
+    time map: CPU working 4.228 s (our logging 19.29 ms | in the MoE 3.486, of it in disk read calls 0.757) | waiting for the GPU 0.152 s (gate 0.005, swaps 0.000, copies 0.144, step end 0.003, MoE timer 0.000) | waiting for the disk 11.765 s | not running 0.027 s (steal, all CPUs 0.980 s) | disk busy 11.527 s, written 0.00 GB
+  prefill 16.2 s | 1 decode steps: 1.12 s and 24.0 disk reads per token | text '4<｜end▁of▁sentence｜>'
+  per decode token: CPU working 0.466 s (our logging 6.05 ms | in the MoE 0.278, of it in disk read calls 0.025) | waiting for the GPU 0.005 s (gate 0.002, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.642 s | not running 0.008 s (steal, all CPUs 0.110 s) | disk busy 0.615 s, written 0.00 GB
+  the step logger itself: 1.01 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 2/2 | largest score difference 2.31 | smallest top-2 margin 5.44
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'sky', 14 tokens:
+  step 0: 10,630 ms | MoE 10,332 ms (disk read 8,708 ms for 351 experts, copy wait 146 ms) | GPU 525 + 314, RAM 524 + 128, disk 351 | -> 'The'
+    time map: CPU working 2.101 s (our logging 8.30 ms | in the MoE 1.800, of it in disk read calls 0.347) | waiting for the GPU 0.151 s (gate 0.002, swaps 0.000, copies 0.146, step end 0.003, MoE timer 0.000) | waiting for the disk 8.361 s | not running 0.017 s (steal, all CPUs 0.970 s) | disk busy 8.084 s, written 0.00 GB
+  step 10: 1,007 ms | MoE 810 ms (disk read 557 ms for 27 experts, copy wait 0 ms) | GPU 56 + 112, RAM 60 + 3, disk 27 | -> ' directions'
+    time map: CPU working 0.466 s (our logging 6.32 ms | in the MoE 0.276, of it in disk read calls 0.026) | waiting for the GPU 0.005 s (gate 0.002, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.531 s | not running 0.004 s (steal, all CPUs 0.080 s) | disk busy 0.542 s, written 0.00 GB
+  step 20: 1,693 ms | MoE 1,273 ms (disk read 656 ms for 20 experts, copy wait 0 ms) | GPU 74 + 122, RAM 39 + 3, disk 20 | -> ','
+    time map: CPU working 1.059 s (our logging 14.31 ms | in the MoE 0.641, of it in disk read calls 0.034) | waiting for the GPU 0.007 s (gate 0.004, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.621 s | not running 0.005 s (steal, all CPUs 0.050 s) | disk busy 0.607 s, written 0.00 GB
+  step 30: 1,887 ms | MoE 1,338 ms (disk read 648 ms for 25 experts, copy wait 0 ms) | GPU 64 + 116, RAM 52 + 1, disk 25 | -> ' other'
+    time map: CPU working 1.267 s (our logging 20.72 ms | in the MoE 0.714, of it in disk read calls 0.045) | waiting for the GPU 0.008 s (gate 0.005, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.603 s | not running 0.009 s (steal, all CPUs 0.110 s) | disk busy 0.582 s, written 0.00 GB
+  prefill 10.6 s | 31 decode steps: 1.19 s and 23.6 disk reads per token | text "The sky appears blue because sunlight is scattered in all directions by the gases and particles in Earth's atmosphere, and blue light is scattered much more strongly than other colors"
+  per decode token: CPU working 0.696 s (our logging 9.92 ms | in the MoE 0.421, of it in disk read calls 0.027) | waiting for the GPU 0.006 s (gate 0.003, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.490 s | not running 0.003 s (steal, all CPUs 0.071 s) | disk busy 0.487 s, written 0.00 GB
+  the step logger itself: 1.39 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.39 | smallest top-2 margin 0.395
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'license', 266 tokens:
+  step 0: 61,395 ms | MoE 60,948 ms (disk read 50,947 ms for 2,761 experts, copy wait 1,587 ms) | GPU 1,253 + 502, RAM 1,776 + 254, disk 2,761 | -> 'This'
+    time map: CPU working 11.734 s (our logging 18.41 ms | in the MoE 11.305, of it in disk read calls 2.934) | waiting for the GPU 1.614 s (gate 0.024, swaps 0.000, copies 1.587, step end 0.003, MoE timer 0.000) | waiting for the disk 48.013 s | not running 0.034 s (steal, all CPUs 5.360 s) | disk busy 46.844 s, written 0.00 GB
+  step 10: 555 ms | MoE 376 ms (disk read 160 ms for 11 experts, copy wait 0 ms) | GPU 149 + 49, RAM 47 + 2, disk 11 | -> ' and'
+    time map: CPU working 0.398 s (our logging 5.17 ms | in the MoE 0.225, of it in disk read calls 0.008) | waiting for the GPU 0.005 s (gate 0.001, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.152 s | not running -0.000 s (steal, all CPUs 0.010 s) | disk busy 0.150 s, written 0.00 GB
+  step 20: 1,335 ms | MoE 880 ms (disk read 211 ms for 16 experts, copy wait 0 ms) | GPU 80 + 113, RAM 43 + 6, disk 16 | -> ' include'
+    time map: CPU working 1.143 s (our logging 19.49 ms | in the MoE 0.684, of it in disk read calls 0.027) | waiting for the GPU 0.008 s (gate 0.005, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.185 s | not running 0.000 s (steal, all CPUs 0.030 s) | disk busy 0.184 s, written 0.00 GB
+  step 30: 1,296 ms | MoE 804 ms (disk read 177 ms for 13 experts, copy wait 0 ms) | GPU 100 + 94, RAM 47 + 4, disk 13 | -> ' comes'
+    time map: CPU working 1.131 s (our logging 14.03 ms | in the MoE 0.637, of it in disk read calls 0.020) | waiting for the GPU 0.007 s (gate 0.004, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.157 s | not running 0.002 s (steal, all CPUs 0.040 s) | disk busy 0.145 s, written 0.00 GB
+  prefill 61.4 s | 31 decode steps: 1.07 s and 21.4 disk reads per token | text 'This license allows anyone to freely use, modify, and distribute the software for any purpose, provided they include the original copyright and permission notice, and it comes with'
+  per decode token: CPU working 0.781 s (our logging 10.87 ms | in the MoE 0.471, of it in disk read calls 0.024) | waiting for the GPU 0.006 s (gate 0.003, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.283 s | not running 0.001 s (steal, all CPUs 0.040 s) | disk busy 0.277 s, written 0.00 GB
+  the step logger itself: 1.67 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.08 | smallest top-2 margin 0.133
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+  hc_pre recordings and swap copy stream: 94 tokens | 1.05 s and 22.4 disk reads per token | picks GPU 31% + 40%, RAM 18% + 2%, disk 9%
+hc_pre recordings and swap copy stream, per decode token: CPU working 0.648 s (our logging 9.12 ms | in the MoE 0.392, of it in disk read calls 0.024) | waiting for the GPU 0.006 s (gate 0.002, swaps 0.000, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.391 s | not running 0.002 s (steal, all CPUs 0.054 s) | disk busy 0.384 s, written 0.00 GB
+hc_pre recordings and swap copy stream, per decode token: 1.046 s = reading the disk 0.415 s (22.4 reads, 18.6 ms each) + the rest 0.631 s
+=== timed baseline, again {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': False, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 37 s (1,281 experts re-read) | fast places hold the load's bytes: True
+prompt 'france', 6 tokens:
+  step 0: 9,691 ms | MoE 9,405 ms (disk read 8,322 ms for 370 experts, copy wait 164 ms) | GPU 284 + 139, RAM 262 + 53, disk 370 | -> ' Paris'
+    time map: CPU working 1.522 s (our logging 7.00 ms | in the MoE 1.234, of it in disk read calls 0.325) | waiting for the GPU 0.171 s (gate 0.002, swaps 0.002, copies 0.164, step end 0.003, MoE timer 0.000) | waiting for the disk 7.997 s | not running 0.002 s (steal, all CPUs 0.970 s) | disk busy 7.792 s, written 0.00 GB
+  step 10: 689 ms | MoE 386 ms (disk read 136 ms for 9 experts, copy wait 0 ms) | GPU 113 + 98, RAM 37 + 1, disk 9 | -> ' one'
+    time map: CPU working 0.546 s (our logging 6.83 ms | in the MoE 0.243, of it in disk read calls 0.008) | waiting for the GPU 0.015 s (gate 0.002, swaps 0.010, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.128 s | not running 0.000 s (steal, all CPUs 0.030 s) | disk busy 0.125 s, written 0.00 GB
+  step 20: 823 ms | MoE 569 ms (disk read 325 ms for 22 experts, copy wait 0 ms) | GPU 68 + 128, RAM 37 + 3, disk 22 | -> ' is'
+    time map: CPU working 0.492 s (our logging 5.15 ms | in the MoE 0.239, of it in disk read calls 0.015) | waiting for the GPU 0.021 s (gate 0.001, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.310 s | not running 0.000 s (steal, all CPUs 0.050 s) | disk busy 0.304 s, written 0.00 GB
+  step 30: 1,757 ms | MoE 977 ms (disk read 328 ms for 22 experts, copy wait 0 ms) | GPU 59 + 130, RAM 47 + 0, disk 22 | -> ','
+    time map: CPU working 1.437 s (our logging 17.75 ms | in the MoE 0.655, of it in disk read calls 0.034) | waiting for the GPU 0.021 s (gate 0.005, swaps 0.013, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.294 s | not running 0.005 s (steal, all CPUs 0.060 s) | disk busy 0.293 s, written 0.00 GB
+  prefill 9.7 s | 31 decode steps: 1.12 s and 22.0 disk reads per token | text ' Paris. It is the largest city in France and one of the most important cities in Europe. Paris is known for its rich history, art, culture, and'
+  per decode token: CPU working 0.769 s (our logging 9.11 ms | in the MoE 0.371, of it in disk read calls 0.023) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.328 s | not running 0.002 s (steal, all CPUs 0.049 s) | disk busy 0.319 s, written 0.00 GB
+  the step logger itself: 1.20 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 29/32 | largest score difference 2.66 | smallest top-2 margin 0.0609
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt '2+2', 11 tokens:
+  step 0: 9,301 ms | MoE 9,004 ms (disk read 7,644 ms for 455 experts, copy wait 195 ms) | GPU 316 + 109, RAM 431 + 94, disk 455 | -> '4'
+    time map: CPU working 1.828 s (our logging 7.41 ms | in the MoE 1.524, of it in disk read calls 0.380) | waiting for the GPU 0.202 s (gate 0.002, swaps 0.003, copies 0.195, step end 0.003, MoE timer 0.000) | waiting for the disk 7.263 s | not running 0.007 s (steal, all CPUs 0.980 s) | disk busy 7.097 s, written 0.00 GB
+  prefill 9.3 s | 1 decode steps: 0.94 s and 24.0 disk reads per token | text '4<｜end▁of▁sentence｜>'
+  per decode token: CPU working 0.550 s (our logging 6.09 ms | in the MoE 0.259, of it in disk read calls 0.020) | waiting for the GPU 0.027 s (gate 0.002, swaps 0.022, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.355 s | not running 0.006 s (steal, all CPUs 0.020 s) | disk busy 0.356 s, written 0.00 GB
+  the step logger itself: 0.89 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 2/2 | largest score difference 2.31 | smallest top-2 margin 5.44
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'sky', 14 tokens:
+  step 0: 7,515 ms | MoE 7,216 ms (disk read 5,608 ms for 351 experts, copy wait 150 ms) | GPU 525 + 314, RAM 524 + 128, disk 351 | -> 'The'
+    time map: CPU working 2.027 s (our logging 7.69 ms | in the MoE 1.729, of it in disk read calls 0.294) | waiting for the GPU 0.158 s (gate 0.002, swaps 0.003, copies 0.150, step end 0.003, MoE timer 0.000) | waiting for the disk 5.314 s | not running 0.015 s (steal, all CPUs 0.520 s) | disk busy 5.167 s, written 0.00 GB
+  step 10: 998 ms | MoE 703 ms (disk read 442 ms for 27 experts, copy wait 0 ms) | GPU 56 + 112, RAM 60 + 3, disk 27 | -> ' directions'
+    time map: CPU working 0.552 s (our logging 5.95 ms | in the MoE 0.260, of it in disk read calls 0.023) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.419 s | not running 0.004 s (steal, all CPUs 0.050 s) | disk busy 0.410 s, written 0.00 GB
+  step 20: 1,752 ms | MoE 1,060 ms (disk read 427 ms for 20 experts, copy wait 0 ms) | GPU 74 + 122, RAM 39 + 3, disk 20 | -> ','
+    time map: CPU working 1.325 s (our logging 15.03 ms | in the MoE 0.635, of it in disk read calls 0.029) | waiting for the GPU 0.024 s (gate 0.004, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.398 s | not running 0.004 s (steal, all CPUs 0.060 s) | disk busy 0.400 s, written 0.00 GB
+  step 30: 1,062 ms | MoE 736 ms (disk read 449 ms for 25 experts, copy wait 0 ms) | GPU 64 + 116, RAM 52 + 1, disk 25 | -> ' other'
+    time map: CPU working 0.621 s (our logging 6.85 ms | in the MoE 0.294, of it in disk read calls 0.031) | waiting for the GPU 0.021 s (gate 0.002, swaps 0.015, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.418 s | not running 0.003 s (steal, all CPUs 0.030 s) | disk busy 0.406 s, written 0.00 GB
+  prefill 7.5 s | 31 decode steps: 1.41 s and 23.6 disk reads per token | text "The sky appears blue because sunlight is scattered in all directions by the gases and particles in Earth's atmosphere, and blue light is scattered much more strongly than other colors"
+  per decode token: CPU working 0.998 s (our logging 12.03 ms | in the MoE 0.481, of it in disk read calls 0.029) | waiting for the GPU 0.025 s (gate 0.003, swaps 0.019, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.381 s | not running 0.002 s (steal, all CPUs 0.064 s) | disk busy 0.370 s, written 0.00 GB
+  the step logger itself: 1.68 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.39 | smallest top-2 margin 0.395
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+prompt 'license', 266 tokens:
+  step 0: 73,330 ms | MoE 72,871 ms (disk read 61,171 ms for 2,761 experts, copy wait 1,586 ms) | GPU 1,253 + 502, RAM 1,776 + 254, disk 2,761 | -> 'This'
+    time map: CPU working 13.471 s (our logging 1521.52 ms | in the MoE 13.036, of it in disk read calls 3.022) | waiting for the GPU 1.632 s (gate 0.037, swaps 0.006, copies 1.586, step end 0.003, MoE timer 0.000) | waiting for the disk 58.148 s | not running 0.078 s (steal, all CPUs 6.460 s) | disk busy 56.676 s, written 0.00 GB
+  step 10: 726 ms | MoE 450 ms (disk read 218 ms for 11 experts, copy wait 0 ms) | GPU 149 + 49, RAM 47 + 2, disk 11 | -> ' and'
+    time map: CPU working 0.500 s (our logging 5.05 ms | in the MoE 0.225, of it in disk read calls 0.008) | waiting for the GPU 0.015 s (gate 0.001, swaps 0.011, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.210 s | not running 0.001 s (steal, all CPUs 0.040 s) | disk busy 0.204 s, written 0.00 GB
+  step 20: 798 ms | MoE 539 ms (disk read 293 ms for 16 experts, copy wait 0 ms) | GPU 80 + 113, RAM 43 + 6, disk 16 | -> ' include'
+    time map: CPU working 0.498 s (our logging 5.77 ms | in the MoE 0.241, of it in disk read calls 0.015) | waiting for the GPU 0.020 s (gate 0.002, swaps 0.015, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.278 s | not running 0.002 s (steal, all CPUs 0.060 s) | disk busy 0.266 s, written 0.00 GB
+  step 30: 744 ms | MoE 462 ms (disk read 227 ms for 13 experts, copy wait 0 ms) | GPU 100 + 94, RAM 47 + 4, disk 13 | -> ' comes'
+    time map: CPU working 0.507 s (our logging 4.98 ms | in the MoE 0.229, of it in disk read calls 0.011) | waiting for the GPU 0.017 s (gate 0.001, swaps 0.013, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.216 s | not running 0.003 s (steal, all CPUs 0.030 s) | disk busy 0.209 s, written 0.00 GB
+  prefill 73.3 s | 31 decode steps: 1.06 s and 21.4 disk reads per token | text 'This license allows anyone to freely use, modify, and distribute the software for any purpose, provided they include the original copyright and permission notice, and it comes with'
+  per decode token: CPU working 0.618 s (our logging 6.76 ms | in the MoE 0.301, of it in disk read calls 0.021) | waiting for the GPU 0.022 s (gate 0.002, swaps 0.017, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.420 s | not running 0.001 s (steal, all CPUs 0.058 s) | disk busy 0.410 s, written 0.00 GB
+  the step logger itself: 1.01 ms per step, after each step's clock, so in no step's time
+  check, one prefill over prompt + new tokens, cache frozen: same tokens 32/32 | largest score difference 2.08 | smallest top-2 margin 0.133
+  same as the fixed_home run: tokens True | gate calls True | first-token top-5 True | check True
+  same as baseline: tokens True | gate calls True | top-5 True | check True | reads per step True
+  baseline, again: 94 tokens | 1.19 s and 22.4 disk reads per token | picks GPU 31% + 40%, RAM 18% + 2%, disk 9%
+baseline, again, per decode token: CPU working 0.792 s (our logging 9.27 ms | in the MoE 0.383, of it in disk read calls 0.024) | waiting for the GPU 0.024 s (gate 0.002, swaps 0.018, copies 0.000, step end 0.003, MoE timer 0.000) | waiting for the disk 0.376 s | not running 0.002 s (steal, all CPUs 0.057 s) | disk busy 0.366 s, written 0.00 GB
+baseline, again, per decode token: 1.195 s = reading the disk 0.401 s (22.4 reads, 17.9 ms each) + the rest 0.794 s
+=== profile baseline {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': False, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 34 s (1,281 experts re-read) | fast places hold the load's bytes: True
+profile, 3 decode tokens: per token 3.078 s = disk read 0.703 s (30.7 experts) + CPU waiting for the GPU 0.024 s (176 waits) + the rest 2.351 s (Python, and launching 28,600 kernels) | GPU busy 0.186 s (6%)
+  the GPU's biggest kernels, per token: ms | count | name
+       40.70 |     77 | Memcpy HtoD (Pinned -> Device)
+       25.26 |    774 | triton_poi_fused___rshift____to_copy_bitwise_and_eq_index_lift_fresh_masked_fill_mul_stack_sub_unsqu
+       19.65 |     40 | Memcpy DtoH (Device -> Pinned)
+       18.88 |    602 | ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn
+       12.96 |    344 | ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn
+        5.68 |   3475 | void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFun
+        5.25 |    129 | std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16,
+        5.24 |   1907 | void at::native::reduce_kernel<128, 4, at::native::ReduceOp<float, at::native::func_wrapper_t<float,
+        4.85 |   3801 | void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<float>, std::arr
+        4.24 |     43 | void gemv2T_kernel_val<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, 128, 16, 4, 4, 
+  the CPU's biggest own times, per token: ms | count | name
+      955.90 |     43 | moe
+      394.92 |  26694 | cudaLaunchKernel
+      114.53 |   1400 | aten::mm
+       99.25 |    258 | expand
+       87.28 |   4942 | aten::add
+       81.65 |    516 | ## Call CompiledFxGraph f3dvmbvheuzxuryh4kn6pa6d36qsiewb2uabbycvfjr6iswh53qv ##
+       79.63 |   3605 | aten::sum
+       57.32 |   3265 | aten::copy_
+       55.44 |   3503 | aten::div
+       51.98 |   2235 | aten::mul
+=== profile plain expand {'old_timer': False, 'compiled_expand': False, 'moe_memory_readings': False, 'hc_pre_recordings': False, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 32 s (775 experts re-read) | fast places hold the load's bytes: True
+profile, 3 decode tokens: per token 2.583 s = disk read 0.521 s (30.7 experts) + CPU waiting for the GPU 0.025 s (176 waits) + the rest 2.037 s (Python, and launching 40,207 kernels) | GPU busy 0.580 s (22%)
+  the GPU's biggest kernels, per token: ms | count | name
+      120.67 |   1479 | void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native::index_ker
+       89.33 |    777 | void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorB
+       80.04 |   1730 | void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFun
+       59.80 |   1805 | void at::native::vectorized_elementwise_kernel<4, at::native::bfloat16_copy_kernel_cuda(at::TensorIt
+       40.71 |     77 | Memcpy HtoD (Pinned -> Device)
+       37.11 |    774 | void at::native::(anonymous namespace)::CatArrayBatchedCopy_contig<at::native::(anonymous namespace)
+       19.65 |     40 | Memcpy DtoH (Device -> Pinned)
+       18.74 |    602 | ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn
+       12.93 |    344 | ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn
+       10.86 |    774 | void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<unsigned char, unsigned 
+  the CPU's biggest own times, per token: ms | count | name
+      704.80 |     43 | moe
+      407.27 |  38304 | cudaLaunchKernel
+      172.16 |    258 | expand
+       80.40 |   1400 | aten::mm
+       75.04 |   6361 | aten::copy_
+       63.03 |   4942 | aten::add
+       62.11 |   3783 | aten::mul
+       58.65 |   3605 | aten::sum
+       54.48 |   5450 | aten::empty_strided
+       49.01 |   1947 | aten::index
+=== profile hc_pre recordings {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': True, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 54 s (775 experts re-read) | fast places hold the load's bytes: True
+profile, 3 decode tokens: per token 1.426 s = disk read 0.704 s (30.7 experts) + CPU waiting for the GPU 0.028 s (176 waits) + the rest 0.695 s (Python, and launching 28,679 kernels) | GPU busy 0.183 s (13%)
+  the GPU's biggest kernels, per token: ms | count | name
+       40.69 |     77 | Memcpy HtoD (Pinned -> Device)
+       25.23 |    774 | triton_poi_fused___rshift____to_copy_bitwise_and_eq_index_lift_fresh_masked_fill_mul_stack_sub_unsqu
+       19.63 |     40 | Memcpy DtoH (Device -> Pinned)
+       18.85 |    602 | ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn
+       12.95 |    344 | ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn
+        5.25 |    129 | std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16,
+        4.75 |   3475 | void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFun
+        4.54 |   3800 | void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<float>, std::arr
+        4.48 |   1907 | void at::native::reduce_kernel<128, 4, at::native::ReduceOp<float, at::native::func_wrapper_t<float,
+        4.26 |     43 | void gemv2T_kernel_val<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, 128, 16, 4, 4, 
+  the CPU's biggest own times, per token: ms | count | name
+      794.36 |     43 | moe
+       90.14 |  14654 | cudaLaunchKernel
+       41.00 |   1314 | aten::mm
+       35.52 |    258 | expand
+       30.77 |    516 | ## Call CompiledFxGraph f3dvmbvheuzxuryh4kn6pa6d36qsiewb2uabbycvfjr6iswh53qv ##
+       27.66 |     45 | cudaDeviceSynchronize
+       23.70 |     86 | cudaGraphLaunch
+       21.28 |   3179 | aten::copy_
+       18.64 |    516 | Torch-Compiled Region: 0/0
+       15.45 |   1719 | aten::mul
+=== profile hc_pre recordings and swap copy stream {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': True, 'swap_copy_stream': True, 'late_swap_copies': False}: the cache is back to its state after the load, in 17 s (775 experts re-read) | fast places hold the load's bytes: True
+profile, 3 decode tokens: per token 2.381 s = disk read 0.517 s (30.7 experts) + CPU waiting for the GPU 0.004 s (133 waits) + the rest 1.860 s (Python, and launching 28,676 kernels) | GPU busy 0.184 s (8%)
+  the GPU's biggest kernels, per token: ms | count | name
+       40.80 |     77 | Memcpy HtoD (Pinned -> Device)
+       25.28 |    774 | triton_poi_fused___rshift____to_copy_bitwise_and_eq_index_lift_fresh_masked_fill_mul_stack_sub_unsqu
+       19.68 |     40 | Memcpy DtoH (Device -> Pinned)
+       18.90 |    602 | ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn
+       12.99 |    344 | ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn
+        5.28 |    129 | std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16,
+        4.77 |   3474 | void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFun
+        4.56 |   3799 | void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<float>, std::arr
+        4.50 |   1906 | void at::native::reduce_kernel<128, 4, at::native::ReduceOp<float, at::native::func_wrapper_t<float,
+        4.27 |     43 | void gemv2T_kernel_val<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, 128, 16, 4, 4, 
+  the CPU's biggest own times, per token: ms | count | name
+      763.89 |     43 | moe
+      234.50 |  14654 | cudaLaunchKernel
+      105.20 |   1314 | aten::mm
+       96.39 |    258 | expand
+       80.79 |    516 | ## Call CompiledFxGraph f3dvmbvheuzxuryh4kn6pa6d36qsiewb2uabbycvfjr6iswh53qv ##
+       58.63 |     86 | cudaGraphLaunch
+       55.22 |   3179 | aten::copy_
+       50.37 |    516 | Torch-Compiled Region: 0/0
+       42.61 |   2956 | aten::empty_strided
+       41.15 |   1719 | aten::mul
+=== profile baseline, again {'old_timer': False, 'compiled_expand': True, 'moe_memory_readings': False, 'hc_pre_recordings': False, 'swap_copy_stream': False, 'late_swap_copies': False}: the cache is back to its state after the load, in 30 s (775 experts re-read) | fast places hold the load's bytes: True
+profile, 3 decode tokens: per token 2.162 s = disk read 0.437 s (30.7 experts) + CPU waiting for the GPU 0.026 s (176 waits) + the rest 1.699 s (Python, and launching 28,588 kernels) | GPU busy 0.186 s (9%)
+  the GPU's biggest kernels, per token: ms | count | name
+       40.79 |     77 | Memcpy HtoD (Pinned -> Device)
+       25.27 |    774 | triton_poi_fused___rshift____to_copy_bitwise_and_eq_index_lift_fresh_masked_fill_mul_stack_sub_unsqu
+       19.66 |     40 | Memcpy DtoH (Device -> Pinned)
+       18.89 |    602 | ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn
+       12.97 |    344 | ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn
+        5.68 |   3473 | void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFun
+        5.25 |   1906 | void at::native::reduce_kernel<128, 4, at::native::ReduceOp<float, at::native::func_wrapper_t<float,
+        5.25 |    129 | std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16,
+        4.85 |   3798 | void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<float>, std::arr
+        4.26 |     43 | void gemv2T_kernel_val<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, 128, 16, 4, 4, 
+  the CPU's biggest own times, per token: ms | count | name
+      616.45 |     43 | moe
+      294.59 |  26694 | cudaLaunchKernel
+       83.89 |   1400 | aten::mm
+       71.12 |    258 | expand
+       64.86 |   4942 | aten::add
+       60.68 |    516 | ## Call CompiledFxGraph f3dvmbvheuzxuryh4kn6pa6d36qsiewb2uabbycvfjr6iswh53qv ##
+       59.79 |   3605 | aten::sum
+       41.63 |   3503 | aten::div
+       41.12 |   3265 | aten::copy_
+       38.20 |   2235 | aten::mul
+profiled tokens {'baseline': [9238, 8295, 1754], 'plain expand': [9238, 8295, 1754], 'hc_pre recordings': [9238, 8295, 1754], 'hc_pre recordings and swap copy stream': [9238, 8295, 1754], 'baseline, again': [9238, 8295, 1754]} | the same in every arm: True
+end check: {'table': [], 'copies': [], 'changed': [], 'compared': 4336}
+baseline: the same as the fixed_home run in tokens, gate calls, top-5 and check: ['france', '2+2', 'sky', 'license']
+plain expand: the same as the fixed_home run in tokens, gate calls, top-5 and check: ['france', '2+2', 'sky', 'license']
+  the same as baseline in tokens, gate calls, top-5, check and reads per step: ['france', '2+2', 'sky', 'license']
+hc_pre recordings: the same as the fixed_home run in tokens, gate calls, top-5 and check: ['france', '2+2', 'sky', 'license']
+  the same as baseline in tokens, gate calls, top-5, check and reads per step: ['france', '2+2', 'sky', 'license']
+hc_pre recordings and swap copy stream: the same as the fixed_home run in tokens, gate calls, top-5 and check: ['france', '2+2', 'sky', 'license']
+  the same as baseline in tokens, gate calls, top-5, check and reads per step: ['france', '2+2', 'sky', 'license']
+baseline, again: the same as the fixed_home run in tokens, gate calls, top-5 and check: ['france', '2+2', 'sky', 'license']
+  the same as baseline in tokens, gate calls, top-5, check and reads per step: ['france', '2+2', 'sky', 'license']
+the rest per decode token, s: france | 2+2 | sky | license
+  baseline                         0.766 | 0.571 | 0.561 | 0.732
+  plain expand                     0.991 | 0.722 | 0.804 | 1.124
+  hc_pre recordings                0.461 | 0.518 | 0.748 | 0.733
+  hc_pre recordings and swap copy stream 0.456 | 0.455 | 0.678 | 0.764
+  baseline, again                  0.772 | 0.563 | 0.997 | 0.621
+saved -> results/arms_expand_hc_pre_copy_stream_nsvf325w5v_20261122T123507Z.json
