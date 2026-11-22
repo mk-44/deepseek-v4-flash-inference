@@ -345,21 +345,6 @@ class CacheStore: # 5 tiers on actual bytes
     def swap(self, layer : int, e : int, a : int): # e [ram cache] to free gpu place and [gpu cache] down into the ram place e left i.e. 2 copies
         he, ha = self.homes[layer, e], self.homes[layer, a]
         p, g, f = he.place, ha.place, self.free.popleft() # e's ram place, a's gpu place, gpu place that holds nobody
-        
-        self.tiers.gpu[f].copy_(self.tiers.ram_place(p), non_blocking = True) # e up
-        self.tiers.ram_place(p).copy_(self.tiers.gpu[g], non_blocking = True) # a down, queued behind e's copy up, so it can't overwrite e's bytes.
-        
-        done = torch.cuda.Event()
-        done.record()
-        
-        self.pending[p] = done # as both copies use p so the cpu must not write into p before they are done.
-        self.free.append(g) # a's old gpu place holds nobody now.
-        he.tier, he.place = 2, f
-        ha.tier, ha.place = 4, p
-        
-    def swap(self, layer : int, e : int, a : int): # e [ram cache] to free gpu place and [gpu cache] down into the ram place e left i.e. 2 copies
-        he, ha = self.homes[layer, e], self.homes[layer, a]
-        p, g, f = he.place, ha.place, self.free.popleft() # e's ram place, a's gpu place, gpu place that holds nobody
 
         if self.copy_stream: 
             # the copy stream starts these copies only after the work queued before them. 
