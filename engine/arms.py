@@ -7,18 +7,35 @@ from pathlib import Path
 import torch
 import expert_store
 from arch import ChatTokenizer, Checkpoint, ModelArgs
-from cache_store import FIXED_HOME, FOLDER, box_sizes, load_cache
+from cache_store import FIXED_HOME, FOLDER, CacheStore, box_sizes, load_cache
 from cache_generation import EVERY, N_FIXED, CacheTrace, StepLog, compare, decode_stats, map_line, profile_tokens, run_prompt, save
 from full_store import saved_entries
 from recordings import RECORDINGS, make_recordings, use_recordings
 from store_moe import MoEWatch
 from expert_plan import load_texts, make_plan 
 
+LATE_COPY_CYCLES = 20_000_000 
+# gpu clock cycles, about 10 to 14 ms at 2 to 1.4 GHz. longer than our thread takes to reach any expert of a layer after its prepare - for test.
+
 DEFAULTS = {
-    "old_timer" : False, # True : the MoE timer that waits for the gpu at both ends of each MoE. False : gpu timestamps, nothing waits.
-    "compiled_expand" : True, # True : fp4_decode through torch.compile. False : the plain fp4_decode.
-    "moe_memory_readings" : False, # True : gpu memory read at both ends of each MoE, the old way. False : the step logger reads the step's peak once, outside the step's clock.
-    "hc_pre_recordings" : False, # True : every 1 token step replays one recording per hc_pre call site. False : the plain hc_pre, about 140 GPU jobs per call.
+    # True : the MoE timer that waits for the gpu at both ends of each MoE. False : gpu timestamps, nothing waits.
+    "old_timer" : False, 
+    
+    # True : fp4_decode through torch.compile. False : the plain fp4_decode.
+    "compiled_expand" : True,
+    
+    # True : gpu memory read at both ends of each MoE, the old way. False : the step logger reads the step's peak once, outside the step's clock.
+    "moe_memory_readings" : False,
+    
+    # True : every 1 token step replays one recording per hc_pre call site. False : the plain hc_pre, about 140 GPU jobs per call.
+    "hc_pre_recordings" : False, 
+    
+    # True : the swap copies run on their own stream, only the expand of a moved expert waits for them on the gpu. 
+    # False : on the default stream, our thread waits for them after each prepare.
+    "swap_copy_stream" : False,
+    
+    # True : the copy stream sleeps LATE_COPY_CYCLES before each swap, so every copy lands late on purpose. False : no sleep.
+    "late_swap_copies" : False    
 }
 
 ARM_SETS = {
@@ -45,12 +62,22 @@ ARM_SETS = {
         "after" : [],
         "profile" : True, # profiles after all the timed arms: they count each arm's kernel launches
     },
+    
+    "swap_copy_stream" : {
+        "about" : "hc_pre recordings on in every arm. the baseline, then the swap copies on their own stream, then the baseline again: what the copy stream saves. after the profiles, the copy stream with every copy late on purpose: its tokens must still match the baseline",
+        "arms" : [("baseline", {"hc_pre_recordings" : True}), ("swap copy stream", {"hc_pre_recordings" : True, "swap_copy_stream" : True}),
+                  ("baseline, again", {"hc_pre_recordings" : True})],
+        "after" : [("swap copy stream, every copy late", {"hc_pre_recordings" : True, "swap_copy_stream" : True, "late_swap_copies" : True})],
+        "profile" : True, # profiles after all the timed arms: they count each arm's copies and kernel launches
+    }
 }
 
 def apply(switches : dict) -> dict: # sets one arm's switches, returns all of them.
     s = {**DEFAULTS, **switches}
     MoEWatch.sync, expert_store.COMPILED_EXPAND, MoEWatch.memory = s["old_timer"], s["compiled_expand"], s["moe_memory_readings"]
     use_recordings(s["hc_pre_recordings"]) # Block.forward finds the recorded hc_pre or the plain one from its next call
+    CacheStore.copy_stream, CacheStore.copy_sleep = s["swap_copy_stream"], LATE_COPY_CYCLES if s["late_swap_copies"] else 0 # the next swap reads them
+
     return s
 
 

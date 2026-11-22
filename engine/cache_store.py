@@ -162,6 +162,13 @@ def plan_places(ckpt : Checkpoint, plan : dict, n_layers : int) -> dict: # (laye
     return homes
 
 class CacheStore: # 5 tiers on actual bytes
+    
+    # True - the swap copies run on their own stream and only the expand that needs them waits on the gpu. 
+    # False - they run on the default stream and our thread waits for them after each prepare.
+    copy_stream = False 
+    
+    copy_sleep = 0 # gpu clock cycles the copy stream sleeps before each swap copies. only the late copies arm sets it.
+
     def __init__(self, ckpt : Checkpoint, plan : dict, n_layers : int, path : str = DISK_FILE):
         self.caches = [LayerCache(plan['layers'][l], plan['rate'][l]) for l in range(n_layers)]
         self.homes = plan_places(ckpt, plan, n_layers)
@@ -180,6 +187,9 @@ class CacheStore: # 5 tiers on actual bytes
 
         self.frozen = False # True during the teacher forced check
         self.pending = {} # ram place to cuda event, done once the copies swap queued on that place are done.
+        self.copies = torch.cuda.Stream() # a second gpu job queue. with copy_stream on, the swap copies run here, beside the compute.
+        self.arrived = {} # gpu place to cuda event, done once a swap's copy up into that place has landed.
+
     
     def place_of(self, home : CacheHome) -> torch.Tensor: # [place_bytes] uint8 - the bytes in fast place [tiers 1 to 4]
         return self.tiers.gpu[home.place] if home.tier <= 2 else self.tiers.ram_place(home.place)
@@ -302,6 +312,11 @@ class CacheStore: # 5 tiers on actual bytes
         
         if h.tier <= 2:
             self.n["gpu"] += 1
+            arrived = self.arrived.pop(h.place, None) # an event only if a swap just moved this expert up.
+            
+            if arrived is not None:
+                torch.cuda.current_stream().wait_event(arrived) # the expand queued next waits on the gpu until the bytes land. our thread does not wait.
+            
             return self.tiers.gpu[h.place] # already on gpu, so no copy.
         
         if h.tier <= 4:
@@ -341,6 +356,33 @@ class CacheStore: # 5 tiers on actual bytes
         self.free.append(g) # a's old gpu place holds nobody now.
         he.tier, he.place = 2, f
         ha.tier, ha.place = 4, p
+        
+    def swap(self, layer : int, e : int, a : int): # e [ram cache] to free gpu place and [gpu cache] down into the ram place e left i.e. 2 copies
+        he, ha = self.homes[layer, e], self.homes[layer, a]
+        p, g, f = he.place, ha.place, self.free.popleft() # e's ram place, a's gpu place, gpu place that holds nobody
+
+        if self.copy_stream: 
+            # the copy stream starts these copies only after the work queued before them. 
+            # gate read back already waited for that work, so no gpu time is lost.
+            self.copies.wait_stream(torch.cuda.current_stream())
+
+        with torch.cuda.stream(self.copies if self.copy_stream else None): # None keeps the default stream.
+            if self.copy_sleep: # test - every copy lands late on purpose, so a missing wait would let an expand read old bytes, leading to wrong ans.
+                torch.cuda._sleep(self.copy_sleep)
+                
+            self.tiers.gpu[f].copy_(self.tiers.ram_place(p), non_blocking = True) # e up
+            arrived = torch.cuda.Event()
+            arrived.record() # e bytes are in place_f.
+            self.tiers.ram_place(p).copy_(self.tiers.gpu[g], non_blocking = True) # a down, queued behind e's copy up, so it can't overwrite e's bytes.
+            done = torch.cuda.Event()
+            done.record() # on the same stream as the copies, so it is done only once both are.
+
+        self.arrived[f] = arrived # the fetch of e makes its expand wait for it.
+        self.pending[p] = done # as both copies use p so the cpu must not write into p before they are done.
+        self.free.append(g) # a's old gpu place holds nobody now.
+        he.tier, he.place = 2, f
+        ha.tier, ha.place = 4, p
+
     
     def take_place(self, layer : int, e : int, z : int): # e [read] from its slot takes z's fast place and z is only on its disk copy.
         he, hz = self.homes[layer, e], self.homes[layer, z]
@@ -390,6 +432,7 @@ class CacheStore: # 5 tiers on actual bytes
         self.caches = [LayerCache(plan["layers"][l], plan["rate"][l]) for l in range(n_layers)]
         self.free = deque(range(n_layers * plan["n_gpu"], n_layers * plan["n_gpu"] + N_FREE))
         self.pending = {}
+        self.arrived = {} # events of the last run, all done after the sync above.
         moved = 0
         for key, h in self.homes.items():
             if h.tier not in (2, 4) or (now[key].tier, now[key].place) == (h.tier, h.place):

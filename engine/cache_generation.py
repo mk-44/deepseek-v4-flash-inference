@@ -77,8 +77,10 @@ class CacheTrace: # one hook on every gate, picks go to the store first (the cac
 
             self.store.prepare(layer, rows) # the cache moves on the bytes: every expert of this call is then where the table says
             self.prepare_s += time.perf_counter() - t
+            
             t = time.perf_counter()
-            torch.cuda.synchronize() # wait for the swaps prepare queued. the MoE counts.tolist() would wait for them anyway, here the wait is timed
+            if not self.store.copy_stream: # with the copy stream nothing waits here. each moved expert's expand waits for its own bytes on the gpu.
+                torch.cuda.synchronize() # wait for the swaps prepare queued. MoE counts.tolist() would wait for them anyway, here the wait is timed.
             self.swap_wait_s += time.perf_counter() - t
             
             c = time.thread_time()
@@ -317,7 +319,9 @@ def profile_tokens(model : Transformer, args : ModelArgs, trace : CacheTrace, id
     if path:
         prof.export_chrome_trace(path) # every cpu op and gpu kernel on one timeline, for ui.perfetto.dev
     
-    gpu = [e for e in prof.events() if e.device_type == torch.autograd.DeviceType.CUDA and not e.is_user_annotation] # kernels, copies and memsets on one stream, without the GPU spans of our labels
+    gpu = [e for e in prof.events() if e.device_type == torch.autograd.DeviceType.CUDA and not e.is_user_annotation] 
+    # kernels, copies and memsets on every stream without the gpu spans of our labels.
+    
     kernels = {} # kernel name -> [gpu_seconds, count]
     
     for e in gpu:
