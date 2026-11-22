@@ -69,7 +69,15 @@ ARM_SETS = {
                   ("baseline, again", {"hc_pre_recordings" : True})],
         "after" : [("swap copy stream, every copy late", {"hc_pre_recordings" : True, "swap_copy_stream" : True, "late_swap_copies" : True})],
         "profile" : True, # profiles after all the timed arms: they count each arm's copies and kernel launches
-    }
+    },
+
+    "expand_hc_pre_copy_stream" : {
+        "about" : "the baseline, then the plain expand, then hc_pre recordings, then hc_pre recordings and the swap copy stream, then the baseline again: what the compiled expand, the recordings and the copy stream each save at full size",
+        "arms" : [("baseline", {}), ("plain expand", {"compiled_expand" : False}), ("hc_pre recordings", {"hc_pre_recordings" : True}),
+                  ("hc_pre recordings and swap copy stream", {"hc_pre_recordings" : True, "swap_copy_stream" : True}), ("baseline, again", {})],
+        "after" : [],
+        "profile" : True, # profiles after all the timed arms: they count each arm's kernel launches
+    },
 }
 
 def apply(switches : dict) -> dict: # sets one arm's switches, returns all of them.
