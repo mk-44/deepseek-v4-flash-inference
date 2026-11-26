@@ -1,5 +1,6 @@
 import time
 import types
+import itertools
 import torch
 from torch.func import functional_call
 from arch import MoE
@@ -10,6 +11,8 @@ MOE_RECORDINGS = {}
 class MoERecording: # a layer MoE in a token step, from the gate output onwards, recorded once, then replayed with one call per step.
     on = False 
     # True - token steps replay the recordings. False - every MoE call runs the plain MoE.forward.
+    orders = None # [720, 6] on the gpu, every order of the gate's 6 positions. made once in make_moe_recordings
+    order_rows = {} # an order (a tuple) to its row in orders, so finding it is one dict lookup
 
     def __init__(self, moe : MoE, store, layer : int, slots : torch.Tensor, x : torch.Tensor, w : torch.Tensor, pool, stream : torch.cuda.Stream):
         self.moe, self.store, self.layer = moe, store, layer
@@ -33,6 +36,7 @@ class MoERecording: # a layer MoE in a token step, from the gate output onwards,
         for k in range(len(self.slots)): # slot order is ascending expert number, the order MoE.forward adds them in
             w = decode_expert(self.slots[k], self.store.layout) # {"w1", "w2", "w3"} BF16, the compiled expand
             y += functional_call(self.expert, {f"{n}.weight" : t for n, t in w.items()}, (self.x, self.w[k : k + 1, None])) # [1, d]
+            del w # this expand is freed before the next one is made, so the pool holds one expand, not two
         y += self.moe.shared_experts(self.x) # added last, as in MoE.forward
         return y.type_as(self.x)
     
@@ -40,7 +44,7 @@ class MoERecording: # a layer MoE in a token step, from the gate output onwards,
         order = sorted(range(len(picks)), key = lambda k : picks[k]) # positions in the gate output, by ascending expert number
         for slot, k in enumerate(order):
             self.store.copy_into(self.layer, picks[k], self.slots[slot]) # one copy job per expert
-        self.w.copy_(weights[0, order]) # [6] the routing weights in slot order
+        torch.index_select(weights[0], 0, self.orders[self.order_rows[tuple(order)]], out = self.w) # [6] the routing weights in slot order. one gpu job, our thread does not wait
         self.x.copy_(x)
         self.graph.replay() # one call. the gpu then runs the 6 expands, the 6 experts, the shared expert and the sum back to back
         return self.y
@@ -67,6 +71,9 @@ def make_moe_recordings(blocks, store, dtype : torch.dtype): # one recording per
     slots = torch.zeros(moe.gate.topk, store.place_bytes, dtype = torch.uint8, device = "cuda") # [6, place_bytes]. zero bytes expand to zero weights, so the first runs make no inf or nan
     x = torch.zeros(1, moe.dim, dtype = dtype, device = "cuda") # [1, d]
     w = torch.zeros(moe.gate.topk, dtype = torch.float32, device = "cuda") # [6]
+    every = list(itertools.permutations(range(moe.gate.topk))) # all 720 orders of 6 positions
+    MoERecording.orders = torch.tensor(every, device = "cuda") # [720, 6] sent up once here, so no step sends an index list up
+    MoERecording.order_rows = {o : row for row, o in enumerate(every)}
     
     for layer, block in enumerate(blocks):
         MOE_RECORDINGS[id(block.ffn)] = MoERecording(block.ffn, store, layer, slots, x, w, pool, stream)

@@ -164,21 +164,21 @@ if __name__ == "__main__":
             print("FAILED: the hc_pre recordings were not made, so the arms that need them are skipped")
             recorded_ok = False
             
-            moe_recorded_ok = False
+        moe_recorded_ok = False
+        
+        if compiled_ok: # the MoE recordings hold the compiled expand, so they need it
+            torch.cuda.empty_cache() # so the reserved memory read below counts only what the MoE recordings hold
+            reserved, t = torch.cuda.memory_reserved(), time.perf_counter()
             
-            if compiled_ok: # the MoE recordings hold the compiled expand, so they need it
-                torch.cuda.empty_cache() # so the reserved memory read below counts only what the MoE recordings hold
-                reserved, t = torch.cuda.memory_reserved(), time.perf_counter()
+            try: # one recording per layer's MoE, made once before any prompt runs. a failure costs only the arms that use them
+                make_moe_recordings(model.layers, store, model.embed.weight.dtype)
+                moe_recorded_ok = True
+                print(f"MoE recordings: {len(MOE_RECORDINGS)} made in {time.perf_counter() - t:.1f} s "
+                      f"| GPU memory they hold {(torch.cuda.memory_reserved() - reserved) / 2**20:.0f} MiB")
                 
-                try: # one recording per layer's MoE, made once before any prompt runs. a failure costs only the arms that use them
-                    make_moe_recordings(model.layers, store, model.embed.weight.dtype)
-                    moe_recorded_ok = True
-                    print(f"MoE recordings: {len(MOE_RECORDINGS)} made in {time.perf_counter() - t:.1f} s "
-                          f"| GPU memory they hold {(torch.cuda.memory_reserved() - reserved) / 2**20:.0f} MiB")
-                    
-                except Exception: # log it, the arms that need them are skipped, the others still run.
-                    traceback.print_exc()
-                    print("FAILED: the MoE recordings were not made, so the arms that need them are skipped")
+            except Exception: # log it, the arms that need them are skipped, the others still run.
+                traceback.print_exc()
+                print("FAILED: the MoE recordings were not made, so the arms that need them are skipped")
 
         print("warm-up: '2+2' once, so first-call costs land in no arm")
         run_prompt(model, args, tokenizer, trace, log, runs["2+2"]["prompt"], 2, False)
