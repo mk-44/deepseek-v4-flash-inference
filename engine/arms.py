@@ -11,6 +11,7 @@ from cache_store import FIXED_HOME, FOLDER, CacheStore, box_sizes, load_cache
 from cache_generation import EVERY, N_FIXED, CacheTrace, StepLog, compare, decode_stats, map_line, profile_tokens, run_prompt, save
 from full_store import saved_entries
 from recordings import RECORDINGS, make_recordings, use_recordings
+from moe_recordings import MOE_RECORDINGS, MoERecording, make_moe_recordings
 from store_moe import MoEWatch
 from expert_plan import load_texts, make_plan 
 
@@ -35,7 +36,11 @@ DEFAULTS = {
     "swap_copy_stream" : False,
     
     # True : the copy stream sleeps LATE_COPY_CYCLES before each swap, so every copy lands late on purpose. False : no sleep.
-    "late_swap_copies" : False    
+    "late_swap_copies" : False,
+    
+    # True : every 1 token step replays one recording per layer for its 6 experts and shared expert. it holds the compiled expand. 
+    # False : the plain MoE loop, about 20 GPU jobs per expert.
+    "moe_recordings" : False
 }
 
 ARM_SETS = {
@@ -78,6 +83,15 @@ ARM_SETS = {
         "after" : [],
         "profile" : True, # profiles after all the timed arms: they count each arm's kernel launches
     },
+    
+    "moe_recordings" : {
+        "about" : "hc_pre recordings and the swap copy stream on in every arm. the baseline, then each layer's MoE replayed from its recording in every 1 token step, then the baseline again: what the MoE recordings save. after the profiles, the MoE recordings with every copy late on purpose: its tokens must still match the baseline",
+        "arms" : [("baseline", {"hc_pre_recordings" : True, "swap_copy_stream" : True}),
+                  ("MoE recordings", {"hc_pre_recordings" : True, "swap_copy_stream" : True, "moe_recordings" : True}),
+                  ("baseline, again", {"hc_pre_recordings" : True, "swap_copy_stream" : True})],
+        "after" : [("MoE recordings, every copy late", {"hc_pre_recordings" : True, "swap_copy_stream" : True, "moe_recordings" : True, "late_swap_copies" : True})],
+        "profile" : True, # profiles after all the timed arms: they count each arm's kernel launches
+    }
 }
 
 def apply(switches : dict) -> dict: # sets one arm's switches, returns all of them.
@@ -85,7 +99,7 @@ def apply(switches : dict) -> dict: # sets one arm's switches, returns all of th
     MoEWatch.sync, expert_store.COMPILED_EXPAND, MoEWatch.memory = s["old_timer"], s["compiled_expand"], s["moe_memory_readings"]
     use_recordings(s["hc_pre_recordings"]) # Block.forward finds the recorded hc_pre or the plain one from its next call
     CacheStore.copy_stream, CacheStore.copy_sleep = s["swap_copy_stream"], LATE_COPY_CYCLES if s["late_swap_copies"] else 0 # the next swap reads them
-
+    MoERecording.on = s["moe_recordings"] # the next MoE call replays its recording or runs the plain way
     return s
 
 
@@ -149,7 +163,23 @@ if __name__ == "__main__":
             traceback.print_exc()
             print("FAILED: the hc_pre recordings were not made, so the arms that need them are skipped")
             recorded_ok = False
-    
+            
+            moe_recorded_ok = False
+            
+            if compiled_ok: # the MoE recordings hold the compiled expand, so they need it
+                torch.cuda.empty_cache() # so the reserved memory read below counts only what the MoE recordings hold
+                reserved, t = torch.cuda.memory_reserved(), time.perf_counter()
+                
+                try: # one recording per layer's MoE, made once before any prompt runs. a failure costs only the arms that use them
+                    make_moe_recordings(model.layers, store, model.embed.weight.dtype)
+                    moe_recorded_ok = True
+                    print(f"MoE recordings: {len(MOE_RECORDINGS)} made in {time.perf_counter() - t:.1f} s "
+                          f"| GPU memory they hold {(torch.cuda.memory_reserved() - reserved) / 2**20:.0f} MiB")
+                    
+                except Exception: # log it, the arms that need them are skipped, the others still run.
+                    traceback.print_exc()
+                    print("FAILED: the MoE recordings were not made, so the arms that need them are skipped")
+
         print("warm-up: '2+2' once, so first-call costs land in no arm")
         run_prompt(model, args, tokenizer, trace, log, runs["2+2"]["prompt"], 2, False)
         
@@ -163,10 +193,17 @@ if __name__ == "__main__":
                 print(f"=== {kind} {name}: FAILED, skipped as the expand did not compile")
                 out["arms"][name] = {"failed" : "the expand did not compile"}
                 continue
+                
             if s["hc_pre_recordings"] and not recorded_ok: # without them the arm would run the plain hc_pre under the recordings label
                 print(f"=== {kind} {name}: FAILED, skipped as the hc_pre recordings were not made")
                 out["arms"][name] = {"failed" : "the hc_pre recordings were not made"}
                 continue
+            
+            if s["moe_recordings"] and not moe_recorded_ok: # without them the arm would run the plain MoE under the recordings label
+                print(f"=== {kind} {name}: FAILED, skipped as the MoE recordings were not made")
+                out["arms"][name] = {"failed" : "the MoE recordings were not made"}
+                continue
+            
             t = time.perf_counter()
             moved = store.restore(ckpt, plan, n_layers)
             same = store.fingerprints() == fp0

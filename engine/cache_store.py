@@ -189,6 +189,7 @@ class CacheStore: # 5 tiers on actual bytes
         self.pending = {} # ram place to cuda event, done once the copies swap queued on that place are done.
         self.copies = torch.cuda.Stream() # a second gpu job queue. with copy_stream on, the swap copies run here, beside the compute.
         self.arrived = {} # gpu place to cuda event, done once a swap's copy up into that place has landed.
+        self.picks = -1, [] # the last gate call's layer and its picks [tokens][6], kept for the recorded MoE.
 
     
     def place_of(self, home : CacheHome) -> torch.Tensor: # [place_bytes] uint8 - the bytes in fast place [tiers 1 to 4]
@@ -337,6 +338,16 @@ class CacheStore: # 5 tiers on actual bytes
     def fetch(self, layer : int, expert : int) -> dict[str, torch.Tensor]: # {"w1", "w2", "w3"}: BF16 weights on the GPU, what StoreExpert asks for
         return decode_expert(self.stored_on_gpu(layer, expert), self.layout)
     
+    def copy_into(self, layer : int, expert : int, slot : torch.Tensor): 
+        # this expert's bytes into a fixed gpu slot [place_bytes], from wherever they are. a recording reads the slot after.
+        h = self.homes[layer, expert]
+        if 3 <= h.tier <= 4: # ram place : one copy up, straight into the slot.
+            self.n["ram"] += 1
+            slot.copy_(self.tiers.ram_place(h.place), non_blocking = True)
+        else: # a gpu place or a disk read through working. stored_on_gpu counts it and makes the gpu wait for a moved expert's copy.
+            slot.copy_(self.stored_on_gpu(layer, expert), non_blocking = True)
+
+    
     def wait(self, done : torch.cuda.Event): # the cpu waits until the gpu has done everything queued before 'done'
         t = time.perf_counter()
         done.synchronize()
@@ -389,6 +400,7 @@ class CacheStore: # 5 tiers on actual bytes
     
     def prepare(self, layer : int, rows : list[list[int]]) -> list[tuple]: 
         # one gate call picks [tokens][6], so its cache moves, done on the bytes before the MoE loop fetches.
+        self.picks = layer, rows # the recorded MoE reads them right after its gate.
         
         if self.frozen: # the teacher-forced check i.e. no move, no bookkeeping count
             return []
